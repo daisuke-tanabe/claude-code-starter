@@ -1,0 +1,9 @@
+# misc
+.DS_Store
+*.pem
+
+# jetbrains
+.idea
+
+# claude
+.claude/settings.local.json
