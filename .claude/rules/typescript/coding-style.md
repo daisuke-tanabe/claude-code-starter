@@ -38,7 +38,9 @@ function process(items: readonly string[]) { ... }
 
 ## null/undefined の扱い
 
-null/undefined への安全なアクセスを心がける。
+- オプショナルチェーン（`?.`）とヌル合体演算子（`??`）を積極的に使用する
+- 理由なく `null` と `undefined` を混在させない（例外: API やライブラリからの値）
+- 「値なし」を表すために空オブジェクト `{}` を使用しない
 
 ## 型の絞り込み
 
