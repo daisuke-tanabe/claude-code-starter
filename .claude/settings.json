@@ -1,5 +1,6 @@
 {
   "language": "japanese",
+  "alwaysThinkingEnabled": true,
   "permissions": {
     "allow": [
       "Bash(git add *)",
