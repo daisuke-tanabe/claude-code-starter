@@ -12,7 +12,6 @@
 - 信頼できる明確に定義されたプランに対して有効化する
 - 探索的な作業には無効化する
 - dangerously-skip-permissionsフラグは絶対に使用しない
-- 代わりに `~/.claude.json` の `allowedTools` を設定する
 
 ## TodoWrite ベストプラクティス
 

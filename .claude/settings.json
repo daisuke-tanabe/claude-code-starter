@@ -1,8 +1,12 @@
 {
   "language": "japanese",
+  "plansDirectory": "./plans",
   "alwaysThinkingEnabled": true,
   "permissions": {
     "allow": [
+      "Grep",
+      "WebSearch",
+      "Bash(grep *)",
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(git branch *)",
@@ -22,17 +26,13 @@
       "Bash(pnpm publish *)",
       "Bash(yarn publish *)",
       "Read(.env)",
-      "Read(.env.*)",
       "Read(**/.env)",
-      "Read(**/.env.*)",
       "Write(.env)",
-      "Write(.env.*)",
       "Write(**/.env)",
-      "Write(**/.env.*)",
       "Edit(.env)",
-      "Edit(.env.*)",
       "Edit(**/.env)",
-      "Edit(**/.env.*)"
+      "Grep(.env)",
+      "Grep(**/.env)"
     ]
   },
   "extraKnownMarketplaces": {
@@ -45,5 +45,31 @@
   },
   "enabledPlugins": {
     "everything-claude-code@everything-claude-code": true
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \".claude/scripts/pre-bash-env-guard.sh\"",
+            "description": "Block .env access via Bash/Grep (allow .env.example etc.)"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \".claude/scripts/post-edit-biome.sh\""
+          }
+        ],
+        "description": "Run Biome check --write on edited file (skips if biome not installed)"
+      }
+    ]
   }
 }

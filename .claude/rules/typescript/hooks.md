@@ -11,8 +11,6 @@ paths:
 
 ## PostToolUse フック
 
-`~/.claude/settings.json` で設定：
-
 - **Biome**：編集後にJS/TSファイルを自動フォーマット・Lint（`biome check --write`）
 - **TypeScriptチェック**：`.ts`/`.tsx` ファイル編集後に `tsc` を実行
 - **console.log警告**：編集したファイルの `console.log` について警告
