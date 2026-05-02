@@ -1,6 +1,6 @@
 # 開発ワークフロー
 
-> このファイルは [common/git-workflow.md](./git-workflow.md) を拡張し、git操作の前に行うフルな機能開発プロセスを説明する。
+> git運用の前提は CLAUDE.md の「Git運用」セクションを参照。詳細な git パターンは `git-workflow` skill を参照。
 
 機能実装ワークフローは開発パイプライン（リサーチ、計画、TDD、コードレビュー、そしてgitへのコミット）を説明する。
 
@@ -35,4 +35,4 @@
 4. **コミット & プッシュ**
    - 詳細なコミットメッセージ
    - Conventional Commitsフォーマットに従う
-   - コミットメッセージフォーマットとPRプロセスは [git-workflow.md](./git-workflow.md) を参照
+   - 詳細な git ベストプラクティスは `git-workflow` skill を参照
