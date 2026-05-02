@@ -1,9 +1,16 @@
-# misc
+# OS files
 .DS_Store
+
+# API keys and secrets
 *.pem
 
-# jetbrains
+# Logs
+logs/
+*.log
+
+# Editor files
 .idea
 
-# claude
+# Claude
+.claude/plans/
 .claude/settings.local.json
