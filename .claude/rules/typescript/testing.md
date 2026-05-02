@@ -7,7 +7,7 @@ paths:
 ---
 # TypeScript/JavaScript テスト
 
-> このファイルは [common/testing.md](../common/testing.md) を拡張し、TypeScript/JavaScript固有の内容を追加する。
+> TDD の手順とパターンは `tdd-workflow` skill を参照。このファイルは TypeScript/JavaScript 固有のフレームワーク選択を補足する。
 
 ## テストフレームワーク
 
