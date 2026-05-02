@@ -15,16 +15,17 @@
    - 要件を満たす場合は、新規コード作成より実績あるアプローチの採用や移植を優先する。
 
 1. **まず計画する**
-   - **planner** エージェントを使用して実装計画を作成する
-   - コーディング前に計画ドキュメントを生成する：PRD、architecture、system_design、tech_doc、task_list
-   - 依存関係とリスクを特定する
-   - フェーズに分解する
+   - 発散・収束が必要なら先に `/opsx:explore` で思考を整理する
+   - `/opsx:propose "<内容>"` で OpenSpec の change を起こす
+   - 生成される成果物：`proposal.md`（why）、`design.md`（how）、`specs/`、`tasks.md`
+   - 依存関係とリスクは proposal.md / design.md に書き出す
+   - フェーズは tasks.md のチェックリストに分解する
+   - design.md は **architect** エージェントでレビューする（トレードオフ、ADR、アンチパターン）
 
-2. **TDDアプローチ**
-   - **tdd-guide** エージェントを使用する
-   - テストを先に書く（RED）
-   - テストを通過するよう実装する（GREEN）
-   - リファクタリングする（IMPROVE）
+2. **実装（TDD アプローチ）**
+   - `/opsx:apply` で tasks.md に従って実装を進める
+   - 各タスクで **tdd-guide** エージェントを呼ぶ：RED → GREEN → IMPROVE
+   - 詳細手順は `tdd-workflow` skill を参照
    - 80%以上のカバレッジを確認する
 
 3. **コードレビュー**
@@ -32,7 +33,20 @@
    - CRITICALとHIGHの問題に対処する
    - 可能な場合はMEDIUMの問題も修正する
 
-4. **コミット & プッシュ**
-   - 詳細なコミットメッセージ
-   - Conventional Commitsフォーマットに従う
+4. **アーカイブ & コミット**
+   - 全タスク完了後に `/opsx:archive` で change を archive へ移し、main specs を更新
+   - Conventional Commits フォーマットに従う
    - 詳細な git ベストプラクティスは `git-workflow` skill を参照
+
+## 規範 skill の参照タイミング
+
+OpenSpec のフェーズごとに参照すべき skill：
+
+| フェーズ | 参照すべき skill |
+|---|---|
+| `/opsx:explore` / `/opsx:propose`（design.md 起稿） | `hexagonal-architecture` / `backend-patterns` / `frontend-patterns` / `api-design` / `database-migrations` |
+| `/opsx:apply`（実装中） | `coding-standards` / `tdd-workflow` / ドメイン別 skills（`postgres-patterns` 等） |
+| 実装後レビュー | `security-review` / `accessibility` / `seo`（該当時） |
+| デプロイ前 | `deployment-patterns` / `e2e-testing` / `browser-qa` |
+
+design.md に「参照する skill」セクションを設けて、どの規範に従うかを明示すると後続の apply 工程が安定する。

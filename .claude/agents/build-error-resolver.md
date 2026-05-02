@@ -104,7 +104,7 @@ npx eslint . --fix
 
 - コードのリファクタリングが必要 → `refactor-cleaner` を使用
 - アーキテクチャ変更が必要 → `architect` を使用
-- 新機能が必要 → `planner` を使用
+- 新機能が必要 → `/opsx:propose` を使用
 - テストが失敗している → `tdd-guide` を使用
 - セキュリティ問題 → `security-reviewer` を使用
 
