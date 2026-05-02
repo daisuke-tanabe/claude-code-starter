@@ -2,12 +2,7 @@
 
 ## 機能実装ワークフロー
 
-新機能・アーキテクチャ変更は OpenSpec の change として起こす：
-
-- `/opsx:explore "<idea>"` — 発散・収束で思考を整理（任意）
-- `/opsx:propose "<idea>"` — proposal / design / specs / tasks を一括生成
-- `/opsx:apply` — tasks.md に従って実装（TDD は `tdd-workflow` skill）
-- `/opsx:archive` — 完了 change を archive へ移し main specs を更新
+新機能・アーキテクチャ変更は `/opsx:propose` から OpenSpec の change として起こす（コマンド一覧は `.claude/commands/opsx/`）。実装中の TDD は `tdd-workflow` skill に従う。
 
 ## Git運用
 
