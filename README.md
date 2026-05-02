@@ -2,17 +2,6 @@
 
 Claude Code の設定をまとめたスターターテンプレート。
 
-## 構成
-
-```
-.claude/
-├── agents/      # 専門エージェント定義（21個）
-├── commands/    # スラッシュコマンド（5個）
-├── skills/      # 再利用可能なスキルパターン（18個）
-├── rules/       # プロジェクト共通ルール
-└── settings.json
-```
-
 ## ベースとした参考リポジトリ
 
 本プロジェクトの Claude Code 設定（`.claude/` 配下の agents / commands / skills / rules）は、[everything-claude-code](https://github.com/affaan-m/everything-claude-code) を参考にして、以下の方針で取捨選択・カスタマイズしている：

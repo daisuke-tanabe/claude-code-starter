@@ -4,7 +4,6 @@
     "commit": "",
     "pr": ""
   },
-  "plansDirectory": "./.claude/plans",
   "permissions": {
     "allow": [
       "Read",

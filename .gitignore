@@ -12,5 +12,4 @@ logs/
 .idea
 
 # Claude
-.claude/plans/
 .claude/settings.local.json
