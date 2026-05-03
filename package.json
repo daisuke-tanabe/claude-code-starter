@@ -1,0 +1,9 @@
+{
+  "name": "claude-code-starter",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "oxfmt": "0.47.0",
+    "oxlint": "1.62.0"
+  }
+}
