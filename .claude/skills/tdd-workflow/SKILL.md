@@ -3,7 +3,7 @@ name: tdd-workflow
 description: 新機能の作成、バグ修正、コードのリファクタリング時にこのスキルを使用する。ユニットテスト・統合テスト・E2Eテストを含む80%以上のカバレッジで、テスト駆動開発を強制する。
 ---
 
-# Test-Driven Development Workflow
+# テスト駆動開発ワークフロー
 
 このスキルは、すべてのコード開発が包括的なテストカバレッジを伴う TDD 原則に従うことを保証する。
 
@@ -380,39 +380,39 @@ npm run test:coverage
 
 ## 避けるべきよくあるテストミス
 
-### FAIL: WRONG: 実装詳細をテストする
+### FAIL: 実装詳細をテストする
 ```typescript
 // Don't test internal state
 expect(component.state.count).toBe(5)
 ```
 
-### PASS: CORRECT: ユーザーが見える振る舞いをテストする
+### PASS: ユーザーが見える振る舞いをテストする
 ```typescript
 // Test what users see
 expect(screen.getByText('Count: 5')).toBeInTheDocument()
 ```
 
-### FAIL: WRONG: 壊れやすいセレクタ
+### FAIL: 壊れやすいセレクタ
 ```typescript
 // Breaks easily
 await page.click('.css-class-xyz')
 ```
 
-### PASS: CORRECT: セマンティックなセレクタ
+### PASS: セマンティックなセレクタ
 ```typescript
 // Resilient to changes
 await page.click('button:has-text("Submit")')
 await page.click('[data-testid="submit-button"]')
 ```
 
-### FAIL: WRONG: テスト独立性なし
+### FAIL: テスト独立性なし
 ```typescript
 // Tests depend on each other
 test('creates user', () => { /* ... */ })
 test('updates same user', () => { /* depends on previous test */ })
 ```
 
-### PASS: CORRECT: 独立したテスト
+### PASS: 独立したテスト
 ```typescript
 // Each test sets up its own data
 test('creates user', () => {

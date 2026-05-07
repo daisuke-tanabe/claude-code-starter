@@ -3,7 +3,7 @@ name: frontend-patterns
 description: React、Next.js、状態管理、パフォーマンス最適化、UI ベストプラクティスのためのフロントエンド開発パターン。
 ---
 
-# Frontend Development Patterns
+# フロントエンド開発パターン
 
 React、Next.js、および高性能ユーザーインターフェース向けのモダンフロントエンドパターン。
 

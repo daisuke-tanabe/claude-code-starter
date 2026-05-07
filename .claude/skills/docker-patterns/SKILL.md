@@ -3,7 +3,7 @@ name: docker-patterns
 description: ローカル開発、コンテナセキュリティ、ネットワーキング、ボリューム戦略、マルチサービスのオーケストレーションのための Docker および Docker Compose パターン。
 ---
 
-# Docker Patterns
+# Docker パターン
 
 コンテナ化開発のための Docker と Docker Compose のベストプラクティス。
 

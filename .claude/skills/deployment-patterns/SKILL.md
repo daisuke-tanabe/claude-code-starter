@@ -3,7 +3,7 @@ name: deployment-patterns
 description: Web アプリケーション向けのデプロイメントワークフロー、CI/CD パイプラインパターン、Docker コンテナ化、ヘルスチェック、ロールバック戦略、本番準備チェックリスト。
 ---
 
-# Deployment Patterns
+# デプロイメントパターン
 
 本番デプロイメントのワークフローと CI/CD のベストプラクティス。
 
