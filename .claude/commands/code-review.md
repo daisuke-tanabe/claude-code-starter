@@ -21,7 +21,7 @@ argument-hint: [pr-number | pr-url | blank for local review]
 
 ---
 
-## Local Review Mode
+## ローカルレビューモード
 
 未コミット変更に対する包括的なセキュリティ・品質レビュー。
 
@@ -73,7 +73,7 @@ CRITICALまたはHIGHの問題があればコミットをブロックする。
 
 ---
 
-## PR Review Mode
+## PRレビューモード
 
 包括的なGitHub PRレビュー — diffを取得し、ファイル全文を読み、validationを実行し、レビューを投稿する。
 

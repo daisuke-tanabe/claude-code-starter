@@ -3,7 +3,7 @@ name: e2e-testing
 description: Playwright を用いた E2E テストパターン、Page Object Model、設定、CI/CD 連携、アーティファクト管理、フレーキーテスト対策。
 ---
 
-# E2E Testing Patterns
+# E2E テストパターン
 
 安定で高速、保守性のある E2E テストスイートを構築するための包括的な Playwright パターン。
 

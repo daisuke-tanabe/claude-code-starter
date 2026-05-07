@@ -3,11 +3,11 @@ name: backend-patterns
 description: Node.js、Express、Next.js API ルート向けのバックエンドアーキテクチャパターン、API 設計、データベース最適化、サーバーサイドベストプラクティス。
 ---
 
-# Backend Development Patterns
+# バックエンド開発パターン
 
 スケーラブルなサーバーサイドアプリケーション向けのバックエンドアーキテクチャパターンとベストプラクティス。
 
-## When to Activate
+## 起動タイミング
 
 - REST または GraphQL API エンドポイントを設計する
 - repository、service、controller レイヤーを実装する

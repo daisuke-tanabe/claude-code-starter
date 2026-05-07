@@ -3,7 +3,7 @@ name: postgres-patterns
 description: クエリ最適化、スキーマ設計、インデックス、セキュリティのための PostgreSQL データベースパターン。Supabase のベストプラクティスに基づく。
 ---
 
-# PostgreSQL Patterns
+# PostgreSQL パターン
 
 PostgreSQL のベストプラクティスのクイックリファレンス。詳細なガイダンスには `database-reviewer` agent を使え。
 

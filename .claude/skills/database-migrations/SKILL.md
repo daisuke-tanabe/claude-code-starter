@@ -3,11 +3,11 @@ name: database-migrations
 description: PostgreSQL、MySQL、一般的な ORM (Prisma、Drizzle、Kysely、Django、TypeORM、golang-migrate) を対象とした、スキーマ変更・データ移行・ロールバック・ゼロダウンタイムデプロイのデータベースマイグレーションのベストプラクティス。
 ---
 
-# Database Migration Patterns
+# データベースマイグレーションパターン
 
 本番システム向けの安全で取り消し可能なデータベーススキーマ変更。
 
-## When to Activate
+## 起動タイミング
 
 - データベーステーブルを作成または変更するとき
 - カラムやインデックスの追加・削除を行うとき
