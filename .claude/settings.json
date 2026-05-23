@@ -1,8 +1,7 @@
 {
-  "language": "japanese",
   "attribution": {
-    "commit": "",
-    "pr": ""
+    "commit": "Co-Authored-By: Claude <noreply@anthropic.com>",
+    "pr": "🤖 Generated with Claude Code"
   },
   "permissions": {
     "allow": [
@@ -37,21 +36,36 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \".claude/scripts/pre-bash-env-guard.sh\""
+            "command": "bash \".claude/scripts/block-env-file-access.sh\""
+          },
+          {
+            "type": "command",
+            "command": "bash \".claude/scripts/check-pr-template.sh\""
           }
         ]
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "Write|Edit|MultiEdit",
+        "matcher": "Edit|Write|MultiEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "bash \".claude/scripts/post-edit-oxc.sh\""
+            "command": "bash \".claude/scripts/format-edited-file.sh\""
           }
         ]
       }
     ]
-  }
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "supabase@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "github@claude-plugins-official": true
+  },
+  "language": "japanese"
 }

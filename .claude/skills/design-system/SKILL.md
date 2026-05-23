@@ -20,12 +20,12 @@ description: デザインシステムの生成・監査、ビジュアル一貫�
 コードベースを分析し、一貫性のあるデザインシステムを生成する:
 
 ```
-1. Scan CSS/Tailwind/styled-components for existing patterns
-2. Extract: colors, typography, spacing, border-radius, shadows, breakpoints
-3. Research 3 competitor sites for inspiration (via browser MCP)
-4. Propose a design token set (JSON + CSS custom properties)
-5. Generate DESIGN.md with rationale for each decision
-6. Create an interactive HTML preview page (self-contained, no deps)
+1. CSS / Tailwind / styled-components をスキャンし、既存パターンを抽出する
+2. 色、タイポグラフィ、余白、border-radius、シャドウ、ブレイクポイントを抽出する
+3. 利用可能なブラウザ閲覧ツール経由で競合 3 サイトを調査し、着想を得る
+4. デザイントークン（JSON + CSS カスタムプロパティ）を提案する
+5. 各決定の根拠を添えて DESIGN.md を生成する
+6. インタラクティブな HTML プレビューページ（依存なし・自己完結）を生成する
 ```
 
 出力: `DESIGN.md` + `design-tokens.json` + `design-preview.html`
@@ -35,16 +35,16 @@ description: デザインシステムの生成・監査、ビジュアル一貫�
 UI を 10 軸でスコア化する(各 0〜10):
 
 ```
-1. Color consistency — are you using your palette or random hex values?
-2. Typography hierarchy — clear h1 > h2 > h3 > body > caption?
-3. Spacing rhythm — consistent scale (4px/8px/16px) or arbitrary?
-4. Component consistency — do similar elements look similar?
-5. Responsive behavior — fluid or broken at breakpoints?
-6. Dark mode — complete or half-done?
-7. Animation — purposeful or gratuitous?
-8. Accessibility — contrast ratios, focus states, touch targets
-9. Information density — cluttered or clean?
-10. Polish — hover states, transitions, loading states, empty states
+1. 色の一貫性 — 定義済みパレットを使っているか、それとも場当たり的な hex 値か
+2. タイポグラフィ階層 — h1 > h2 > h3 > 本文 > キャプションが明確か
+3. 余白のリズム — 一貫したスケール（4px / 8px / 16px）か、それとも恣意的か
+4. コンポーネントの一貫性 — 似た要素は似た見た目になっているか
+5. レスポンシブ挙動 — 流動的か、ブレイクポイントで破綻していないか
+6. ダークモード — 完全実装か、中途半端か
+7. アニメーション — 目的があるか、それとも装飾過多か
+8. アクセシビリティ — コントラスト比、フォーカス状態、タッチターゲット
+9. 情報密度 — 雑然としているか、整然としているか
+10. 仕上げ — ホバー・トランジション・ローディング・空状態などの状態表現
 ```
 
 各軸についてスコア・具体例・ファイル:行レベルの修正案を出す。
@@ -54,13 +54,13 @@ UI を 10 軸でスコア化する(各 0〜10):
 汎用的な AI 生成デザインパターンを検出する:
 
 ```
-- Gratuitous gradients on everything
-- Purple-to-blue defaults
-- "Glass morphism" cards with no purpose
-- Rounded corners on things that shouldn't be rounded
-- Excessive animations on scroll
-- Generic hero with centered text over stock gradient
-- Sans-serif font stack with no personality
+- 何にでも装飾過多なグラデーションを使う
+- 紫 → 青のデフォルト配色
+- 目的のない「グラスモーフィズム」カード
+- 角丸にすべきでない要素まで角丸にする
+- スクロールに伴う過剰なアニメーション
+- 凡庸なグラデーションの上に中央寄せテキストだけのヒーロー
+- 個性のない sans-serif フォントスタック
 ```
 
 ## 例
