@@ -1,13 +1,16 @@
 # CLAUDE.md
 
-## 機能実装ワークフロー
+- 推測ではなく根拠で動く
+- 効率より正確性を優先する
+- 同意ではなく対話を選ぶ
+- 警告を抑制する前に自分の入力を疑う
+- 読んでいないファイルは編集しない
+- シークレットをコードに書かない
 
-新機能・アーキテクチャ変更は `/opsx:propose` から OpenSpec の change として起こす（コマンド一覧は `.claude/commands/opsx/`）。実装中の TDD は `tdd-workflow` skill に従う。
+## ブランチ戦略
 
-## Git運用
+`develop` ベースのフローを採用する (`.claude/skills/git-workflow` の汎用ガイドが GitHub Flow を想定する箇所はこちらを優先する)。
 
-- ブランチ戦略: GitHub Flow ベース、`main` を統合ブランチとする
-- 作業ブランチは `main` から切り、PR 経由で `main` にマージ
-- `main` への直接コミット禁止
-- コミットメッセージ: Conventional Commits
-- 詳細な git ベストプラクティスは `git-workflow` skill を参照
+- 作業ブランチは必ず `develop` から切り、PR のベースブランチも `develop`
+- `main` は本番反映済みの安定ブランチ (`develop` → `main` のマージは別フロー)
+- ブランチ命名は `feat/...` `fix/...` 等の Conventional Commits 系プレフィックス
