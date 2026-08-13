@@ -3,6 +3,7 @@ name: backend-patterns
 description: Node.js、Express、Next.js API ルート向けのバックエンドアーキテクチャパターン、レイヤー分割、データベース最適化、キャッシュ、エラー処理、認証・認可、レート制限、バックグラウンドジョブ、ロギング。API ハンドラ作成・サーバーサイドの設計判断・データベースクエリ実装・認証認可組み込み・エラーハンドリング設計を行う際は必ず本スキルを参照する。
 metadata:
   source: "affaan-m/everything-claude-code@skills/backend-patterns"
+  sourceVersion: "d29cf651c795869f733669c33e3d33dfd8307d10"
 ---
 
 # バックエンド開発パターン

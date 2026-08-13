@@ -6,8 +6,9 @@
 
 ```typescript
 // PASS: useMemo for expensive computations
+// sort 前にコピーする。Array.prototype.sort は元の配列を破壊的に変更する
 const sortedItems = useMemo(() => {
-  return items.sort((a, b) => b.score - a.score)
+  return [...items].sort((a, b) => b.score - a.score)
 }, [items])
 
 // PASS: useCallback for functions passed to children
