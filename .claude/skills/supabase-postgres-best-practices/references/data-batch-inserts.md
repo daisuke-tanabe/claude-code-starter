@@ -9,7 +9,7 @@ tags: batch, insert, bulk, performance, copy
 
 INSERT 文を個別に実行するとオーバーヘッドが大きい。複数行を 1 文にまとめるか COPY を使う。
 
-**誤り (1 行ごとの insert):**
+誤り (1 行ごとの insert):
 
 ```sql
 -- それぞれの insert が独立したトランザクションとラウンドトリップを発生させる
@@ -21,7 +21,7 @@ insert into events (user_id, action) values (2, 'click');
 -- 1000 件の insert = 1000 回のラウンドトリップ = 遅い
 ```
 
-**正しい例 (batch insert):**
+正しい例 (batch insert):
 
 ```sql
 -- 1 つの文で複数行をまとめて挿入

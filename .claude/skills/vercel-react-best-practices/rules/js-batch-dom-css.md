@@ -9,7 +9,7 @@ tags: javascript, dom, css, performance, reflow, layout-thrashing
 
 スタイル書き込みとレイアウト読み取りを交互に行うのは避ける。スタイル変更の合間に `offsetWidth`、`getBoundingClientRect()`、`getComputedStyle()` のようなレイアウトプロパティを読むと、ブラウザは同期的な reflow を強制的に発生させる。
 
-**これは問題ない (ブラウザがスタイル変更をまとめる):**
+これは問題ない (ブラウザがスタイル変更をまとめる):
 ```typescript
 function updateElementStyles(element: HTMLElement) {
   // 各行でスタイルは無効化されるが、ブラウザが再計算をバッチ化する
@@ -20,7 +20,7 @@ function updateElementStyles(element: HTMLElement) {
 }
 ```
 
-**Incorrect (読み書きが交互に入り、reflow が強制される):**
+Incorrect (読み書きが交互に入り、reflow が強制される):
 ```typescript
 function layoutThrashing(element: HTMLElement) {
   element.style.width = '100px'
@@ -30,7 +30,7 @@ function layoutThrashing(element: HTMLElement) {
 }
 ```
 
-**Correct (書き込みをまとめてから、1 回だけ読み取る):**
+Correct (書き込みをまとめてから、1 回だけ読み取る):
 ```typescript
 function updateElementStyles(element: HTMLElement) {
   // 書き込みをまとめて行う
@@ -44,7 +44,7 @@ function updateElementStyles(element: HTMLElement) {
 }
 ```
 
-**Correct (読み取りをまとめてから、書き込みをまとめる):**
+Correct (読み取りをまとめてから、書き込みをまとめる):
 ```typescript
 function avoidThrashing(element: HTMLElement) {
   // 読み取りフェーズ - レイアウト系のクエリを先にすべて行う
@@ -58,7 +58,7 @@ function avoidThrashing(element: HTMLElement) {
 }
 ```
 
-**さらに良い: CSS クラスを使う**
+さらに良い: CSS クラスを使う
 ```css
 .highlighted-box {
   width: 100px;
@@ -75,7 +75,7 @@ function updateElementStyles(element: HTMLElement) {
 }
 ```
 
-**React の例:**
+React の例:
 ```tsx
 // Incorrect: スタイル変更とレイアウトクエリが交互
 function Box({ isHighlighted }: { isHighlighted: boolean }) {

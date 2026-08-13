@@ -9,7 +9,7 @@ tags: jsonb, gin, indexes, json
 
 インデックスがないと JSONB クエリはテーブル全体をスキャンしてしまう。containment 系のクエリには GIN インデックスを使う。
 
-**誤り (JSONB にインデックスを張らない):**
+誤り (JSONB にインデックスを張らない):
 
 ```sql
 create table products (
@@ -22,7 +22,7 @@ select * from products where attributes @> '{"color": "red"}';
 select * from products where attributes->>'brand' = 'Nike';
 ```
 
-**正しい例 (JSONB に GIN インデックスを張る):**
+正しい例 (JSONB に GIN インデックスを張る):
 
 ```sql
 -- containment 系の演算子 (@>, ?, ?&, ?|) 向けの GIN インデックス

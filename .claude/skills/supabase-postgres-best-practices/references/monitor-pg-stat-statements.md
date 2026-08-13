@@ -9,14 +9,14 @@ tags: pg-stat-statements, monitoring, statistics, performance
 
 pg_stat_statements はすべてのクエリの実行統計を記録し、遅いクエリや頻発するクエリの特定に役立つ。
 
-**誤り (クエリの傾向が分からない):**
+誤り (クエリの傾向が分からない):
 
 ```sql
 -- データベースが遅いが、どのクエリが問題か分からない
 -- pg_stat_statements がないと判断できない
 ```
 
-**正しい例 (pg_stat_statements を有効化して問い合わせる):**
+正しい例 (pg_stat_statements を有効化して問い合わせる):
 
 ```sql
 -- 拡張を有効化

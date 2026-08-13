@@ -7,13 +7,13 @@ tags: rerender, components, remount, performance
 
 ## Don't Define Components Inside Components
 
-**Impact: HIGH (毎レンダーでの再マウントを防ぐ)**
+Impact: HIGH (毎レンダーでの再マウントを防ぐ)
 
 別のコンポーネント内でコンポーネントを定義すると、毎レンダーで新しいコンポーネント型が生成される。React からは毎回別のコンポーネントに見えるため完全に再マウントされ、state も DOM もすべて失われる。
 
 開発者がこれを行う典型的な理由は、props を渡さずに親の変数へアクセスしたい、というもの。常に props を渡す形にする。
 
-**Incorrect (毎レンダーで再マウントされる):**
+Incorrect (毎レンダーで再マウントされる):
 
 ```tsx
 function UserProfile({ user, theme }) {
@@ -44,7 +44,7 @@ function UserProfile({ user, theme }) {
 
 `UserProfile` がレンダリングされるたびに、`Avatar` と `Stats` は毎回新しいコンポーネント型になる。React は古いインスタンスを unmount して新しいものをマウントするため、内部 state は失われ、effect が再実行され、DOM ノードも作り直される。
 
-**Correct (代わりに props で渡す):**
+Correct (代わりに props で渡す):
 
 ```tsx
 function Avatar({ src, theme }: { src: string; theme: string }) {
@@ -75,7 +75,7 @@ function UserProfile({ user, theme }) {
 }
 ```
 
-**このバグの兆候:**
+このバグの兆候:
 - 入力欄が 1 文字入力するたびにフォーカスを失う
 - アニメーションが突然リスタートする
 - 親が再レンダリングされるたびに `useEffect` の cleanup/setup が走る

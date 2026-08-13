@@ -19,7 +19,7 @@
 
 ## セマンティックカラー
 
-**Incorrect:**
+Incorrect:
 
 ```tsx
 <div className="bg-blue-500 text-white">
@@ -27,7 +27,7 @@
 </div>
 ```
 
-**Correct:**
+Correct:
 
 ```tsx
 <div className="bg-primary text-primary-foreground">
@@ -41,7 +41,7 @@
 
 ポジティブ・ネガティブ・ステータスのインジケータには、Badge の variant、`text-destructive` のようなセマンティックトークン、もしくはカスタム CSS 変数を使う — 生の Tailwind カラーに手を伸ばさない。
 
-**Incorrect:**
+Incorrect:
 
 ```tsx
 <span className="text-emerald-600">+20.1%</span>
@@ -49,7 +49,7 @@
 <span className="text-red-600">-3.2%</span>
 ```
 
-**Correct:**
+Correct:
 
 ```tsx
 <Badge variant="secondary">+20.1%</Badge>
@@ -63,7 +63,7 @@
 
 ## 組み込み variant を優先
 
-**Incorrect:**
+Incorrect:
 
 ```tsx
 <Button className="border border-input bg-transparent hover:bg-accent">
@@ -71,7 +71,7 @@
 </Button>
 ```
 
-**Correct:**
+Correct:
 
 ```tsx
 <Button variant="outline">Click me</Button>
@@ -81,9 +81,9 @@
 
 ## className はレイアウトのみ
 
-`className` はレイアウト (例: `max-w-md`、`mx-auto`、`mt-4`) のために使う。**コンポーネントの色や typography を上書きするためには使わない**。色を変えたい場合はセマンティックトークン、組み込み variant、CSS 変数を使う。
+`className` はレイアウト (例: `max-w-md`、`mx-auto`、`mt-4`) のために使う。コンポーネントの色や typography を上書きするためには使わない。色を変えたい場合はセマンティックトークン、組み込み variant、CSS 変数を使う。
 
-**Incorrect:**
+Incorrect:
 
 ```tsx
 <Card className="bg-blue-100 text-blue-900 font-bold">
@@ -91,7 +91,7 @@
 </Card>
 ```
 
-**Correct:**
+Correct:
 
 ```tsx
 <Card className="max-w-md mx-auto">
@@ -100,9 +100,9 @@
 ```
 
 コンポーネントの見た目をカスタマイズするには、以下の順で優先する。
-1. **組み込み variant** — `variant="outline"`、`variant="destructive"` など。
-2. **セマンティックなカラートークン** — `bg-primary`、`text-muted-foreground`。
-3. **CSS 変数** — グローバル CSS ファイルでカスタムカラーを定義 ([customization.md](../customization.md) を参照)。
+1. 組み込み variant — `variant="outline"`、`variant="destructive"` など。
+2. セマンティックなカラートークン — `bg-primary`、`text-muted-foreground`。
+3. CSS 変数 — グローバル CSS ファイルでカスタムカラーを定義 ([customization.md](../customization.md) を参照)。
 
 ---
 
@@ -142,13 +142,13 @@
 
 条件付きやマージされたクラス名にはプロジェクトの `cn()` ユーティリティを使う。className 文字列内に三項演算を手書きしない。
 
-**Incorrect:**
+Incorrect:
 
 ```tsx
 <div className={`flex items-center ${isActive ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
 ```
 
-**Correct:**
+Correct:
 
 ```tsx
 import { cn } from "@/lib/utils"
@@ -170,7 +170,7 @@ import { cn } from "@/lib/utils"
 
 スクロールコンテナのスクロール連動エッジフェードには `scroll-fade` を使う。軸別のバリアントは `scroll-fade-x` と `scroll-fade-b`。マスクグラデーションを手作りしない。チャットコンポーネントは内部で既にこれらを適用している。`Attachment` はアップロード中にタイトルをシマー表示し、`MessageScrollerViewport` はエッジをフェードする。
 
-**Incorrect:**
+Incorrect:
 
 ```tsx
 <span className="animate-pulse bg-gradient-to-r from-muted-foreground/40 via-foreground/70 to-muted-foreground/40 bg-clip-text text-transparent [animation:shimmer_1.6s_infinite]">
@@ -178,7 +178,7 @@ import { cn } from "@/lib/utils"
 </span>
 ```
 
-**Correct:**
+Correct:
 
 ```tsx
 <span className="shimmer">Thinking…</span>

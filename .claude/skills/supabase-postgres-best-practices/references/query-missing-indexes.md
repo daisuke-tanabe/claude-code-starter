@@ -9,7 +9,7 @@ tags: indexes, performance, sequential-scan, query-optimization
 
 インデックスのないカラムでフィルタや join を行うとフルテーブルスキャンが発生し、テーブルが大きくなるほど指数関数的に遅くなる。
 
-**誤り (大きなテーブルで sequential scan が走る):**
+誤り (大きなテーブルで sequential scan が走る):
 
 ```sql
 -- customer_id にインデックスがないためフルテーブルスキャンになる
@@ -18,7 +18,7 @@ select * from orders where customer_id = 123;
 -- EXPLAIN: Seq Scan on orders (cost=0.00..25000.00 rows=100 width=85)
 ```
 
-**正しい例 (インデックススキャン):**
+正しい例 (インデックススキャン):
 
 ```sql
 -- 頻繁にフィルタするカラムにインデックスを作成する

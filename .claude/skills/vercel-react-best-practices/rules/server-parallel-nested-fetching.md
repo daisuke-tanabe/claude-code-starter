@@ -9,7 +9,7 @@ tags: server, rsc, parallel-fetching, promise-chaining
 
 ネストしたデータを並列に取得する場合は、各アイテムの promise の中で依存する fetch を連結する。これにより、1 つの遅いアイテムが他をブロックしなくなる。
 
-**Incorrect (1 つの遅いアイテムが、すべてのネストした fetch をブロックする):**
+Incorrect (1 つの遅いアイテムが、すべてのネストした fetch をブロックする):
 
 ```tsx
 const chats = await Promise.all(
@@ -23,7 +23,7 @@ const chatAuthors = await Promise.all(
 
 100 件のうち 1 件の `getChat(id)` が極端に遅いと、他 99 件のチャットの author の読み込みは、データが揃っていても始められない。
 
-**Correct (アイテムごとにネストした fetch を連結する):**
+Correct (アイテムごとにネストした fetch を連結する):
 
 ```tsx
 const chatAuthors = await Promise.all(

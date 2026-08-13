@@ -9,7 +9,7 @@ tags: data-types, schema, storage, performance
 
 適切なデータ型を選ぶことで、ストレージを削減し、クエリ性能を改善し、バグも防げる。
 
-**誤り (不適切なデータ型):**
+誤り (不適切なデータ型):
 
 ```sql
 create table users (
@@ -21,7 +21,7 @@ create table users (
 );
 ```
 
-**正しい例 (適切なデータ型):**
+正しい例 (適切なデータ型):
 
 ```sql
 create table users (

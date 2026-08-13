@@ -9,7 +9,7 @@ tags: async, parallelization, dependencies, better-all
 
 部分的に依存関係を持つ処理では、`better-all` を使って並列度を最大化する。それぞれのタスクを開始可能な最も早いタイミングで自動的に起動してくれる。
 
-**Incorrect (profile が不必要に config を待ってしまう):**
+Incorrect (profile が不必要に config を待ってしまう):
 
 ```typescript
 const [user, config] = await Promise.all([
@@ -19,7 +19,7 @@ const [user, config] = await Promise.all([
 const profile = await fetchProfile(user.id)
 ```
 
-**Correct (config と profile が並列に走る):**
+Correct (config と profile が並列に走る):
 
 ```typescript
 import { all } from 'better-all'
@@ -33,7 +33,7 @@ const { user, config, profile } = await all({
 })
 ```
 
-**追加依存なしの代替手段:**
+追加依存なしの代替手段:
 
 すべての promise を先に作っておき、最後に `Promise.all()` でまとめてもよい。
 

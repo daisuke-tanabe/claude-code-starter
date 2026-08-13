@@ -9,7 +9,7 @@ tags: rerender, searchParams, localStorage, optimization
 
 コールバック内でしか読まない動的状態 (searchParams、localStorage 等) は subscribe しない。
 
-**Incorrect (searchParams のあらゆる変更を subscribe してしまう):**
+Incorrect (searchParams のあらゆる変更を subscribe してしまう):
 
 ```tsx
 function ShareButton({ chatId }: { chatId: string }) {
@@ -24,7 +24,7 @@ function ShareButton({ chatId }: { chatId: string }) {
 }
 ```
 
-**Correct (必要なときだけ読み、subscribe しない):**
+Correct (必要なときだけ読み、subscribe しない):
 
 ```tsx
 function ShareButton({ chatId }: { chatId: string }) {

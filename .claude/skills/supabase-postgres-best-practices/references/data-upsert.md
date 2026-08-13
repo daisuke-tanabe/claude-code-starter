@@ -9,7 +9,7 @@ tags: upsert, on-conflict, insert, update
 
 SELECT してから INSERT/UPDATE する方式は競合状態を生む。アトミックな upsert として INSERT ... ON CONFLICT を使う。
 
-**誤り (チェックしてから insert する競合状態):**
+誤り (チェックしてから insert する競合状態):
 
 ```sql
 -- 競合状態: 2 つのリクエストが同時にチェックする
@@ -21,7 +21,7 @@ insert into settings (user_id, key, value) values (123, 'theme', 'dark');
 -- 一方は成功するが、もう一方は duplicate key エラーで失敗!
 ```
 
-**正しい例 (アトミックな UPSERT):**
+正しい例 (アトミックな UPSERT):
 
 ```sql
 -- 単一のアトミック処理

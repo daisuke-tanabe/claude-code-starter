@@ -9,7 +9,7 @@ tags: indexes, partial-index, query-optimization, storage
 
 partial index は WHERE 条件を満たす行だけを対象にするインデックスで、特定条件で常に絞り込むクエリではより小さく速くなる。
 
-**誤り (フルインデックスは不要な行まで含む):**
+誤り (フルインデックスは不要な行まで含む):
 
 ```sql
 -- 論理削除された行も含めてすべてインデックスに入る
@@ -19,7 +19,7 @@ create index users_email_idx on users (email);
 select * from users where email = 'user@example.com' and deleted_at is null;
 ```
 
-**正しい例 (クエリのフィルタに合わせた partial index):**
+正しい例 (クエリのフィルタに合わせた partial index):
 
 ```sql
 -- アクティブなユーザーだけをインデックスに含める

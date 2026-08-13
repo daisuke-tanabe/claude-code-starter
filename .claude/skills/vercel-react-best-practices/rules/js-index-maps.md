@@ -9,7 +9,7 @@ tags: javascript, map, indexing, optimization, performance
 
 同じキーで `.find()` を何度も呼ぶ場合は Map を使う。
 
-**Incorrect (1 ルックアップごとに O(n)):**
+Incorrect (1 ルックアップごとに O(n)):
 
 ```typescript
 function processOrders(orders: Order[], users: User[]) {
@@ -20,7 +20,7 @@ function processOrders(orders: Order[], users: User[]) {
 }
 ```
 
-**Correct (1 ルックアップごとに O(1)):**
+Correct (1 ルックアップごとに O(1)):
 
 ```typescript
 function processOrders(orders: Order[], users: User[]) {

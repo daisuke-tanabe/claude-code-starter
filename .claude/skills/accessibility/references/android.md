@@ -42,7 +42,7 @@ IconButton(onClick = onDelete) {
 
 ## ターゲットサイズ
 
-- Material のクリック可能コンポーネントは最低 **48×48 dp** を確保
+- Material のクリック可能コンポーネントは最低 48×48 dp を確保
 - カスタムの `Modifier.clickable` では `Modifier.minimumInteractiveComponentSize()` で同等のサイズを確保
 
 ## カスタムビューのセマンティック化

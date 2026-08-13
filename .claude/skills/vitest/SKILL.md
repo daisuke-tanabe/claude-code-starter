@@ -10,7 +10,7 @@ metadata:
 
 Vitest は Vite を基盤とする次世代テストフレームワークである。ネイティブな ESM・TypeScript・JSX サポートを標準で備えながら、Jest 互換 API を提供する。Vitest は Vite アプリと同じ config・transformer・resolver・plugin を共有する。
 
-**主な特徴:**
+主な特徴:
 - Vite ネイティブ: Vite の変換パイプラインを利用し、HMR のように高速なテスト更新を実現
 - Jest 互換: 多くの Jest テストスイートをそのまま置き換え可能
 - スマート watch モード: モジュールグラフに基づき、影響を受けるテストだけを再実行

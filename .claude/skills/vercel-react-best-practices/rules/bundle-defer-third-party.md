@@ -9,7 +9,7 @@ tags: bundle, third-party, analytics, defer
 
 計測、ロギング、エラートラッキングはユーザー操作をブロックしない。hydration 後に読み込めばよい。
 
-**Incorrect (初期バンドルをブロックする):**
+Incorrect (初期バンドルをブロックする):
 
 ```tsx
 import { Analytics } from '@vercel/analytics/react'
@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
 }
 ```
 
-**Correct (hydration 後にロードする):**
+Correct (hydration 後にロードする):
 
 ```tsx
 import dynamic from 'next/dynamic'

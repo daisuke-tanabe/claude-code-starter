@@ -9,7 +9,7 @@ tags: async, suspense, streaming, layout-shift
 
 async コンポーネントの中で JSX を返す前にデータを await するのではなく、Suspense 境界を使ってラッパー UI を先に表示し、データはバックグラウンドでロードする。
 
-**Incorrect (ラッパー全体がデータ取得でブロックされる):**
+Incorrect (ラッパー全体がデータ取得でブロックされる):
 
 ```tsx
 async function Page() {
@@ -30,7 +30,7 @@ async function Page() {
 
 中央セクションだけがデータを必要としているのに、レイアウト全体がデータを待ってしまう。
 
-**Correct (ラッパーは即座に表示され、データはストリームで流れてくる):**
+Correct (ラッパーは即座に表示され、データはストリームで流れてくる):
 
 ```tsx
 function Page() {
@@ -56,7 +56,7 @@ async function DataDisplay() {
 
 Sidebar、Header、Footer はすぐに描画される。データを待つのは DataDisplay だけ。
 
-**代替 (複数コンポーネントで promise を共有する):**
+代替 (複数コンポーネントで promise を共有する):
 
 ```tsx
 function Page() {
@@ -89,11 +89,11 @@ function DataSummary({ dataPromise }: { dataPromise: Promise<Data> }) {
 
 両コンポーネントが同じ promise を共有するので、fetch は 1 回だけ。レイアウトはすぐ描画され、2 つのコンポーネントが同時に待機する。
 
-**このパターンを避けるべきケース:**
+このパターンを避けるべきケース:
 
 - レイアウト判断（配置に影響する）に必要なクリティカルなデータ
 - SEO 上重要な above-the-fold のコンテンツ
 - Suspense のオーバーヘッドに見合わない、小さく高速なクエリ
 - レイアウトシフト（ロード中→コンテンツの飛び）を避けたいとき
 
-**トレードオフ:** 初回描画の高速化と、潜在的なレイアウトシフトとの兼ね合い。UX の優先度に応じて選ぶ。
+トレードオフ: 初回描画の高速化と、潜在的なレイアウトシフトとの兼ね合い。UX の優先度に応じて選ぶ。

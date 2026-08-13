@@ -9,7 +9,7 @@ tags: vacuum, analyze, statistics, maintenance, autovacuum
 
 統計が古いままだとクエリプランナが誤った判断を下す。VACUUM は領域を回収し、ANALYZE は統計を更新する。
 
-**誤り (古い統計のまま):**
+誤り (古い統計のまま):
 
 ```sql
 -- テーブルには 1M 行あるのに、統計上は 1000 行と認識されている
@@ -19,7 +19,7 @@ explain select * from orders where status = 'pending';
 -- 実際は: Index Scan の方がずっと速い
 ```
 
-**正しい例 (統計を最新に保つ):**
+正しい例 (統計を最新に保つ):
 
 ```sql
 -- 大量のデータ変更があった後に手動で analyze する

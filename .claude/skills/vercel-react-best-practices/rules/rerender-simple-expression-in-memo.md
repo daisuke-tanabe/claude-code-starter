@@ -10,7 +10,7 @@ tags: rerender, useMemo, optimization
 論理演算や算術演算が少ない単純な式で、結果がプリミティブ型 (boolean、number、string) の場合は `useMemo` でラップしない。
 `useMemo` の呼び出しと依存比較自体のコストが、式そのものより高くつくことがある。
 
-**Incorrect:**
+Incorrect:
 
 ```tsx
 function Header({ user, notifications }: Props) {
@@ -23,7 +23,7 @@ function Header({ user, notifications }: Props) {
 }
 ```
 
-**Correct:**
+Correct:
 
 ```tsx
 function Header({ user, notifications }: Props) {

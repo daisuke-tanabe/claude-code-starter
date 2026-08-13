@@ -9,7 +9,7 @@ tags: initialization, useEffect, app-startup, side-effects
 
 アプリ全体で 1 回だけ実行したい初期化処理を、コンポーネントの `useEffect([])` に書いてはならない。コンポーネントは再マウントされ得るし、effect も再実行される。代わりにモジュールレベルのガードか、エントリモジュールでのトップレベル初期化を使う。
 
-**Incorrect (開発時に 2 回、再マウント時にも再実行される):**
+Incorrect (開発時に 2 回、再マウント時にも再実行される):
 
 ```tsx
 function Comp() {
@@ -22,7 +22,7 @@ function Comp() {
 }
 ```
 
-**Correct (アプリの起動ごとに 1 回だけ):**
+Correct (アプリの起動ごとに 1 回だけ):
 
 ```tsx
 let didInit = false

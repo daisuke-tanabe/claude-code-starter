@@ -21,12 +21,12 @@ metadata:
 
 ## 主要原則
 
-- **Page Object Model**: セレクタとアクションを Page クラスに集約し、スペックから UI 詳細を排除する
-- **`data-testid` を優先**: UI/CSS 変更に強いセレクタを最優先で使う
-- **明示的な待機**: `waitForTimeout` を使わず、API レスポンスや要素の状態で待つ
-- **フレーキーは隔離が先**: 修正中は `fixme` / `skip` で main を緑に保ち、Issue 番号で追跡
-- **アーティファクトは失敗時のみ**: スクリーンショット／動画／トレースは失敗時のみ保存して容量を抑える
-- **CI と本番を明確に区別**: `process.env.CI` / `NODE_ENV === 'production'` で挙動を切り替える
+- Page Object Model: セレクタとアクションを Page クラスに集約し、スペックから UI 詳細を排除する
+- `data-testid` を優先: UI/CSS 変更に強いセレクタを最優先で使う
+- 明示的な待機: `waitForTimeout` を使わず、API レスポンスや要素の状態で待つ
+- フレーキーは隔離が先: 修正中は `fixme` / `skip` で main を緑に保ち、Issue 番号で追跡
+- アーティファクトは失敗時のみ: スクリーンショット／動画／トレースは失敗時のみ保存して容量を抑える
+- CI と本番を明確に区別: `process.env.CI` / `NODE_ENV === 'production'` で挙動を切り替える
 
 ## 詳細リファレンス
 

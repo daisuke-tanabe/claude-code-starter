@@ -8,7 +8,7 @@
 
 SQL の書き換え例を具体的に示すこと。抽象的なアドバイスは避ける。
 
-**良い例:** "`WHERE id IN (SELECT ...)` ではなく `WHERE id = ANY(ARRAY[...])` を使う" **悪い例:** "良いスキーマを設計する"
+良い例: "`WHERE id IN (SELECT ...)` ではなく `WHERE id = ANY(ARRAY[...])` を使う" 悪い例: "良いスキーマを設計する"
 
 ### 2. エラー優先の構造
 
@@ -24,8 +24,8 @@ SQL の書き換え例を具体的に示すこと。抽象的なアドバイス�
 
 具体的なメトリクスを含める。これによりエージェントが優先順位を判断しやすくなる。
 
-**良い例:** "クエリが 10 倍高速化"、"インデックスサイズが 50% 縮小"、"N+1 を解消"
-**悪い例:** "速い"、"良い"、"効率的"
+良い例: "クエリが 10 倍高速化"、"インデックスサイズが 50% 縮小"、"N+1 を解消"
+悪い例: "速い"、"良い"、"効率的"
 
 ### 4. 自己完結した例
 
@@ -47,8 +47,8 @@ CREATE INDEX users_active_email_idx ON users(email) WHERE deleted_at IS NULL;
 
 意味の伝わるテーブル名・カラム名を使う。LLM にとって名前は意図を表す重要な手がかりとなる。
 
-**良い例:** `users`, `email`, `created_at`, `is_active`
-**悪い例:** `table1`, `col1`, `field`, `flag`
+良い例: `users`, `email`, `created_at`, `is_active`
+悪い例: `table1`, `col1`, `field`, `flag`
 
 ---
 
@@ -83,18 +83,18 @@ CREATE INDEX CONCURRENTLY USERS_EMAIL_IDX ON USERS(EMAIL) WHERE DELETED_AT IS NU
 
 ## アプリケーションコードを含めるべきとき
 
-**デフォルト: SQL のみ**
+デフォルト: SQL のみ
 
 ほとんどのリファレンスは純粋な SQL パターンに集中させる。これにより例の汎用性が保たれる。
 
-**アプリケーションコードを含めるケース:**
+アプリケーションコードを含めるケース:
 
 - connection pool の設定
 - アプリケーション文脈でのトランザクション管理
 - ORM のアンチパターン (Prisma/TypeORM の N+1 など)
 - prepared statement の利用
 
-**混在する例のフォーマット:**
+混在する例のフォーマット:
 
 ````markdown
 **Incorrect (N+1 in application):**
@@ -108,7 +108,7 @@ for (const user of users) {
 ```
 ````
 
-**Correct (batch query):**
+Correct (batch query):
 
 ```typescript
 const posts = await db.query("SELECT * FROM posts WHERE user_id = ANY($1)", [
@@ -122,25 +122,25 @@ const posts = await db.query("SELECT * FROM posts WHERE user_id = ANY($1)", [
 
 | レベル | 改善幅 | 利用シーン |
 |-------|-------------|----------|
-| **CRITICAL** | 10〜100 倍 | インデックス欠落、コネクション枯渇、大規模テーブルでの sequential scan |
-| **HIGH** | 5〜20 倍 | インデックスタイプの誤り、不適切な partitioning、covering index の欠落 |
-| **MEDIUM-HIGH** | 2〜5 倍 | N+1 クエリ、非効率なページネーション、RLS の最適化 |
-| **MEDIUM** | 1.5〜3 倍 | 冗長なインデックス、クエリプランの不安定さ |
-| **LOW-MEDIUM** | 1.2〜2 倍 | VACUUM のチューニング、設定の微調整 |
-| **LOW** | 局所的 | 発展的なパターン、エッジケース |
+| CRITICAL | 10〜100 倍 | インデックス欠落、コネクション枯渇、大規模テーブルでの sequential scan |
+| HIGH | 5〜20 倍 | インデックスタイプの誤り、不適切な partitioning、covering index の欠落 |
+| MEDIUM-HIGH | 2〜5 倍 | N+1 クエリ、非効率なページネーション、RLS の最適化 |
+| MEDIUM | 1.5〜3 倍 | 冗長なインデックス、クエリプランの不安定さ |
+| LOW-MEDIUM | 1.2〜2 倍 | VACUUM のチューニング、設定の微調整 |
+| LOW | 局所的 | 発展的なパターン、エッジケース |
 
 ---
 
 ## 参考資料の基準
 
-**主要なソース:**
+主要なソース:
 
 - Postgres 公式ドキュメント
 - Supabase 公式ドキュメント
 - Postgres wiki
 - 信頼できるブログ (2ndQuadrant、Crunchy Data など)
 
-**フォーマット:**
+フォーマット:
 
 ```markdown
 Reference:
@@ -157,8 +157,8 @@ Reference:
 - [ ] 影響度（impact）がパフォーマンス改善幅と一致している
 - [ ] impactDescription に定量的な指標が含まれている
 - [ ] 説明が簡潔である (1〜2 文)
-- [ ] **Incorrect** な SQL 例が少なくとも 1 つある
-- [ ] **Correct** な SQL 例が少なくとも 1 つある
+- [ ] Incorrect な SQL 例が少なくとも 1 つある
+- [ ] Correct な SQL 例が少なくとも 1 つある
 - [ ] SQL が意味のある命名になっている
 - [ ] コメントが _なぜ_ を説明していて、_何_ を説明していない
 - [ ] 必要に応じてトレードオフに触れている

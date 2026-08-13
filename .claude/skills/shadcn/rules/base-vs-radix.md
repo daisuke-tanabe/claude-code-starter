@@ -17,7 +17,7 @@
 
 Radix はデフォルト要素を置き換えるのに `asChild` を使う。Base は `render` を使う。トリガーを余計な要素で包まない。
 
-**Incorrect:**
+Incorrect:
 
 ```tsx
 <DialogTrigger>
@@ -27,7 +27,7 @@ Radix はデフォルト要素を置き換えるのに `asChild` を使う。Bas
 </DialogTrigger>
 ```
 
-**Correct (radix):**
+Correct (radix):
 
 ```tsx
 <DialogTrigger asChild>
@@ -35,7 +35,7 @@ Radix はデフォルト要素を置き換えるのに `asChild` を使う。Bas
 </DialogTrigger>
 ```
 
-**Correct (base):**
+Correct (base):
 
 ```tsx
 <DialogTrigger render={<Button />}>Open</DialogTrigger>
@@ -49,13 +49,13 @@ Radix はデフォルト要素を置き換えるのに `asChild` を使う。Bas
 
 `render` で要素を非ボタン (`<a>`、`<span>`) に変える場合は `nativeButton={false}` を追加する。
 
-**Incorrect (base):** `nativeButton={false}` の付け忘れ。
+Incorrect (base): `nativeButton={false}` の付け忘れ。
 
 ```tsx
 <Button render={<a href="/docs" />}>Read the docs</Button>
 ```
 
-**Correct (base):**
+Correct (base):
 
 ```tsx
 <Button render={<a href="/docs" />} nativeButton={false}>
@@ -63,7 +63,7 @@ Radix はデフォルト要素を置き換えるのに `asChild` を使う。Bas
 </Button>
 ```
 
-**Correct (radix):**
+Correct (radix):
 
 ```tsx
 <Button asChild>
@@ -84,9 +84,9 @@ Radix はデフォルト要素を置き換えるのに `asChild` を使う。Bas
 
 ## Select
 
-**items prop (base のみ)。** Base はルートに `items` prop が必須。Radix はインライン JSX のみを使う。
+items prop (base のみ)。 Base はルートに `items` prop が必須。Radix はインライン JSX のみを使う。
 
-**Incorrect (base):**
+Incorrect (base):
 
 ```tsx
 <Select>
@@ -94,7 +94,7 @@ Radix はデフォルト要素を置き換えるのに `asChild` を使う。Bas
 </Select>
 ```
 
-**Correct (base):**
+Correct (base):
 
 ```tsx
 const items = [
@@ -117,7 +117,7 @@ const items = [
 </Select>
 ```
 
-**Correct (radix):**
+Correct (radix):
 
 ```tsx
 <Select>
@@ -133,9 +133,9 @@ const items = [
 </Select>
 ```
 
-**Placeholder。** Base は items 配列の `{ value: null }` アイテムで指定する。Radix は `<SelectValue placeholder="...">` を使う。
+Placeholder。 Base は items 配列の `{ value: null }` アイテムで指定する。Radix は `<SelectValue placeholder="...">` を使う。
 
-**コンテンツの配置。** Base は `alignItemWithTrigger` を使う。Radix は `position` を使う。
+コンテンツの配置。 Base は `alignItemWithTrigger` を使う。Radix は `position` を使う。
 
 ```tsx
 // base.
@@ -151,7 +151,7 @@ const items = [
 
 Base は `multiple`、`SelectValue` の render-function children、`itemToStringValue` によるオブジェクト値をサポートする。Radix は単一選択かつ文字列値のみ。
 
-**Correct (base — 複数選択):**
+Correct (base — 複数選択):
 
 ```tsx
 <Select items={items} multiple defaultValue={[]}>
@@ -164,7 +164,7 @@ Base は `multiple`、`SelectValue` の render-function children、`itemToString
 </Select>
 ```
 
-**Correct (base — オブジェクト値):**
+Correct (base — オブジェクト値):
 
 ```tsx
 <Select defaultValue={plans[0]} itemToStringValue={(plan) => plan.name}>
@@ -181,7 +181,7 @@ Base は `multiple`、`SelectValue` の render-function children、`itemToString
 
 Base は `multiple` の真偽値 prop を使う。Radix は `type="single"` または `type="multiple"` を使う。
 
-**Incorrect (base):**
+Incorrect (base):
 
 ```tsx
 <ToggleGroup type="single" defaultValue="daily">
@@ -189,7 +189,7 @@ Base は `multiple` の真偽値 prop を使う。Radix は `type="single"` ま�
 </ToggleGroup>
 ```
 
-**Correct (base):**
+Correct (base):
 
 ```tsx
 // 単一選択 (prop 不要)、defaultValue は常に配列。
@@ -205,7 +205,7 @@ Base は `multiple` の真偽値 prop を使う。Radix は `type="single"` ま�
 </ToggleGroup>
 ```
 
-**Correct (radix):**
+Correct (radix):
 
 ```tsx
 // 単一選択。defaultValue は文字列。
@@ -221,7 +221,7 @@ Base は `multiple` の真偽値 prop を使う。Radix は `type="single"` ま�
 </ToggleGroup>
 ```
 
-**単一値の制御:**
+単一値の制御:
 
 ```tsx
 // base — 配列で wrap/unwrap する。
@@ -239,19 +239,19 @@ const [value, setValue] = React.useState("normal")
 
 Base は単一つまみの場合に素のナンバーを受け付ける。Radix は常に配列が必要。
 
-**Incorrect (base):**
+Incorrect (base):
 
 ```tsx
 <Slider defaultValue={[50]} max={100} step={1} />
 ```
 
-**Correct (base):**
+Correct (base):
 
 ```tsx
 <Slider defaultValue={50} max={100} step={1} />
 ```
 
-**Correct (radix):**
+Correct (radix):
 
 ```tsx
 <Slider defaultValue={[50]} max={100} step={1} />
@@ -275,7 +275,7 @@ const [value, setValue] = React.useState([0.3, 0.7])
 
 Radix は `type="single"` か `type="multiple"` が必要で、`collapsible` をサポートする。`defaultValue` は文字列。Base は `type` prop を使わず、`multiple` の真偽値を使う。`defaultValue` は常に配列。
 
-**Incorrect (base):**
+Incorrect (base):
 
 ```tsx
 <Accordion type="single" collapsible defaultValue="item-1">
@@ -283,7 +283,7 @@ Radix は `type="single"` か `type="multiple"` が必要で、`collapsible` を
 </Accordion>
 ```
 
-**Correct (base):**
+Correct (base):
 
 ```tsx
 <Accordion defaultValue={["item-1"]}>
@@ -297,7 +297,7 @@ Radix は `type="single"` か `type="multiple"` が必要で、`collapsible` を
 </Accordion>
 ```
 
-**Correct (radix):**
+Correct (radix):
 
 ```tsx
 <Accordion type="single" collapsible defaultValue="item-1">

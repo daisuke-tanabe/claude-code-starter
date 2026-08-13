@@ -7,11 +7,11 @@ tags: server, io, performance, next.js, route-handlers, og-image
 
 ## Hoist Static I/O to Module Level
 
-**Impact: HIGH (リクエスト毎の繰り返しファイル/ネットワーク I/O を回避する)**
+Impact: HIGH (リクエスト毎の繰り返しファイル/ネットワーク I/O を回避する)
 
 ルートハンドラやサーバー関数で静的アセット (フォント、ロゴ、画像、設定ファイル) を読み込む場合、I/O 処理をモジュールレベルに巻き上げる。モジュールレベルのコードはモジュールが最初に import されたときに 1 回だけ実行され、毎回のリクエストでは走らない。これにより、毎回呼ばれていた冗長なファイルシステム読み出しやネットワーク fetch を排除できる。
 
-**Incorrect (リクエストごとにフォントを読み込む):**
+Incorrect (リクエストごとにフォントを読み込む):
 
 ```typescript
 // app/api/og/route.tsx
@@ -37,7 +37,7 @@ export async function GET(request: Request) {
 }
 ```
 
-**Correct (モジュール初期化時に 1 回だけ読み込む):**
+Correct (モジュール初期化時に 1 回だけ読み込む):
 
 ```typescript
 // app/api/og/route.tsx
@@ -66,7 +66,7 @@ export async function GET(request: Request) {
 }
 ```
 
-**Correct (モジュールレベルで同期 fs を使う):**
+Correct (モジュールレベルで同期 fs を使う):
 
 ```typescript
 // app/api/og/route.tsx
@@ -94,7 +94,7 @@ export async function GET(request: Request) {
 }
 ```
 
-**Incorrect (毎回 config を読み込む):**
+Incorrect (毎回 config を読み込む):
 
 ```typescript
 import fs from 'node:fs/promises'
@@ -109,7 +109,7 @@ export async function processRequest(data: Data) {
 }
 ```
 
-**Correct (config と template をモジュールレベルに巻き上げる):**
+Correct (config と template をモジュールレベルに巻き上げる):
 
 ```typescript
 import fs from 'node:fs/promises'

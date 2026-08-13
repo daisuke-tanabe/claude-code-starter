@@ -9,7 +9,7 @@ tags: rerender, memo, useMemo, optimization
 
 高コストな処理を memo 化されたコンポーネントに切り出し、計算前に早期 return できるようにする。
 
-**Incorrect (loading 中でも avatar の計算が走る):**
+Incorrect (loading 中でも avatar の計算が走る):
 
 ```tsx
 function Profile({ user, loading }: Props) {
@@ -23,7 +23,7 @@ function Profile({ user, loading }: Props) {
 }
 ```
 
-**Correct (loading 中は計算をスキップする):**
+Correct (loading 中は計算をスキップする):
 
 ```tsx
 const UserAvatar = memo(function UserAvatar({ user }: { user: User }) {
@@ -41,4 +41,4 @@ function Profile({ user, loading }: Props) {
 }
 ```
 
-**注意:** プロジェクトで [React Compiler](https://react.dev/learn/react-compiler) が有効化されている場合、`memo()` や `useMemo()` による手動の memo 化は不要。コンパイラが自動的に再レンダリングを最適化する。
+注意: プロジェクトで [React Compiler](https://react.dev/learn/react-compiler) が有効化されている場合、`memo()` や `useMemo()` による手動の memo 化は不要。コンパイラが自動的に再レンダリングを最適化する。

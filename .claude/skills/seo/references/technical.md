@@ -21,9 +21,9 @@
 
 | 指標 | 目標 |
 |---|---|
-| LCP（Largest Contentful Paint） | **< 2.5s** |
-| INP（Interaction to Next Paint） | **< 200ms** |
-| CLS（Cumulative Layout Shift） | **< 0.1** |
+| LCP（Largest Contentful Paint） | < 2.5s |
+| INP（Interaction to Next Paint） | < 200ms |
+| CLS（Cumulative Layout Shift） | < 0.1 |
 
 一般的な対処:
 - ヒーロー画像のプリロード（`<link rel="preload" as="image">`）
@@ -41,4 +41,4 @@
 | 内部ページ | `BreadcrumbList` |
 | Q&A セクション | `FAQPage`（内容が本当に一致する場合のみ） |
 
-スキーマは **実態に一致**させる。実在しないコンテンツに対して `FAQPage` や `Review` を貼ると、Search Console で警告 / ペナルティ対象になる。
+スキーマは 実態に一致させる。実在しないコンテンツに対して `FAQPage` や `Review` を貼ると、Search Console で警告 / ペナルティ対象になる。

@@ -9,7 +9,7 @@ tags: rendering, jsx, static, optimization
 
 静的な JSX はコンポーネント外に切り出し、再生成を避ける。
 
-**Incorrect (毎レンダーで要素を作り直す):**
+Incorrect (毎レンダーで要素を作り直す):
 
 ```tsx
 function LoadingSkeleton() {
@@ -25,7 +25,7 @@ function Container() {
 }
 ```
 
-**Correct (同じ要素を使い回す):**
+Correct (同じ要素を使い回す):
 
 ```tsx
 const loadingSkeleton = (
@@ -43,4 +43,4 @@ function Container() {
 
 大きく静的な SVG ノードは毎レンダーで作り直すコストが大きいため、特に効果がある。
 
-**注意:** プロジェクトで [React Compiler](https://react.dev/learn/react-compiler) が有効化されている場合、コンパイラが静的な JSX 要素を自動で hoist し、コンポーネントの再レンダリングも最適化するため、手動での hoist は不要。
+注意: プロジェクトで [React Compiler](https://react.dev/learn/react-compiler) が有効化されている場合、コンパイラが静的な JSX 要素を自動で hoist し、コンポーネントの再レンダリングも最適化するため、手動での hoist は不要。

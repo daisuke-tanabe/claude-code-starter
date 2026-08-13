@@ -9,7 +9,7 @@ tags: client, swr, deduplication, data-fetching
 
 SWR を使うと、コンポーネントインスタンスをまたいだリクエストの重複排除、キャッシュ、再検証ができる。
 
-**Incorrect (重複排除なし、各インスタンスが fetch する):**
+Incorrect (重複排除なし、各インスタンスが fetch する):
 
 ```tsx
 function UserList() {
@@ -22,7 +22,7 @@ function UserList() {
 }
 ```
 
-**Correct (複数インスタンスが 1 つのリクエストを共有する):**
+Correct (複数インスタンスが 1 つのリクエストを共有する):
 
 ```tsx
 import useSWR from 'swr'
@@ -32,7 +32,7 @@ function UserList() {
 }
 ```
 
-**イミュータブルなデータの場合:**
+イミュータブルなデータの場合:
 
 ```tsx
 import { useImmutableSWR } from '@/lib/swr'
@@ -42,7 +42,7 @@ function StaticContent() {
 }
 ```
 
-**ミューテーションの場合:**
+ミューテーションの場合:
 
 ```tsx
 import { useSWRMutation } from 'swr/mutation'

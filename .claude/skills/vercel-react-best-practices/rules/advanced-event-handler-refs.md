@@ -9,7 +9,7 @@ tags: advanced, hooks, refs, event-handlers, optimization
 
 コールバックの変更で再 subscribe したくない effect で使う場合、コールバックを ref に格納する。
 
-**Incorrect (毎レンダー再 subscribe される):**
+Incorrect (毎レンダー再 subscribe される):
 
 ```tsx
 function useWindowEvent(event: string, handler: (e) => void) {
@@ -20,7 +20,7 @@ function useWindowEvent(event: string, handler: (e) => void) {
 }
 ```
 
-**Correct (subscription が安定する):**
+Correct (subscription が安定する):
 
 ```tsx
 function useWindowEvent(event: string, handler: (e) => void) {
@@ -37,7 +37,7 @@ function useWindowEvent(event: string, handler: (e) => void) {
 }
 ```
 
-**代替: 最新の React を使えるなら `useEffectEvent` を使う:**
+代替: 最新の React を使えるなら `useEffectEvent` を使う:
 
 ```tsx
 import { useEffectEvent } from 'react'

@@ -47,7 +47,7 @@ describe.concurrent('parallel suite', () => {
 })
 ```
 
-**重要:** concurrent テストでは context の `{ expect }` を使う。
+重要: concurrent テストでは context の `{ expect }` を使う。
 
 ## 並行実行からの除外
 

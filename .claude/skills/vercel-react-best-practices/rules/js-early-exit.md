@@ -9,7 +9,7 @@ tags: javascript, functions, optimization, early-return
 
 結果が確定した時点で早期 return し、無駄な処理を行わないようにする。
 
-**Incorrect (結果が決まった後も全項目を処理してしまう):**
+Incorrect (結果が決まった後も全項目を処理してしまう):
 
 ```typescript
 function validateUsers(users: User[]) {
@@ -32,7 +32,7 @@ function validateUsers(users: User[]) {
 }
 ```
 
-**Correct (最初のエラーで即 return):**
+Correct (最初のエラーで即 return):
 
 ```typescript
 function validateUsers(users: User[]) {

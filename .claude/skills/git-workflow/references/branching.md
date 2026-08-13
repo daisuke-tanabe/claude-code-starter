@@ -14,7 +14,7 @@ main (protected, always deployable)
   └── fix/login-bug          → PR → merge to main
 ```
 
-**ルール:**
+ルール:
 - `main` は常にデプロイ可能
 - `main` から feature ブランチを作成する
 - レビュー準備が整ったら Pull Request を開く
@@ -33,7 +33,7 @@ main (trunk)
   └── short-lived feature
 ```
 
-**ルール:**
+ルール:
 - 全員が `main` または非常に短命なブランチにコミットする
 - 未完成の作業はフィーチャーフラグで隠す
 - マージ前にCIを通過させる
@@ -56,7 +56,7 @@ main (production releases)
         └── hotfix/critical  → merge to main and develop
 ```
 
-**ルール:**
+ルール:
 - `main` は本番リリース用コードのみ
 - `develop` は統合ブランチ
 - feature ブランチは `develop` から切り、`develop` へマージ

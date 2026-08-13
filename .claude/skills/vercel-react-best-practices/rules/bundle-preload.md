@@ -9,7 +9,7 @@ tags: bundle, preload, user-intent, hover
 
 重いバンドルを必要になる前に preload して、体感レイテンシを削減する。
 
-**例 (hover/focus で preload する):**
+例 (hover/focus で preload する):
 
 ```tsx
 function EditorButton({ onClick }: { onClick: () => void }) {
@@ -31,7 +31,7 @@ function EditorButton({ onClick }: { onClick: () => void }) {
 }
 ```
 
-**例 (フィーチャーフラグが有効になったときに preload する):**
+例 (フィーチャーフラグが有効になったときに preload する):
 
 ```tsx
 function FlagsProvider({ children, flags }: Props) {

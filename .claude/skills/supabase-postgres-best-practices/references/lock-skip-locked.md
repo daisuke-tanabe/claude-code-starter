@@ -9,7 +9,7 @@ tags: skip-locked, queue, workers, concurrency
 
 複数のワーカーがキューを処理する際、SKIP LOCKED を使うと待たずに別々の行を処理できる。
 
-**誤り (ワーカー同士が互いをブロックする):**
+誤り (ワーカー同士が互いをブロックする):
 
 ```sql
 -- Worker 1 と Worker 2 が両方とも次のジョブを取得しようとする
@@ -18,7 +18,7 @@ select * from jobs where status = 'pending' order by created_at limit 1 for upda
 -- Worker 2 は Worker 1 のロックが解放されるのを待つ羽目になる!
 ```
 
-**正しい例 (SKIP LOCKED で並列に処理する):**
+正しい例 (SKIP LOCKED で並列に処理する):
 
 ```sql
 -- 各ワーカーはロック済みの行をスキップして、次に利用可能な行を取得する

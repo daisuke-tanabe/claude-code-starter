@@ -7,11 +7,11 @@ tags: javascript, performance, idle, scheduling, analytics
 
 ## Defer Non-Critical Work with requestIdleCallback
 
-**Impact: MEDIUM (バックグラウンド処理中も UI の応答性を保つ)**
+Impact: MEDIUM (バックグラウンド処理中も UI の応答性を保つ)
 
 クリティカルでない処理は `requestIdleCallback()` でブラウザのアイドル時間にスケジュールする。メインスレッドをユーザー操作とアニメーションのために空けておけ、jank を減らし体感パフォーマンスを高める。
 
-**Incorrect (ユーザー操作中にメインスレッドをブロックする):**
+Incorrect (ユーザー操作中にメインスレッドをブロックする):
 
 ```typescript
 function handleSearch(query: string) {
@@ -25,7 +25,7 @@ function handleSearch(query: string) {
 }
 ```
 
-**Correct (クリティカルでない処理をアイドル時間へ defer する):**
+Correct (クリティカルでない処理をアイドル時間へ defer する):
 
 ```typescript
 function handleSearch(query: string) {
@@ -47,7 +47,7 @@ function handleSearch(query: string) {
 }
 ```
 
-**必須の処理には timeout を付ける:**
+必須の処理には timeout を付ける:
 
 ```typescript
 // ブラウザが忙しい状態でも 2 秒以内に analytics が発火することを保証する
@@ -57,7 +57,7 @@ requestIdleCallback(
 )
 ```
 
-**大きなタスクをチャンク分割する:**
+大きなタスクをチャンク分割する:
 
 ```typescript
 function processLargeDataset(items: Item[]) {
@@ -80,7 +80,7 @@ function processLargeDataset(items: Item[]) {
 }
 ```
 
-**未対応ブラウザのフォールバック:**
+未対応ブラウザのフォールバック:
 
 ```typescript
 const scheduleIdleWork = window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 1))
@@ -90,7 +90,7 @@ scheduleIdleWork(() => {
 })
 ```
 
-**使うべきケース:**
+使うべきケース:
 
 - 計測とテレメトリ
 - localStorage / IndexedDB への state 保存
@@ -98,7 +98,7 @@ scheduleIdleWork(() => {
 - 緊急性のないデータ変換処理
 - クリティカルでない機能の遅延初期化
 
-**使うべきでないケース:**
+使うべきでないケース:
 
 - 即時のフィードバックが必要なユーザー操作
 - ユーザーが待っているレンダリング更新

@@ -30,7 +30,7 @@
 
 設定ページでは `Field orientation="horizontal"` を使う。視覚的に隠したラベルには `FieldLabel className="sr-only"` を使う。
 
-**フォームコントロールの選び方:**
+フォームコントロールの選び方:
 
 - シンプルなテキスト入力 → `Input`
 - 既定の選択肢を持つドロップダウン → `Select`
@@ -48,7 +48,7 @@
 
 `InputGroup` の中で生の `Input` や `Textarea` を使わない。
 
-**Incorrect:**
+Incorrect:
 
 ```tsx
 <InputGroup>
@@ -56,7 +56,7 @@
 </InputGroup>
 ```
 
-**Correct:**
+Correct:
 
 ```tsx
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group"
@@ -72,7 +72,7 @@ import { InputGroup, InputGroupInput } from "@/components/ui/input-group"
 
 `Button` を `Input` の中や隣に独自に配置しない。
 
-**Incorrect:**
+Incorrect:
 
 ```tsx
 <div className="relative">
@@ -83,7 +83,7 @@ import { InputGroup, InputGroupInput } from "@/components/ui/input-group"
 </div>
 ```
 
-**Correct:**
+Correct:
 
 ```tsx
 import { InputGroup, InputGroupInput, InputGroupAddon } from "@/components/ui/input-group"
@@ -104,7 +104,7 @@ import { InputGroup, InputGroupInput, InputGroupAddon } from "@/components/ui/in
 
 `Button` コンポーネントを手でループしてアクティブ状態を管理しない。
 
-**Incorrect:**
+Incorrect:
 
 ```tsx
 const [selected, setSelected] = useState("daily")
@@ -122,7 +122,7 @@ const [selected, setSelected] = useState("daily")
 </div>
 ```
 
-**Correct:**
+Correct:
 
 ```tsx
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
@@ -147,7 +147,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 </Field>
 ```
 
-> **注:** `defaultValue` と `type`/`multiple` の props は base と radix で異なる。[base-vs-radix.md](./base-vs-radix.md#togglegroup) を参照。
+> 注: `defaultValue` と `type`/`multiple` の props は base と radix で異なる。[base-vs-radix.md](./base-vs-radix.md#togglegroup) を参照。
 
 ---
 

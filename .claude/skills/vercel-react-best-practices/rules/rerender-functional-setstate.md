@@ -9,7 +9,7 @@ tags: react, hooks, useState, useCallback, callbacks, closures
 
 現在の state を元に state を更新する場合は、state 変数を直接参照するのではなく functional update 形式の setState を使う。stale closure を防ぎ、不要な依存を排除し、コールバックの参照を安定させられる。
 
-**Incorrect (state を依存に含める必要がある):**
+Incorrect (state を依存に含める必要がある):
 
 ```tsx
 function TodoList() {
@@ -31,7 +31,7 @@ function TodoList() {
 
 最初のコールバックは `items` が変わるたびに再生成され、子コンポーネントの不必要な再レンダリングを招く。2 つ目のコールバックは stale closure バグを抱えており、常に初期の `items` を参照してしまう。
 
-**Correct (安定したコールバック、stale closure なし):**
+Correct (安定したコールバック、stale closure なし):
 
 ```tsx
 function TodoList() {
@@ -51,24 +51,24 @@ function TodoList() {
 }
 ```
 
-**メリット:**
+メリット:
 
-1. **安定したコールバック参照** - state が変わってもコールバックを再生成する必要がない
-2. **stale closure なし** - 常に最新の state を対象に動作する
-3. **依存が少ない** - 依存配列が単純になり、メモリリークも減らせる
-4. **バグの予防** - React で最も多い closure 由来のバグを排除できる
+1. 安定したコールバック参照 - state が変わってもコールバックを再生成する必要がない
+2. stale closure なし - 常に最新の state を対象に動作する
+3. 依存が少ない - 依存配列が単純になり、メモリリークも減らせる
+4. バグの予防 - React で最も多い closure 由来のバグを排除できる
 
-**functional update を使うべきケース:**
+functional update を使うべきケース:
 
 - 現在の state に依存するすべての setState
 - state が必要な useCallback/useMemo の内部
 - state を参照するイベントハンドラ
 - state を更新する非同期処理
 
-**直接更新で問題ないケース:**
+直接更新で問題ないケース:
 
 - 静的な値をセットする: `setCount(0)`
 - props や引数からのみセットする: `setName(newName)`
 - 前の値に依存しない state
 
-**注意:** プロジェクトで [React Compiler](https://react.dev/learn/react-compiler) が有効化されている場合、コンパイラが一部のケースを自動最適化することがある。それでも、正しさと stale closure バグ防止のため functional update は推奨される。
+注意: プロジェクトで [React Compiler](https://react.dev/learn/react-compiler) が有効化されている場合、コンパイラが一部のケースを自動最適化することがある。それでも、正しさと stale closure バグ防止のため functional update は推奨される。

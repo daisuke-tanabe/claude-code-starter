@@ -9,7 +9,7 @@ tags: explain, analyze, diagnostics, query-plan
 
 EXPLAIN ANALYZE は実際にクエリを実行し、実測時間を出力するため、本当のパフォーマンスのボトルネックを明らかにできる。
 
-**誤り (パフォーマンス問題を勘で推測する):**
+誤り (パフォーマンス問題を勘で推測する):
 
 ```sql
 -- クエリが遅いが、原因が分からない
@@ -17,7 +17,7 @@ select * from orders where customer_id = 123 and status = 'pending';
 -- 「インデックスが足りないはず」 - だがどのカラム?
 ```
 
-**正しい例 (EXPLAIN ANALYZE を使う):**
+正しい例 (EXPLAIN ANALYZE を使う):
 
 ```sql
 explain (analyze, buffers, format text)

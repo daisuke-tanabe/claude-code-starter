@@ -9,7 +9,7 @@ tags: naming, identifiers, case-sensitivity, schema, conventions
 
 PostgreSQL は引用符なしの識別子を小文字に畳み込む。引用符付きで大小文字を混在させると常に引用符が必要となり、ツールや ORM、AI アシスタントが認識できずに問題を引き起こす。
 
-**誤り (大小文字を混在させた識別子):**
+誤り (大小文字を混在させた識別子):
 
 ```sql
 -- 引用符付き識別子は大小文字を保持するが、どこでも引用符が必須になる
@@ -27,7 +27,7 @@ SELECT firstName FROM Users;
 -- ERROR: relation "users" does not exist
 ```
 
-**正しい例 (lowercase snake_case):**
+正しい例 (lowercase snake_case):
 
 ```sql
 -- 引用符なしの lowercase 識別子は可搬性があり、ツールにも優しい

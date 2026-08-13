@@ -1,6 +1,6 @@
 # Icons
 
-**import には常にプロジェクトで設定された `iconLibrary` を使う。** プロジェクトコンテキストの `iconLibrary` フィールドを確認する: `lucide` → `lucide-react`、`tabler` → `@tabler/icons-react` など。`lucide-react` を勝手に前提にしない。
+import には常にプロジェクトで設定された `iconLibrary` を使う。 プロジェクトコンテキストの `iconLibrary` フィールドを確認する: `lucide` → `lucide-react`、`tabler` → `@tabler/icons-react` など。`lucide-react` を勝手に前提にしない。
 
 ---
 
@@ -8,7 +8,7 @@
 
 アイコンに `data-icon="inline-start"` (前置) または `data-icon="inline-end"` (後置) を付ける。アイコンにはサイズクラスを付けない。
 
-**Incorrect:**
+Incorrect:
 
 ```tsx
 <Button>
@@ -17,7 +17,7 @@
 </Button>
 ```
 
-**Correct:**
+Correct:
 
 ```tsx
 <Button>
@@ -37,7 +37,7 @@
 
 コンポーネントは CSS でアイコンのサイズを管理する。`Button`、`DropdownMenuItem`、`Alert`、`Sidebar*` その他の shadcn コンポーネント内のアイコンに `size-4`、`w-4 h-4`、その他のサイズクラスを付けない。ユーザーがカスタムサイズを明示的に求めた場合を除く。
 
-**Incorrect:**
+Incorrect:
 
 ```tsx
 <Button>
@@ -51,7 +51,7 @@
 </DropdownMenuItem>
 ```
 
-**Correct:**
+Correct:
 
 ```tsx
 <Button>
@@ -71,7 +71,7 @@
 
 ルックアップマップへの文字列キーではなく `icon={CheckIcon}` を使う。
 
-**Incorrect:**
+Incorrect:
 
 ```tsx
 const iconMap = {
@@ -87,7 +87,7 @@ function StatusBadge({ icon }: { icon: string }) {
 <StatusBadge icon="check" />
 ```
 
-**Correct:**
+Correct:
 
 ```tsx
 // プロジェクトで設定された iconLibrary から import する (例: lucide-react、@tabler/icons-react)。

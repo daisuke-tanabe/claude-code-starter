@@ -11,7 +11,7 @@ tags: javascript, arrays, performance, optimization, comparison
 
 実際のアプリケーションでは、比較がホットパス（イベントハンドラ、レンダーループ）で動くときに特に効く。
 
-**Incorrect (常に重い比較が走る):**
+Incorrect (常に重い比較が走る):
 
 ```typescript
 function hasChanges(current: string[], original: string[]) {
@@ -22,7 +22,7 @@ function hasChanges(current: string[], original: string[]) {
 
 `current.length` が 5、`original.length` が 100 でも、O(n log n) のソートが 2 回動く。さらに join した文字列の生成と比較のオーバーヘッドもある。
 
-**Correct (O(1) で長さチェックを先に行う):**
+Correct (O(1) で長さチェックを先に行う):
 
 ```typescript
 function hasChanges(current: string[], original: string[]) {

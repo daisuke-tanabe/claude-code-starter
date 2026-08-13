@@ -9,7 +9,7 @@ tags: rerender, derived-state, useEffect, state
 
 現在の props/state から計算できる値は、state に持たず、effect で更新しない。レンダリング中に派生させ、余計なレンダリングと state の不整合を避ける。props の変更だけに反応して effect で state を更新するのも避ける。代わりに派生値を使うか、key によるリセットを優先する。
 
-**Incorrect (冗長な state と effect):**
+Incorrect (冗長な state と effect):
 
 ```tsx
 function Form() {
@@ -25,7 +25,7 @@ function Form() {
 }
 ```
 
-**Correct (レンダリング中に派生させる):**
+Correct (レンダリング中に派生させる):
 
 ```tsx
 function Form() {

@@ -9,7 +9,7 @@ tags: prepared-statements, connection-pooling, transaction-mode
 
 prepared statement は個別のデータベース接続に紐づく。transaction mode pooling では接続が共有されるため衝突が発生する。
 
-**誤り (transaction pooling で named prepared statement を使う):**
+誤り (transaction pooling で named prepared statement を使う):
 
 ```sql
 -- named prepared statement
@@ -20,7 +20,7 @@ execute get_user(123);
 -- ERROR: prepared statement "get_user" does not exist
 ```
 
-**正しい例 (匿名 prepared statement を使うか session mode を選ぶ):**
+正しい例 (匿名 prepared statement を使うか session mode を選ぶ):
 
 ```sql
 -- 選択肢 1: 匿名の prepared statement を使う (多くの ORM は自動的にこの方式)

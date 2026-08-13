@@ -11,7 +11,7 @@ React Server Components や SSR 中にレンダリングされる client コン�
 
 サーバー側のモジュールスコープは、リクエストローカルではなくプロセス全体で共有されたメモリと捉える。
 
-**Incorrect (リクエストデータが並行レンダー間で漏れる):**
+Incorrect (リクエストデータが並行レンダー間で漏れる):
 
 ```tsx
 let currentUser: User | null = null
@@ -28,7 +28,7 @@ async function Dashboard() {
 
 リクエストが 2 つ重なると、リクエスト A が `currentUser` をセットし、リクエスト B が上書きして、リクエスト A が `Dashboard` のレンダリングを終える前に値が変わってしまう。
 
-**Correct (リクエストデータをレンダーツリー内に閉じ込める):**
+Correct (リクエストデータをレンダーツリー内に閉じ込める):
 
 ```tsx
 export default async function Page() {

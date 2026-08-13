@@ -9,7 +9,7 @@ tags: indexes, covering-index, include, index-only-scan
 
 covering index はクエリが必要とするすべてのカラムを含むため、テーブル本体にアクセスせずに済む index-only scan を可能にする。
 
-**誤り (インデックススキャン + ヒープ参照):**
+誤り (インデックススキャン + ヒープ参照):
 
 ```sql
 create index users_email_idx on users (email);
@@ -18,7 +18,7 @@ create index users_email_idx on users (email);
 select email, name, created_at from users where email = 'user@example.com';
 ```
 
-**正しい例 (INCLUDE を使った index-only scan):**
+正しい例 (INCLUDE を使った index-only scan):
 
 ```sql
 -- 検索対象ではないカラムをインデックスに含める

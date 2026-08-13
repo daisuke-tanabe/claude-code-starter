@@ -19,11 +19,11 @@ metadata:
 
 ## コアコンセプト
 
-- **POUR 原則**: WCAG の基盤（Perceivable、Operable、Understandable、Robust）
-- **セマンティックマッピング**: 汎用コンテナよりもネイティブ要素を使い、組み込みのアクセシビリティを得る
-- **アクセシビリティツリー**: 支援技術が実際に「読み取る」UI の表現
-- **フォーカス管理**: キーボード／スクリーンリーダーのカーソル順序と可視性を制御する
-- **ラベリングとヒント**: `aria-label`、`accessibilityLabel`、`contentDescription` を通じてコンテキストを提供する
+- POUR 原則: WCAG の基盤（Perceivable、Operable、Understandable、Robust）
+- セマンティックマッピング: 汎用コンテナよりもネイティブ要素を使い、組み込みのアクセシビリティを得る
+- アクセシビリティツリー: 支援技術が実際に「読み取る」UI の表現
+- フォーカス管理: キーボード／スクリーンリーダーのカーソル順序と可視性を制御する
+- ラベリングとヒント: `aria-label`、`accessibilityLabel`、`contentDescription` を通じてコンテキストを提供する
 
 ## POUR の実装ステップ
 
@@ -33,13 +33,13 @@ metadata:
 
 ### Step 2: 知覚可能な属性を定義する
 
-- テキストコントラスト **4.5:1**（通常）または **3:1**（大文字 / UI）
+- テキストコントラスト 4.5:1（通常）または 3:1（大文字 / UI）
 - 非テキストコンテンツ（画像、アイコン）にテキスト代替を追加
 - レスポンシブな再フロー（機能を失わずに最大 400% ズーム）
 
 ### Step 3: 操作可能なコントロールを実装する
 
-- 最小 **24×24 CSS ピクセル**（WCAG 2.2 SC 2.5.8）。ネイティブは慣行的に 44×44 pt / 48×48 dp
+- 最小 24×24 CSS ピクセル（WCAG 2.2 SC 2.5.8）。ネイティブは慣行的に 44×44 pt / 48×48 dp
 - すべてのインタラクティブ要素がキーボードで到達可能で、可視のフォーカスインジケーターを持つ（SC 2.4.11）
 - ドラッグ動作にシングルポインター代替を提供
 
@@ -72,10 +72,10 @@ flowchart TD
 
 | 機能 | Web (HTML/ARIA) | iOS (SwiftUI) | Android (Compose) |
 |---|---|---|---|
-| **主要ラベル** | `aria-label` / `<label>` | `.accessibilityLabel()` | `contentDescription` |
-| **補助ヒント** | `aria-describedby` | `.accessibilityHint()` | `Modifier.semantics { stateDescription = ... }` |
-| **アクションロール** | `role="button"` | `.accessibilityAddTraits(.isButton)` | `Modifier.semantics { role = Role.Button }` |
-| **ライブ更新** | `aria-live="polite"` | `.accessibilityLiveRegion(.polite)` | `Modifier.semantics { liveRegion = LiveRegionMode.Polite }` |
+| 主要ラベル | `aria-label` / `<label>` | `.accessibilityLabel()` | `contentDescription` |
+| 補助ヒント | `aria-describedby` | `.accessibilityHint()` | `Modifier.semantics { stateDescription = ... }` |
+| アクションロール | `role="button"` | `.accessibilityAddTraits(.isButton)` | `Modifier.semantics { role = Role.Button }` |
+| ライブ更新 | `aria-live="polite"` | `.accessibilityLiveRegion(.polite)` | `Modifier.semantics { liveRegion = LiveRegionMode.Polite }` |
 
 ## プラットフォーム別の詳細
 
@@ -87,16 +87,16 @@ flowchart TD
 
 ## 避けるべきアンチパターン
 
-- **Div ボタン**: ロールやキーボードサポートを追加せずに `<div>` や `<span>` をクリックイベントに使う
-- **色のみによる意味伝達**: エラーや状態を色の変化のみで示す（例: 枠線を赤に変える）
-- **モーダルのフォーカス未トラップ**: フォーカスをトラップしないモーダル。フォーカスは _トラップされ_、`Escape` キーまたは閉じるボタンで _脱出可能_ でなければならない（WCAG SC 2.1.2）
-- **冗長な alt テキスト**: 「Image of...」「Picture of...」を使う（スクリーンリーダーは既にロール「Image」を読み上げる）
+- Div ボタン: ロールやキーボードサポートを追加せずに `<div>` や `<span>` をクリックイベントに使う
+- 色のみによる意味伝達: エラーや状態を色の変化のみで示す（例: 枠線を赤に変える）
+- モーダルのフォーカス未トラップ: フォーカスをトラップしないモーダル。フォーカスは _トラップされ_、`Escape` キーまたは閉じるボタンで _脱出可能_ でなければならない（WCAG SC 2.1.2）
+- 冗長な alt テキスト: 「Image of...」「Picture of...」を使う（スクリーンリーダーは既にロール「Image」を読み上げる）
 
 ## ベストプラクティスチェックリスト
 
-- [ ] インタラクティブ要素が **24×24px**（Web）または **44×44pt** / **48×48dp**（ネイティブ）のターゲットサイズを満たす
+- [ ] インタラクティブ要素が 24×24px（Web）または 44×44pt / 48×48dp（ネイティブ）のターゲットサイズを満たす
 - [ ] フォーカスインジケーターが明確に視認でき、高コントラスト
-- [ ] モーダルが開いている間はフォーカスを **トラップ**、`Escape` キーまたは閉じるボタンで適切に解放
+- [ ] モーダルが開いている間はフォーカスを トラップ、`Escape` キーまたは閉じるボタンで適切に解放
 - [ ] ドロップダウンとメニューが閉じるときにトリガー要素にフォーカスを戻す
 - [ ] フォームがテキストベースのエラー提案を提供
 - [ ] アイコンのみのボタンすべてに説明的なテキストラベル

@@ -75,6 +75,6 @@ services:
 ```
 
 選び方:
-- **Named volume**: 永続化が必要なデータ（DB / Redis 等）
-- **Bind mount**: 開発時のホットリロード（`./src:/app/src`）
-- **Anonymous volume**: bind mount で上書きされたくないコンテナ内ディレクトリ（`/app/node_modules` 等）
+- Named volume: 永続化が必要なデータ（DB / Redis 等）
+- Bind mount: 開発時のホットリロード（`./src:/app/src`）
+- Anonymous volume: bind mount で上書きされたくないコンテナ内ディレクトリ（`/app/node_modules` 等）

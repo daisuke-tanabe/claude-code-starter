@@ -9,7 +9,7 @@ tags: react, hooks, useState, performance, initialization
 
 高コストな初期値には `useState` に関数を渡す。関数形式を使わないと、その値が一度しか使われなくても、毎レンダーで初期化処理が走ってしまう。
 
-**Incorrect (毎レンダーで実行される):**
+Incorrect (毎レンダーで実行される):
 
 ```tsx
 function FilteredList({ items }: { items: Item[] }) {
@@ -31,7 +31,7 @@ function UserProfile() {
 }
 ```
 
-**Correct (一度だけ実行される):**
+Correct (一度だけ実行される):
 
 ```tsx
 function FilteredList({ items }: { items: Item[] }) {

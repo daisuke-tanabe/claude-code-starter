@@ -9,7 +9,7 @@ tags: javascript, loops, optimization, caching
 
 ホットパスではオブジェクトのプロパティ参照をキャッシュする。
 
-**Incorrect (3 ルックアップ × N 反復):**
+Incorrect (3 ルックアップ × N 反復):
 
 ```typescript
 for (let i = 0; i < arr.length; i++) {
@@ -17,7 +17,7 @@ for (let i = 0; i < arr.length; i++) {
 }
 ```
 
-**Correct (合計 1 ルックアップ):**
+Correct (合計 1 ルックアップ):
 
 ```typescript
 const value = obj.config.settings.value

@@ -9,7 +9,7 @@ tags: pagination, cursor, keyset, offset, performance
 
 OFFSET によるページネーションはスキップする行をすべて走査するため、深いページほど遅くなる。cursor ベースのページネーションは O(1) で動作する。
 
-**誤り (OFFSET ページネーション):**
+誤り (OFFSET ページネーション):
 
 ```sql
 -- 1 ページ目: 20 行をスキャン
@@ -22,7 +22,7 @@ select * from products order by id limit 20 offset 1980;
 select * from products order by id limit 20 offset 199980;
 ```
 
-**正しい例 (cursor / keyset ページネーション):**
+正しい例 (cursor / keyset ページネーション):
 
 ```sql
 -- 1 ページ目: 先頭から 20 件取得

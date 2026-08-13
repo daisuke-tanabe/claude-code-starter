@@ -9,7 +9,7 @@ tags: server, rsc, parallel-fetching, composition
 
 React Server Components はツリー内で逐次実行される。コンポジションを使って構造を組み直し、データ取得を並列化する。
 
-**Incorrect (Sidebar は Page の fetch 完了を待つ):**
+Incorrect (Sidebar は Page の fetch 完了を待つ):
 
 ```tsx
 export default async function Page() {
@@ -28,7 +28,7 @@ async function Sidebar() {
 }
 ```
 
-**Correct (両方が同時に fetch する):**
+Correct (両方が同時に fetch する):
 
 ```tsx
 async function Header() {
@@ -51,7 +51,7 @@ export default function Page() {
 }
 ```
 
-**children prop を使った代替:**
+children prop を使った代替:
 
 ```tsx
 async function Header() {

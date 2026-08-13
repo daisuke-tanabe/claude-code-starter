@@ -9,7 +9,7 @@ tags: advanced, hooks, useEffectEvent, refs, optimization
 
 依存配列に含めずに、コールバック内から最新の値へアクセスする。effect の再実行を防ぎつつ、stale closure を回避できる。
 
-**Incorrect (コールバックが変わるたびに effect が再実行される):**
+Incorrect (コールバックが変わるたびに effect が再実行される):
 
 ```tsx
 function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
@@ -22,7 +22,7 @@ function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
 }
 ```
 
-**Correct (React の useEffectEvent を使う):**
+Correct (React の useEffectEvent を使う):
 
 ```tsx
 import { useEffectEvent } from 'react';

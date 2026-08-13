@@ -9,7 +9,7 @@ tags: rendering, ssr, hydration, localStorage, flicker
 
 クライアント側ストレージ（localStorage、cookie）に依存するコンテンツを描画するとき、SSR の破綻と hydration 後のチラつきの両方を避けるには、React の hydration 前に DOM を更新する同期スクリプトを差し込む。
 
-**Incorrect (SSR が壊れる):**
+Incorrect (SSR が壊れる):
 
 ```tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
@@ -26,7 +26,7 @@ function ThemeWrapper({ children }: { children: ReactNode }) {
 
 `localStorage` が undefined のため、サーバーサイドレンダリングが失敗する。
 
-**Incorrect (見た目のチラつき):**
+Incorrect (見た目のチラつき):
 
 ```tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
@@ -50,7 +50,7 @@ function ThemeWrapper({ children }: { children: ReactNode }) {
 
 最初はデフォルト値 (`light`) で描画され、その後 hydration を経て更新されるため、誤った状態のコンテンツが一瞬表示される。
 
-**Correct (チラつきも hydration mismatch もない):**
+Correct (チラつきも hydration mismatch もない):
 
 ```tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {

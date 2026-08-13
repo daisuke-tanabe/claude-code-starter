@@ -13,7 +13,7 @@ memo 化されたコンポーネントが、配列・関数・オブジェクト
 
 これを解消するには、デフォルト値を定数に抽出する。
 
-**Incorrect (`onClick` は毎レンダーで異なる値になる):**
+Incorrect (`onClick` は毎レンダーで異なる値になる):
 
 ```tsx
 const UserAvatar = memo(function UserAvatar({ onClick = () => {} }: { onClick?: () => void }) {
@@ -24,7 +24,7 @@ const UserAvatar = memo(function UserAvatar({ onClick = () => {} }: { onClick?: 
 <UserAvatar />
 ```
 
-**Correct (デフォルト値が安定する):**
+Correct (デフォルト値が安定する):
 
 ```tsx
 const NOOP = () => {};

@@ -9,7 +9,7 @@ tags: primary-key, identity, uuid, serial, schema
 
 primary key の選択は、insert 性能、インデックスサイズ、レプリケーション効率に影響する。
 
-**誤り (問題のある primary key 選択):**
+誤り (問題のある primary key 選択):
 
 ```sql
 -- identity は SQL 標準のアプローチ
@@ -23,7 +23,7 @@ create table orders (
 );
 ```
 
-**正しい例 (最適な primary key 戦略):**
+正しい例 (最適な primary key 戦略):
 
 ```sql
 -- 連番 ID には IDENTITY を使う (SQL 標準で大半のケースで最適)

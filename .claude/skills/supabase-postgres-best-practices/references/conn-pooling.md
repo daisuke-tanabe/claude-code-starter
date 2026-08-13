@@ -9,7 +9,7 @@ tags: connection-pooling, pgbouncer, performance, scalability
 
 Postgres の接続は高コスト (1 接続あたり 1〜3MB の RAM) である。pooling を使わないと、負荷下でアプリケーションが接続を使い切ってしまう。
 
-**誤り (リクエストごとに新しい接続を作る):**
+誤り (リクエストごとに新しい接続を作る):
 
 ```sql
 -- リクエストごとに新しい接続を生成
@@ -20,7 +20,7 @@ Postgres の接続は高コスト (1 接続あたり 1〜3MB の RAM) である�
 select count(*) from pg_stat_activity;  -- 487 接続!
 ```
 
-**正しい例 (connection pool を利用する):**
+正しい例 (connection pool を利用する):
 
 ```sql
 -- アプリとデータベースの間に PgBouncer のような pooler を挟む
@@ -35,7 +35,7 @@ select count(*) from pg_stat_activity;  -- 10 接続
 
 pool モード:
 
-- **Transaction mode**: トランザクションごとに接続を返却する (多くのアプリに最適)
-- **Session mode**: セッション中ずっと接続を保持する (prepared statement や temp table が必要なケース向け)
+- Transaction mode: トランザクションごとに接続を返却する (多くのアプリに最適)
+- Session mode: セッション中ずっと接続を保持する (prepared statement や temp table が必要なケース向け)
 
 Reference: [Connection Pooling](https://supabase.com/docs/guides/database/connecting-to-postgres#connection-pooler)
