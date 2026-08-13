@@ -1,6 +1,8 @@
 ---
 name: design-system
 description: デザインシステムの生成・監査、ビジュアル一貫性の確認、スタイリングを変更する PR レビューに使用する。
+metadata:
+  source: "affaan-m/everything-claude-code@skills/design-system"
 ---
 
 # デザインシステム — ビジュアルシステムを生成・監査する

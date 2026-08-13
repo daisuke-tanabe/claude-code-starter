@@ -4,6 +4,8 @@ description: Propose a new change with all artifacts generated in one step. Use 
 license: MIT
 compatibility: Requires openspec CLI.
 metadata:
+  source: "OpenSpec CLI"
+  sourceNote: "openspec update で再生成する"
   author: openspec
   version: "1.0"
   generatedBy: "1.3.1"

@@ -1,6 +1,8 @@
 ---
 name: api-design
 description: リソース命名、HTTP ステータスコード、レスポンスエンベロープ、ページネーション、フィルタリング、エラーレスポンス、認証・認可、レート制限、バージョニングを含む REST API 設計パターン。新しい API エンドポイント設計・既存 API 契約レビュー・ページネーション/フィルタ追加・エラーハンドリング設計・API バージョニング戦略立案を行う際は必ず本スキルを参照する。
+metadata:
+  source: "affaan-m/everything-claude-code@skills/api-design"
 ---
 
 # API 設計パターン

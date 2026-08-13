@@ -2,6 +2,9 @@
 name: next-upgrade
 description: 公式マイグレーションガイドと codemod に従って Next.js を最新版にアップグレードする
 argument-hint: "[target-version]"
+metadata:
+  source: "vercel-labs/next-skills@skills/next-upgrade"
+  sourceNote: "upstream 廃止。移行ガイドは next 同梱ドキュメントに統合され、アップグレードは npx @next/codemod@latest upgrade を使う"
 ---
 
 # Next.js のアップグレード

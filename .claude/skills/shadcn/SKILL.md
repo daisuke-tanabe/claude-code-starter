@@ -3,6 +3,8 @@ name: shadcn
 description: shadcn コンポーネントとプロジェクトを管理する — 追加・検索・修正・デバッグ・スタイリング・UI のコンポジションをサポート。プロジェクトのコンテキスト、コンポーネントのドキュメント、利用例を提供する。shadcn/ui、component registry、preset、--preset コード、または `components.json` を持つプロジェクトを扱う際に適用される。「shadcn init」「create an app with --preset」「switch to --preset」などのリクエストにもトリガーされる。
 user-invocable: false
 allowed-tools: Bash(npx shadcn@latest *), Bash(pnpm dlx shadcn@latest *), Bash(bunx --bun shadcn@latest *)
+metadata:
+  source: "shadcn-ui/ui@skills/shadcn"
 ---
 
 # shadcn/ui

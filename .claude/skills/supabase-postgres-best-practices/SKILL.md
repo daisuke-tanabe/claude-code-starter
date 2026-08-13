@@ -3,6 +3,7 @@ name: supabase-postgres-best-practices
 description: Supabase が提供する Postgres のパフォーマンス最適化およびベストプラクティス集。Postgres のクエリ・スキーマ設計・データベース設定を記述／レビュー／最適化する際に本スキルを使用する。
 license: MIT
 metadata:
+  source: "supabase-community/supabase-plugin@skills/supabase-postgres-best-practices"
   author: supabase
   version: "1.1.1"
   organization: Supabase

@@ -1,6 +1,9 @@
 ---
 name: next-cache-components
 description: Next.js 16 の Cache Components - PPR、use cache ディレクティブ、cacheLife、cacheTag、updateTag
+metadata:
+  source: "vercel/next.js@skills/next-cache-components-adoption"
+  sourceNote: "旧 vercel-labs/next-skills の next-cache-components 由来。upstream では next-cache-components-adoption と next-cache-components-optimizer の 2 スキルに分割された"
 ---
 
 # Cache Components (Next.js 16+)

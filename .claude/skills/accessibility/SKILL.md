@@ -1,6 +1,8 @@
 ---
 name: accessibility
 description: WCAG 2.2 Level AA に準拠したインクルーシブなデジタルプロダクトを設計・実装・監査する。Web (HTML / WAI-ARIA)、iOS (SwiftUI)、Android (Jetpack Compose) の各プラットフォームでアクセシブルな UI を実装するために本スキルを使用する。UI コンポーネント仕様の定義・既存コードのアクセシビリティ監査・WCAG 2.2 新基準（Target Size、Focus Appearance、Redundant Entry 等）の実装・スクリーンリーダー/キーボード操作の検証を行う際は必ず本スキルを参照する。
+metadata:
+  source: "affaan-m/everything-claude-code@skills/accessibility"
 ---
 
 # アクセシビリティ (WCAG 2.2)
