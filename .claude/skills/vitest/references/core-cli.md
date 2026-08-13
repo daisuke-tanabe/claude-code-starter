@@ -68,6 +68,15 @@ vitest list --filesOnly        # テストファイルのみ一覧
 vitest init browser            # ブラウザテストのセットアップ
 ```
 
+### `vitest --list-tags`
+
+テストを実行せずに config で定義されたタグを一覧表示する:
+
+```bash
+vitest --list-tags             # 人が読みやすい一覧
+vitest --list-tags=json        # JSON 出力
+```
+
 ## よく使うオプション
 
 ```bash
@@ -77,12 +86,14 @@ vitest init browser            # ブラウザテストのセットアップ
 
 # フィルタリング
 --testNamePattern, -t     # パターンに一致するテストを実行
+--tagsFilter <expr>       # タグ式でテストを実行、例: "db && !flaky"
 --changed                 # 変更されたファイルに対するテストを実行
 --changed HEAD~1          # 直近コミットの変更に対するテスト
+--dir <path>              # テスト探索を特定ディレクトリに限定
 
 # レポーター
---reporter <name>         # default, verbose, dot, json, html
---reporter=html --outputFile=report.html
+--reporter <name>         # default, verbose, tree, dot, json, html, junit, minimal, blob
+--reporter=json --outputFile=report.json
 
 # カバレッジ
 --coverage                # カバレッジを有効化
@@ -93,11 +104,12 @@ vitest init browser            # ブラウザテストのセットアップ
 --shard <index>/<count>   # 複数マシンへテストを分割
 --bail <n>                # n 件失敗で停止
 --retry <n>               # 失敗したテストを n 回リトライ
---sequence.shuffle        # テスト順序をランダム化
+--shuffle                 # テスト順序をランダム化
+--no-file-parallelism     # テストファイルを 1 つずつ実行
 
 # watch モード
 --no-watch                # watch モードを無効化
---standalone              # テストを実行せずに起動
+--standalone              # テストを実行せずに起動 (v4: フィルタ指定時はマッチしたファイルを実行)
 
 # 環境
 --environment <env>       # jsdom, happy-dom, node
@@ -127,20 +139,17 @@ vitest init browser            # ブラウザテストのセットアップ
 
 ## CI 向けのシャーディング
 
-複数マシンにテストを分割する:
+複数マシンにテストを分割する。blob レポーターはデフォルトで `.vitest/blob/` に書き込む:
 
 ```bash
 # Machine 1
-vitest run --shard=1/3 --reporter=blob
+vitest run --shard=1/3 --reporter=blob --outputFile=reports/blob-1.json
 
 # Machine 2
-vitest run --shard=2/3 --reporter=blob
+vitest run --shard=2/3 --reporter=blob --outputFile=reports/blob-2.json
 
-# Machine 3
-vitest run --shard=3/3 --reporter=blob
-
-# レポートをマージ
-vitest --merge-reports --reporter=junit
+# すべての blob を最終レポートにマージ
+vitest --merge-reports=reports --reporter=junit --reporter=default
 ```
 
 ## watch モードのキーボードショートカット
@@ -159,6 +168,8 @@ watch モード中にキー入力する:
 - 1 回実行を保証するには `--run` フラグを使う (lint-staged で重要)
 - camelCase (`--testTimeout`) と kebab-case (`--test-timeout`) のどちらでも動作する
 - 真偽値オプションは `--no-` プレフィックスで否定できる
+- タグでの絞り込みには `--tagsFilter` を使う。タグは config での宣言が必要 — [features-test-tags](features-test-tags.md) を参照
+- `--merge-reports` と `--reporter=blob` は watch モードでは動作しない
 
 <!-- 
 Source references:

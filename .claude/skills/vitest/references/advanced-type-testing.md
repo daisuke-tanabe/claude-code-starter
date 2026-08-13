@@ -73,7 +73,7 @@ const value = 'hello'
 expectTypeOf(value).toBeString()
 
 const obj = { name: 'test', count: 42 }
-expectTypeOf(obj).toMatchTypeOf<{ name: string }>()
+expectTypeOf(obj).toExtend<{ name: string }>()
 expectTypeOf(obj).toHaveProperty('name')
 ```
 
@@ -105,17 +105,19 @@ expectTypeOf<User>().toHaveProperty('id')
 expectTypeOf<User>().toHaveProperty('name').toBeString()
 
 // 形状チェック
-expectTypeOf({ id: 1, name: 'test' }).toMatchTypeOf<User>()
+expectTypeOf({ id: 1, name: 'test' }).toExtend<User>()
 ```
 
 ## 等価性 vs マッチング
+
+`toMatchTypeOf` は expect-type v1.2+ で deprecated になった。部分集合マッチには `toExtend` を使う:
 
 ```ts
 interface A { x: number }
 interface B { x: number; y: string }
 
-// toMatchTypeOf - 部分集合マッチ
-expectTypeOf<B>().toMatchTypeOf<A>()  // B は A を継承
+// toExtend - 部分集合マッチ (toMatchTypeOf を置き換える)
+expectTypeOf<B>().toExtend<A>()  // B は A を継承
 
 // toEqualTypeOf - 完全一致
 expectTypeOf<A>().not.toEqualTypeOf<B>()  // 完全一致しない
@@ -216,7 +218,7 @@ describe('createUser', () => {
   })
 
   test('types: returns User type', () => {
-    expectTypeOf(createUser).returns.toMatchTypeOf<{ name: string }>()
+    expectTypeOf(createUser).returns.toExtend<{ name: string }>()
   })
 })
 ```
@@ -225,7 +227,7 @@ describe('createUser', () => {
 
 - 型のみのテストには `.test-d.ts` を使う
 - 型アサーションには `expectTypeOf` を使う
-- 部分集合マッチには `toMatchTypeOf` を使う
+- 部分集合マッチには `toExtend` を使う。`toMatchTypeOf` は deprecated
 - 完全一致には `toEqualTypeOf` を使う
 - 型エラーをテストするには `@ts-expect-error` を使う
 - `vitest typecheck` または `--typecheck` で実行する

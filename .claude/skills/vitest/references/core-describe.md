@@ -90,13 +90,15 @@ describe.concurrent('parallel tests', () => {
 })
 ```
 
-### concurrent 内での sequential
+### 並行実行からの除外
+
+`describe.sequential` は v5 で削除された。継承またはグローバル設定された並行実行から除外するには `{ concurrent: false }` を使う:
 
 ```ts
 describe.concurrent('parallel', () => {
   test('concurrent 1', async () => {})
-  
-  describe.sequential('must be sequential', () => {
+
+  describe('must be sequential', { concurrent: false }, () => {
     test('step 1', async () => {})
     test('step 2', async () => {})
   })
@@ -171,21 +173,21 @@ describe('Database', () => {
 
 ## 修飾子の組み合わせ
 
-すべての修飾子はチェーン可能:
+修飾子はチェーン可能:
 
 ```ts
 describe.skip.concurrent('skipped concurrent', () => {})
 describe.only.shuffle('only and shuffled', () => {})
-describe.concurrent.skip('equivalent', () => {})
 ```
 
 ## 要点
 
 - トップレベルのテストは暗黙のファイルスイートに属する
-- ネストしたスイートは親のオプション (timeout、retry など) を継承する
+- ネストしたスイートは親のオプション (timeout、retry、concurrency など) を継承する
 - フックは所属スイートとそのネストしたスイートに対してスコープが効く
 - スナップショットを含む `describe.concurrent` では context の `expect` を使う
 - shuffle の順序は `sequence.seed` の設定に依存する
+- `describe.sequential` は v5 で削除された — `{ concurrent: false }` を使う
 
 <!-- 
 Source references:

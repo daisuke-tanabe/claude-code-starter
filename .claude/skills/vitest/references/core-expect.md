@@ -98,6 +98,32 @@ expect(fn).toHaveBeenNthCalledWith(1, 'arg1', 'arg2')
 
 expect(fn).toHaveReturned()
 expect(fn).toHaveReturnedWith(value)
+
+// v4 での追加
+expect(fn).toHaveBeenCalledExactlyOnceWith('arg1', 'arg2')
+expect(fnA).toHaveBeenCalledBefore(fnB)
+expect(fnA).toHaveBeenCalledAfter(fnB)
+```
+
+### Chai スタイルのスパイアサーション (4.1+)
+
+sinon-chai 互換のエイリアス。Sinon からの移行時に便利:
+
+```ts
+expect(spy).to.have.been.called
+expect(spy).to.have.been.calledOnce
+expect(spy).to.have.been.calledWith('arg1', 'arg2')
+expect(spy).to.have.been.calledOnceWith('arg')
+```
+
+### 条件付きモックの消費確認 (v5)
+
+すべての `vi.when` の挙動が消費されたことをアサートする:
+
+```ts
+const w = vi.when(spy).calledWith(1).thenReturnOnce('a')
+spy(1)
+expect(w).toHaveBeenExhausted()
 ```
 
 ## 非対称 matcher
@@ -134,16 +160,47 @@ expect({ value: null }).toEqual({
 expect([1, 2]).toEqual(
   expect.not.arrayContaining([3])
 )
+
+// toBeOneOf - いずれかの候補にマッチ (オプショナルなプロパティに最適)
+expect(user).toEqual({
+  name: expect.any(String),
+  middleName: expect.toBeOneOf([expect.any(String), undefined]),
+})
+
+// schemaMatching (4.0+) - Standard Schema (Zod, Valibot, ArkType) にマッチ
+import { z } from 'zod'
+expect(payload).toEqual({
+  email: expect.schemaMatching(z.string().email()),
+})
+expect(repo.save).toHaveBeenCalledWith(expect.schemaMatching(UserSchema))
 ```
 
 ## Soft アサーション
 
-失敗してもテストを続行する:
+クリティカルでないアサーションには `expect.soft` を推奨する。テストは失敗扱いになるが続行され、すべての失敗がまとめて報告される:
 
 ```ts
-expect.soft(1).toBe(2) // テストは失敗扱いだが続行する
-expect.soft(2).toBe(3) // これも実行される
-// すべての失敗は終了時に報告される
+expect.soft(response.status).toBe(200) // クリティカルでない、続行する
+expect.soft(response.headers.get('x-id')).toBeTruthy()
+expect(response.body).toBeDefined() // クリティカル: 通常の expect は失敗で停止する
+```
+
+## 型を絞り込むアサーション (4.0+)
+
+`expect.assert` はランタイムで throw しつつ TypeScript の型も絞り込む。`toBeTruthy` / `toBeDefined` は `void` を返すため型は絞り込まれない:
+
+```ts
+const user = cache.get('alice') // { id, name } | undefined
+expect.assert(user)             // undefined なら throw、以降は型が絞り込まれる
+expect(user.name).toBe('Alice') // `!` も `as` も不要
+
+// typeof / instanceof も絞り込む
+expect.assert(typeof input === 'string')
+input.toUpperCase()
+
+// 同じ namespace から Chai の assert ヘルパーも使える
+expect.assert.isDefined(maybeUser)
+expect.assert.instanceOf(error, MyError)
 ```
 
 ## Poll アサーション
@@ -212,8 +269,12 @@ expect(() => throw new Error('fail')).toThrowErrorMatchingSnapshot()
 - 非同期アサーション (`resolves`、`rejects`、`poll`) は必ず `await` する
 - concurrent テストでは追跡の正確さのため context の `expect` を使う
 - `toThrow` を使うときは同期コードを関数でラップする必要がある
+- クリティカルでないアサーションには `expect.soft` を使い、必須条件には通常の `expect` を使う
+- TypeScript の型の絞り込みも必要な場合は `toBeTruthy` ではなく `expect.assert` を使う
 
 <!-- 
 Source references:
 - https://vitest.dev/api/expect.html
+- https://vitest.dev/guide/recipes/type-narrowing
+- https://vitest.dev/guide/recipes/schema-matching
 -->

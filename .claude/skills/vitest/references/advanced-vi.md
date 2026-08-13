@@ -88,6 +88,38 @@ vi.doUnmock('./config')
 vi.unmock('./module') // hoist される
 ```
 
+## 条件付きモック — vi.when (v5)
+
+引数ごとにスパイの挙動を定義する:
+
+```ts
+vi.when(spy)
+  .calledWith(1).thenReturn('one')
+  .calledWith(2).thenReturn('two')
+
+// then* アクション: thenReturn / thenThrow / thenResolve / thenReject (+ *Once)
+// オプション: { times }、第 2 引数に { onUnmatched: 'throw' | 'passthrough' | fn }
+
+vi.isWhenChain(w)  // When チェーンかどうかの型ガード
+```
+
+FIFO / LIFO のマッチングと `toHaveBeenExhausted` は [features-mocking](features-mocking.md) を参照。
+
+## アサーションヘルパー — vi.defineHelper (4.1+)
+
+再利用可能なアサーション関数をラップし、失敗をヘルパー内部ではなく呼び出し側の行として報告させる:
+
+```ts
+const expectValidUser = vi.defineHelper((user: unknown) => {
+  expect(user).toHaveProperty('id')
+  expect(user).toHaveProperty('email')
+})
+
+test('returns a valid user', async () => {
+  expectValidUser(await fetchUser('alice')) // 失敗はここで報告される
+})
+```
+
 ## モジュールのリセット
 
 ```ts
@@ -102,6 +134,10 @@ await vi.dynamicImportSettled()
 
 ```ts
 vi.useFakeTimers()
+
+// fake にするタイマーを選ぶ (toFake と toNotFake は同時に指定できない)
+vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] })
+vi.useFakeTimers({ toNotFake: ['setInterval'] })
 
 setTimeout(() => console.log('done'), 1000)
 
@@ -239,7 +275,8 @@ vi.mocked(fn, { partial: true }).mockResolvedValue({ ok: true })
 
 - `vi.mock` は hoist される - 動的なモックには `vi.doMock` を使う
 - `vi.hoisted` で mock factory 内から変数を参照できる
-- 既存メソッドのスパイには `vi.spyOn` を使う
+- 既存メソッドのスパイには `vi.spyOn` を使う。v4 ではコンストラクタにも対応する
+- 引数ごとの挙動には `vi.when` を、アサーションヘルパーには `vi.defineHelper` を使う
 - fake timer は明示的なセットアップとティアダウンが必要
 - `vi.waitFor` はアサーションが成功するまで再試行する
 

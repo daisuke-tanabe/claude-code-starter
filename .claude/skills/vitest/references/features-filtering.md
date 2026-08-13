@@ -102,31 +102,27 @@ test('dynamic', ({ skip }) => {
 
 ## タグ
 
-カスタムタグで絞り込む:
+タグは config で宣言し、テスト / スイートに適用し、タグ式で絞り込む:
 
 ```ts
-test('database test', { tags: ['db'] }, () => {})
-test('slow test', { tags: ['slow', 'integration'] }, () => {})
-```
-
-タグ付きのテストを実行:
-
-```bash
-vitest --tags db
-vitest --tags "db,slow"      # OR
-vitest --tags db --tags slow # OR
-```
-
-許可するタグを設定する:
-
-```ts
+// vitest.config.ts
 defineConfig({
   test: {
-    tags: ['db', 'slow', 'integration'],
-    strictTags: true, // 未知のタグで失敗させる
+    tags: [{ name: 'db' }, { name: 'slow' }, { name: 'flaky' }],
   },
 })
+
+// テストファイル
+test('database test', { tags: ['db'] }, () => {})
 ```
+
+```bash
+vitest --tagsFilter "db && !flaky"
+vitest --tagsFilter "unit || e2e"
+vitest --list-tags            # 定義済みタグを表示
+```
+
+構文の全体、priority、タグごとのオプションは [features-test-tags](features-test-tags.md) を参照。
 
 ## include / exclude パターン
 
@@ -145,9 +141,14 @@ defineConfig({
     
     // in-source testing 用の source 指定
     includeSource: ['src/**/*.ts'],
+
+    // 探索範囲をディレクトリに限定する (広範な exclude より高速)
+    dir: './src',
   },
 })
 ```
+
+> v4 では `exclude` のデフォルトが `node_modules` / `.git` のみに簡素化された。テストの探索範囲は `test.dir` で限定するのが望ましい。従来の除外を復元するには `configDefaults.exclude` をスプレッドする。
 
 ## watch モードでの絞り込み
 

@@ -122,6 +122,48 @@ vitest --update
 # watch モードでは 'u' を押すと失敗したスナップショットを更新
 ```
 
+CI (`process.env.CI`) では Vitest はスナップショットを一切書き込まない。不一致、欠落したスナップショット、どのテストにもマッチしない obsolete なスナップショットはすべて実行を失敗させる。
+
+## Visual と ARIA スナップショット (Browser Mode)
+
+```ts
+import { expect, test } from 'vitest'
+import { page } from 'vitest/browser' // v4: 'vitest/browser' から import する
+
+test('button looks correct', async () => {
+  await expect(page.getByRole('button')).toMatchScreenshot('primary-button')
+})
+
+// ARIA スナップショット — アクセシビリティツリーをアサートする (4.1+、experimental)
+test('nav structure', async () => {
+  await expect.element(page.getByRole('navigation')).toMatchAriaInlineSnapshot(`
+    - navigation "Main":
+      - link "Home"
+  `)
+})
+```
+
+## カスタムスナップショット matcher (4.1+)
+
+`vitest` から export される合成可能な `Snapshots` ヘルパーの上に matcher を構築する。`jest-snapshot` からの import を置き換えるものである:
+
+```ts
+import { expect, Snapshots } from 'vitest'
+
+const { toMatchSnapshot, toMatchInlineSnapshot } = Snapshots
+
+expect.extend({
+  toMatchTrimmedSnapshot(received: string, length: number) {
+    return toMatchSnapshot.call(this, received.slice(0, length))
+  },
+  toMatchTrimmedInlineSnapshot(received: string, inlineSnapshot?: string) {
+    return toMatchInlineSnapshot.call(this, received.slice(0, 10), inlineSnapshot)
+  },
+})
+```
+
+インラインスナップショット文字列は必ず最後の引数にする。ファイルスナップショットの matcher は `async` にする必要がある。
+
 ## カスタムシリアライザー
 
 スナップショットのフォーマットをカスタマイズする:
@@ -154,8 +196,9 @@ defineConfig({
 defineConfig({
   test: {
     snapshotFormat: {
-      printBasicPrototype: false, // Array / Object のプロトタイプを出力しない
+      printBasicPrototype: false, // Array / Object のプロトタイプを出力しない (Vitest のデフォルト)
       escapeString: false,
+      printShadowRoot: true,      // v4 デフォルト: カスタム要素は shadow root を出力する
     },
   },
 })
@@ -199,9 +242,12 @@ defineConfig({
 - 大きな出力 (HTML、JSON) には `toMatchFileSnapshot` を使う
 - インラインスナップショットはテストファイル内で自動更新される
 - concurrent テストでは context の `expect` を使う
+- CI は obsolete なスナップショットで失敗する。`--update` でクリーンアップする
+- v4 はカスタム要素の shadow root を出力する。無効化するには `snapshotFormat.printShadowRoot: false` を設定する
 
 <!-- 
 Source references:
 - https://vitest.dev/guide/snapshot.html
 - https://vitest.dev/api/expect.html#tomatchsnapshot
+- https://vitest.dev/guide/browser/aria-snapshots
 -->

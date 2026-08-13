@@ -1,6 +1,6 @@
 ---
 name: test-context-fixtures
-description: テスト context と test.extend によるカスタム fixture
+description: テスト context、builder パターンの test.extend によるカスタム fixture、スコープ、test.override
 ---
 
 # Test Context と Fixtures
@@ -10,227 +10,152 @@ description: テスト context と test.extend によるカスタム fixture
 各テストは第 1 引数に context を受け取る:
 
 ```ts
-test('context', ({ task, expect, skip }) => {
-  console.log(task.name)  // テスト名
-  expect(1).toBe(1)       // context にバインドされた expect
-  skip()                  // 動的にテストを skip
+test('context', ({ task, expect, skip, signal, annotate }) => {
+  console.log(task.name)        // テストメタデータ (readonly)
+  expect(1).toBe(1)             // 当該テストにバインドされた expect
+  skip(condition, 'reason')     // 動的に skip
 })
 ```
 
-### Context のプロパティ
+プロパティ:
+- `task` — テストメタデータ (name、file など)
+- `expect` — 当該テストにバインドされた expect。concurrent なスナップショットテストで必須
+- `skip(condition?, message?)` — テストを skip する
+- `signal` (3.2+) — タイムアウト / キャンセル / bail 時に中断される `AbortSignal`
+- `annotate(message, type?, attachment?)` (3.2+) — レポーター向けのアノテーションを付ける
+- `onTestFinished(fn)` / `onTestFailed(fn)` — テスト単位のクリーンアップ / ハンドラー
+- `bench` (v5) — ベンチマーク fixture。`*.bench.ts` ファイル内でのみ利用可能
 
-- `task` - テストメタデータ (name、file など)
-- `expect` - 当該テストにバインドされた expect (concurrent テストで重要)
-- `skip(condition?, message?)` - テストを skip する
-- `onTestFinished(fn)` - テスト後のクリーンアップ
-- `onTestFailed(fn)` - 失敗時にのみ実行
+## カスタム fixture — builder パターン (4.1+、推奨)
 
-## test.extend によるカスタム fixture
-
-再利用可能なテストユーティリティを作成する:
+`.extend(name, options?, fixture)` は型を自動推論する。ティアダウンには `onCleanup` を使う:
 
 ```ts
-import { test as base } from 'vitest'
+import { test as baseTest } from 'vitest'
 
-// fixture 型を定義
-interface Fixtures {
-  db: Database
-  user: User
-}
+export const test = baseTest
+  // 素の値 — 型は { port: number; host: string } と推論される
+  .extend('config', { port: 3000, host: 'localhost' })
+  // 関数 fixture — 先に定義した fixture を参照できる
+  .extend('server', async ({ config }, { onCleanup }) => {
+    const server = await startServer(config)
+    onCleanup(() => server.close()) // テスト / スコープの終了後に実行される
+    return server
+  })
 
-// 拡張した test を作成
-export const test = base.extend<Fixtures>({
-  // setup / teardown を備えた fixture
-  db: async ({}, use) => {
-    const db = await createDatabase()
-    await use(db)           // テストに提供
-    await db.close()        // クリーンアップ
+test('uses server', ({ config, server }) => {
+  expect(server.url).toContain(String(config.port))
+})
+```
+
+> `onCleanup` は fixture ごとに 1 回だけ呼び出せる。複数のリソースを扱う場合は fixture を分割する。
+
+### fixture のオプション
+
+```ts
+const test = baseTest
+  .extend('metrics', { auto: true }, () => new Metrics())       // すべてのテストで実行
+  .extend('config', { scope: 'worker' }, () => loadConfig())    // ワーカーごとに 1 回
+  .extend('db', { scope: 'file' }, async ({ config }, { onCleanup }) => {
+    const db = await createDatabase(config)
+    onCleanup(() => db.close())
+    return db
+  })
+  .extend('baseUrl', { injected: true }, () => 'http://localhost:3000') // config から上書き可能
+```
+
+## オブジェクト構文 (Playwright 互換)
+
+`use()` コールバックを使う。型は手動で宣言する必要がある:
+
+```ts
+const test = baseTest.extend<{ page: Page; baseUrl: string }>({
+  page: async ({}, use) => {
+    const page = await browser.newPage()
+    await use(page)        // ここでテストが実行される
+    await page.close()     // 実行後にクリーンアップ
   },
-  
-  // 他の fixture に依存する fixture
-  user: async ({ db }, use) => {
-    const user = await db.createUser({ name: 'Test' })
-    await use(user)
-    await db.deleteUser(user.id)
-  },
+  baseUrl: 'http://localhost:3000',
 })
 ```
 
-fixture を使う:
+タプル形式でオプションを指定する: `fixture: [async ({}, use) => {…}, { scope: 'file' }]`。
+
+## fixture のスコープ (3.2+)
+
+| スコープ | 生存期間 | アクセスできるもの |
+|-------|----------|------------|
+| `test` (デフォルト) | テストごと | worker + file + test の fixture + 組み込み context |
+| `file` | ファイルごとに 1 回 | worker + file の fixture |
+| `worker` | ワーカープロセスごとに 1 回 | worker の fixture のみ |
+
+組み込み context (`task`、`expect` など) にアクセスできるのは `test` スコープの fixture だけである。file / worker の fixture でファイルパスが必要な場合は `expect.getState().testPath` を使う。デフォルトでは各ファイルが独立したワーカーになるため、[隔離を無効化](features-concurrency.md)しない限り `file` と `worker` の挙動は同じである。
+
+## 注入された fixture (project ごとの値)
 
 ```ts
-test('query user', async ({ db, user }) => {
-  const found = await db.findUser(user.id)
-  expect(found).toEqual(user)
-})
-```
+// fixtures.ts
+const test = baseTest.extend('url', { injected: true }, '/default')
 
-## fixture の初期化
-
-fixture はアクセスされたときにのみ初期化される:
-
-```ts
-const test = base.extend({
-  expensive: async ({}, use) => {
-    console.log('initializing')  // 当該テストが使用するときだけ実行される
-    await use('value')
-  },
-})
-
-test('no fixture', () => {})           // expensive は呼ばれない
-test('uses fixture', ({ expensive }) => {}) // expensive が呼ばれる
-```
-
-## 自動 fixture
-
-すべてのテストで fixture を実行する:
-
-```ts
-const test = base.extend({
-  setup: [
-    async ({}, use) => {
-      await globalSetup()
-      await use()
-      await globalTeardown()
-    },
-    { auto: true }  // 常に実行
-  ],
-})
-```
-
-## スコープ付き fixture
-
-### ファイルスコープ
-
-ファイルにつき 1 回だけ初期化:
-
-```ts
-const test = base.extend({
-  connection: [
-    async ({}, use) => {
-      const conn = await connect()
-      await use(conn)
-      await conn.close()
-    },
-    { scope: 'file' }
-  ],
-})
-```
-
-### ワーカースコープ
-
-ワーカーにつき 1 回だけ初期化:
-
-```ts
-const test = base.extend({
-  sharedResource: [
-    async ({}, use) => {
-      await use(globalResource)
-    },
-    { scope: 'worker' }
-  ],
-})
-```
-
-## 注入された fixture (設定から)
-
-project ごとに fixture を上書きする:
-
-```ts
-// テストファイル
-const test = base.extend({
-  apiUrl: ['/default', { injected: true }],
-})
-
-// vitest.config.ts
+// vitest.config.ts — project ごとに provide する
 defineConfig({
   test: {
     projects: [
-      {
-        test: {
-          name: 'prod',
-          provide: { apiUrl: 'https://api.prod.com' },
-        },
-      },
+      { test: { name: 'prod', provide: { url: 'https://prod' } } },
     ],
   },
 })
 ```
 
-## スイート単位のスコープ値
+fixture を介さずに provide された生の値を読むには `import { inject } from 'vitest'` を使う。
 
-特定のスイート向けに fixture を上書きする:
+## fixture の上書き — test.override (4.1+)
+
+`test.override` はスイートとその子孫に対して fixture の値を置き換える。deprecated になった `test.scoped` を置き換えるものである:
 
 ```ts
-const test = base.extend({
-  environment: 'development',
-})
+describe('production', () => {
+  test
+    .override('config', { port: 8080, host: 'api.example.com' })
+    .override('debug', false)        // チェーン可能
 
-describe('production tests', () => {
-  test.scoped({ environment: 'production' })
-  
-  test('uses production', ({ environment }) => {
-    expect(environment).toBe('production')
+  test('uses prod config', ({ server }) => {
+    expect(server.url).toBe('http://api.example.com:8080')
   })
 })
 
-test('uses default', ({ environment }) => {
-  expect(environment).toBe('development')
+// 関数による上書き (他の fixture を参照できる) とクリーンアップ
+test.override('db', async ({ config }, { onCleanup }) => {
+  const db = await createTestDatabase(config)
+  onCleanup(() => db.drop())
+  return db
 })
 ```
 
-## 拡張テストのフック
+`override` では新しい fixture の追加や `scope` / `auto` の変更はできない。新しい fixture には `test.extend` を使う。
 
-fixture に対応した型付きフック:
+## 合成とフック
 
-```ts
-const test = base.extend<{ db: Database }>({
-  db: async ({}, use) => {
-    const db = await createDb()
-    await use(db)
-    await db.close()
-  },
-})
-
-// フックは fixture を認識する
-test.beforeEach(({ db }) => {
-  db.seed()
-})
-
-test.afterEach(({ db }) => {
-  db.clear()
-})
-```
-
-## fixture の合成
-
-拡張済みテストからさらに拡張する:
+拡張済みテストをさらに拡張し、型を認識するフックを拡張した `test` に対して使う:
 
 ```ts
-// base-test.ts
-export const test = base.extend<{ db: Database }>({
-  db: async ({}, use) => { /* ... */ },
-})
+import { test as dbTest } from './db-test'
 
-// admin-test.ts
-import { test as dbTest } from './base-test'
+export const test = dbTest.extend('user', ({ db }) => db.createUser())
 
-export const test = dbTest.extend<{ admin: User }>({
-  admin: async ({ db }, use) => {
-    const admin = await db.createAdmin()
-    await use(admin)
-  },
-})
+test.beforeEach(({ db }) => db.seed())            // fixture を参照できる
+test.beforeAll(({ db }) => db.migrate())          // file / worker の fixture のみ (4.1+)
+test.aroundAll(async (run, { db }) => db.tx(run))
 ```
 
 ## 要点
 
-- `{ }` のデストラクチャリングで fixture にアクセスする
-- fixture は遅延評価される - アクセスされた時のみ初期化される
-- fixture からクリーンアップ関数を返す
-- セットアップ用の fixture には `{ auto: true }` を使う
-- 高コストな共有リソースには `{ scope: 'file' }` を使う
-- fixture は合成可能 - 拡張済みテストからさらに拡張できる
+- builder パターンを推奨する — 型が推論され、クリーンアップは `onCleanup` で行う
+- fixture は遅延評価される — デストラクチャリングされた時のみ初期化される
+- 必ず `{ db }` とデストラクチャリングする。`context.db` は使わない
+- 高コストな共有リソースには `{ scope: 'file' | 'worker' }` を使う
+- スイートごとに fixture の値を変えるには `test.scoped` ではなく `test.override` を使う
+- project ごとの値には `{ injected: true }` と project の `provide` を組み合わせる
 
 <!-- 
 Source references:

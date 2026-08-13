@@ -189,11 +189,12 @@ defineConfig({
 vitest --project unit
 vitest --project integration
 
-# 複数 project
+# 複数 project / ワイルドカード
 vitest --project unit --project e2e
+vitest --project="packages*"
 
 # project を除外
-vitest --project.ignore browser
+vitest --project="!browser"
 ```
 
 ## project に値を提供する
@@ -248,9 +249,9 @@ test('uses injected url', ({ apiUrl }) => {
 })
 ```
 
-## project の隔離
+## project ごとのプールと隔離 (v4)
 
-各 project はデフォルトで独自のスレッドプールで実行される:
+v4 のプール刷新以降、隔離・並列度・Node の CLI オプションは project ごとに設定できる:
 
 ```ts
 defineConfig({
@@ -258,9 +259,22 @@ defineConfig({
     projects: [
       {
         test: {
-          name: 'isolated',
-          isolate: true, // 完全隔離
-          pool: 'forks',
+          name: 'unit',
+          isolate: false,                 // 高速な非隔離ユニットテスト
+          exclude: ['**/*.integration.test.ts'],
+        },
+      },
+      {
+        test: {
+          name: 'sequential',
+          include: ['**/*.sequential.test.ts'],
+          fileParallelism: false,         // これらのファイルを 1 つずつ実行
+        },
+      },
+      {
+        test: {
+          name: 'staging',
+          execArgv: ['--env-file=.env.staging'], // project ごとの Node フラグ
         },
       },
     ],
@@ -287,10 +301,10 @@ defineConfig({
 
 ## 要点
 
-- project は同一の Vitest プロセスで実行される
-- 各 project ごとに環境や設定を変えられる
+- project は同一の Vitest プロセスで実行される。削除された `workspace` オプションを置き換えるものである
+- 各 project ごとに環境・プール・隔離・設定を変えられる
 - モノレポのパッケージには glob パターンを使う
-- 特定の project を実行するには `--project` フラグを使う
+- 特定の project を実行するには `--project` を使う。ワイルドカードと `!` による除外に対応する
 - `provide` でテストに設定値を注入する
 - project は明示的に上書きしない限りルート設定を継承する
 

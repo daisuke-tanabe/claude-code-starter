@@ -28,19 +28,15 @@ defineConfig({
       // レポーター
       reporter: ['text', 'json', 'html'],
       
-      // 含めるファイル
+      // v4: 未カバーのファイルもレポートするには `include` を定義する。
+      // 未定義の場合、実行中にロードされたファイルのみレポートされる。
       include: ['src/**/*.{ts,tsx}'],
       
-      // 除外するファイル
+      // 除外は `include` にマッチしたファイルに適用される
       exclude: [
-        'node_modules/',
-        'tests/',
         '**/*.d.ts',
         '**/*.test.ts',
       ],
-      
-      // 未カバーのファイルもレポート
-      all: true,
       
       // 閾値
       thresholds: {
@@ -64,6 +60,7 @@ npm i -D @vitest/coverage-v8
 
 - 高速、事前インストルメント不要
 - V8 ネイティブの coverage を利用
+- v4 は AST ベースのリマッピングを使い、Istanbul と同等の精度になった。v3 からのアップグレード時はカバレッジ数値の変動を見込む
 - 多くのプロジェクトで推奨
 
 ### Istanbul
@@ -110,6 +107,9 @@ coverage: {
     
     // 閾値の自動更新 (段階的改善向け)
     autoUpdate: true,
+
+    // v5: glob 閾値はトップレベルの `perFile` を継承しない。glob ごとに設定する
+    'src/utils/**': { lines: 80, perFile: true },
   },
 }
 ```
@@ -183,7 +183,7 @@ coverage: {
 
 ## シャーディングとの併用
 
-シャード実行のカバレッジをマージする:
+シャード実行のカバレッジをマージする。blob はデフォルトで `.vitest/blob/` に出力される:
 
 ```bash
 vitest run --shard=1/3 --coverage --reporter=blob
@@ -193,13 +193,20 @@ vitest run --shard=3/3 --coverage --reporter=blob
 vitest --merge-reports --coverage --reporter=json
 ```
 
+## v4 での変更
+
+- `coverage.all` と `coverage.extensions` は削除された — `coverage.include` を設定しない限り、カバーされたファイルのみレポートされる。
+- `coverage.ignoreEmptyLines` は削除された。ランタイムコードを持たない行はカウントされなくなった。
+- `coverage.experimentalAstAwareRemapping` は削除された — AST リマッピングが V8 のデフォルトかつ唯一のモードになった。
+- プログラマティックなカバレッジ API は `vitest/coverage` から `vitest/node` に移動した。
+
 ## 要点
 
 - V8 は高速、Istanbul は互換性が高い
 - `--coverage` フラグまたは `coverage.enabled: true` を利用する
-- 未カバーのファイルも見たい場合は `all: true` を指定する
+- 未カバーのソースファイルもレポートするには `coverage.include` を定義する
 - 最低カバレッジを強制するには閾値を設定する
-- ignore コメントを保持するには `@preserve` を付ける
+- ignore コメントを保持するには `@preserve` を付ける。例: `/* v8 ignore next -- @preserve */`
 
 <!-- 
 Source references:
