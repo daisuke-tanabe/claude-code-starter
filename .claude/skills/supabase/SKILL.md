@@ -1,8 +1,9 @@
 ---
 name: supabase
-description: "Supabase に関わるあらゆるタスクで使用する。トリガー: Supabase の各プロダクト (Database, Auth, Edge Functions, Realtime, Storage, Vectors, Cron, Queues)、Next.js / React / SvelteKit / Astro / Remix におけるクライアントライブラリと SSR 連携 (supabase-js, @supabase/ssr)、認証関連の問題 (login, logout, sessions, JWT, cookies, getSession, getUser, getClaims, RLS)、Supabase CLI または MCP サーバー、スキーマ変更、マイグレーション、セキュリティ監査、Postgres 拡張 (pg_graphql, pg_cron, pg_vector)。"
+description: "Supabase に関わるあらゆるタスクで使用する。トリガー: Supabase の各プロダクト (Database, Auth, Edge Functions, Realtime, Storage, Vectors, Cron, Queues)、Next.js / React / SvelteKit / Astro / Remix におけるクライアントライブラリと SSR 連携 (supabase-js, @supabase/ssr)、認証関連の問題 (login, logout, sessions, JWT, cookies, getSession, getUser, getClaims, RLS)、Supabase CLI または MCP サーバー、スキーマ変更、マイグレーション、宣言的スキーマ、セキュリティ監査、Postgres 拡張 (pg_graphql, pg_cron, pg_vector)、Supabase プロジェクトでのエラーや想定外の挙動のデバッグ (HTTP エラー、Postgres エラー、RLS の想定外挙動、permission denied、スキーマキャッシュ問題、タイムアウト、Edge Functions のクラッシュ、Realtime の切断、Storage の失敗)、ログの参照・クエリ (Logs Explorer, ClickHouse)。"
 metadata:
   source: "supabase-community/supabase-plugin@skills/supabase"
+  sourceVersion: "1329274441f347bae3fc06d3bab2ad9535c0cab5"
   author: supabase
   version: "0.1.2"
 ---
@@ -70,6 +71,9 @@ auth、RLS、ビュー、Storage、ユーザーデータに触れる Supabase �
 - **Storage のアクセス制御**
   - **Storage の upsert には INSERT + SELECT + UPDATE が必要。** INSERT だけを付与すると新規アップロードはできるが、ファイル置換 (upsert) は静かに失敗する。3 つすべてが必要。
 
+- 依存関係とサプライチェーンのセキュリティ
+  - `supabase-js`、`@supabase/ssr`、`supabase-py` などの Supabase パッケージをインストールする際は、必ずバージョンを固定し lockfile をコミットする。チェックリスト全体は [npm セキュリティガイド](https://supabase.com/docs/guides/security/npm-security.md) を参照する。
+
 上記でカバーされていないセキュリティ上の懸念については、Supabase の product security インデックスを参照する: `https://supabase.com/docs/guides/security/product-security.md`
 
 ## Supabase CLI
@@ -86,7 +90,7 @@ supabase <group> <command> --help  # Flags for a specific command
 
 - `supabase db query` には **CLI v2.79.0+** が必要 → 代替として MCP `execute_sql` または `psql` を使用する
 - `supabase db advisors` には **CLI v2.81.3+** が必要 → 代替として MCP `get_advisors` を使用する
-- 新しいマイグレーション SQL ファイルが必要なときは、**必ず** 先に `supabase migration new <name>` で作成する。マイグレーションファイル名を勝手に作ったり、期待されるフォーマットを記憶に頼ったりしない。
+- 命令的マイグレーション運用のプロジェクトでは、手書きのマイグレーションファイルを必ず先に `supabase migration new <name>` で作成する。マイグレーションファイル名を勝手に作ったり、期待されるフォーマットを記憶に頼ったりしない。宣言的スキーマ運用のプロジェクトでは `supabase/schemas/` からマイグレーションを生成する。後述の「スキーマ変更とコミット」を参照する。
 
 **バージョン確認とアップグレード:** `supabase --version` で確認する。CLI の changelog やバージョン固有の機能については、[CLI ドキュメント](https://supabase.com/docs/reference/cli/introduction) または [GitHub releases](https://github.com/supabase/cli/releases) を参照する。
 
@@ -116,6 +120,16 @@ Supabase 機能を実装する前に、関連ドキュメントを確認する�
 
 ## スキーマ変更とコミット
 
+まず、プロジェクトがどちらのスキーマ運用かを判断する。
+
+### 選択肢 A: 宣言的スキーマ
+
+`supabase/schemas/` が存在する、または `config.toml` に `schema_paths` が設定されている場合はこちら。スキーマのあるべき状態をそれらのファイルで編集し、マイグレーションを生成してレビューする。手書きのマイグレーションから始めない。[Declarative database schemas ガイド](https://supabase.com/docs/guides/local-development/declarative-database-schemas) を参照する。
+
+### 選択肢 B: 命令的マイグレーション
+
+宣言的スキーマを使っていないプロジェクトはこちら。
+
 **スキーマ変更には `execute_sql` (MCP) または `supabase db query` (CLI) を使用する。** これらは SQL をデータベースに直接実行し、マイグレーション履歴を作成しないため、自由に試行錯誤でき、準備が整ってからクリーンなマイグレーションを生成できる。
 
 ローカル DB のスキーマ変更に `apply_migration` を使ってはならない。呼び出すたびにマイグレーション履歴を書き込むため、試行錯誤ができず、`supabase db diff` / `supabase db pull` が空または競合する diff を出力する。一度使ってしまうと、最初に渡した SQL のままから動けなくなる。
@@ -126,6 +140,10 @@ Supabase 機能を実装する前に、関連ドキュメントを確認する�
 2. **変更にビュー / 関数 / トリガー / Storage が含まれる場合は、上記のセキュリティチェックリストを再確認する。**
 3. **マイグレーションを生成する** → `supabase db pull <descriptive-name> --local --yes`
 4. **検証する** → `supabase migration list --local`
+
+## デバッグ
+
+Supabase 関連のリクエストでエラーが出た場合、記憶に頼って診断や修正案の提示をしてはならない。Supabase REST API・Postgres・PostgREST のエラーコード、空の結果、想定外の RLS ブロック、Auth・Realtime・Edge Functions・Storage などのサービスのエラーが対象で、必ず先に Supabase の [Monitoring and Debugging](https://supabase.com/docs/guides/monitoring-and-debugging.md) ドキュメントを取得する。同ドキュメントはスロークエリやインデックス不足などのパフォーマンス最適化もカバーする。
 
 ## リファレンスガイド
 
