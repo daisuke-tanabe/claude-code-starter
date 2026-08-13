@@ -112,11 +112,12 @@ test.concurrent('test 2', async ({ expect }) => {
 })
 ```
 
-### Sequential
+### 並行実行からの除外
+
+`test.sequential` は v5 で削除された。継承またはグローバル設定された並行実行から除外するには `concurrent: false` を使う:
 
 ```ts
-// concurrent コンテキスト内で順次実行を強制する
-test.sequential('must run alone', async () => {})
+test('must run alone', { concurrent: false }, async () => {})
 ```
 
 ## パラメータ化テスト
@@ -169,31 +170,44 @@ test.for([
 第 1 引数で context ユーティリティを取得できる:
 
 ```ts
-test('with context', ({ expect, skip, task }) => {
-  console.log(task.name)   // テスト名
-  skip(someCondition)      // 動的に skip
-  expect(1).toBe(1)        // context にバインドされた expect
+test('with context', ({ expect, skip, task, signal, annotate }) => {
+  console.log(task.name)        // テストメタデータ
+  skip(someCondition, 'reason') // 動的に skip
+  expect(1).toBe(1)             // context にバインドされた expect
+})
+
+// signal (3.2+): タイムアウト / キャンセル / bail 時に中断される AbortSignal
+test('aborts on timeout', async ({ signal }) => {
+  await fetch('/resource', { signal })
+}, 2000)
+
+// annotate (3.2+): レポーターに表示されるメモを付ける
+test('annotated', async ({ annotate }) => {
+  await annotate('see issue #123', 'issues')
 })
 ```
 
 ## カスタムテストと Fixtures
 
+型が自動推論される builder パターン (4.1+) を推奨する:
+
 ```ts
 import { test as base } from 'vitest'
 
-const test = base.extend({
-  db: async ({}, use) => {
+const test = base
+  .extend('db', async ({}, { onCleanup }) => {
     const db = await createDb()
-    await use(db)
-    await db.close()
-  },
-})
+    onCleanup(() => db.close()) // テスト / スコープの終了後に実行される
+    return db
+  })
 
 test('query', async ({ db }) => {
   const users = await db.query('SELECT * FROM users')
   expect(users).toBeDefined()
 })
 ```
+
+fixture のスコープ、`test.override`、Playwright 互換のオブジェクト構文は [features-context](features-context.md) を参照。
 
 ## リトライ設定
 
@@ -214,18 +228,36 @@ test('with delay', {
 
 ## タグ
 
+タグはまず config で宣言し、その上でテストに適用する (4.1+):
+
 ```ts
 test('database test', { tags: ['db', 'slow'] }, async () => {})
 
-// 実行例: vitest --tags db
+// タグ式で実行する:
+// vitest --tagsFilter "db && !flaky"
+```
+
+タグの定義とフィルタ構文は [features-test-tags](features-test-tags.md) を参照。
+
+## ベンチマーク (v5)
+
+`bench` はトップレベルの import ではなくなった。`test()` 内で使う [test-context の fixture](features-benchmarking.md) である:
+
+```ts
+// ファイルは benchmark.include にマッチする必要がある (例: *.bench.ts)
+test('sort', async ({ bench }) => {
+  await bench('Array.sort', () => [3, 1, 2].sort()).run()
+})
 ```
 
 ## 要点
 
+- オプションは第 2 引数として渡す。第 3 引数のオプションオブジェクトは v4 で削除された。末尾のタイムアウト数値は引き続き許可される
 - 本体を持たないテストは `todo` として扱われる
 - `test.only` は CI で例外を投げる (`allowOnly: true` を設定しない限り)
 - concurrent テストやスナップショットでは context の `expect` を使う
 - 関数名は第 1 引数として渡された場合にテスト名として利用される
+- `test.sequential` は v5 で削除された — `{ concurrent: false }` を使う
 
 <!-- 
 Source references:

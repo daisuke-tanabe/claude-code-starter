@@ -124,23 +124,39 @@ pnpm --filter "./packages/**" exec rm -rf dist
 
 ## Workspace の設定
 
-`.npmrc` または `pnpm-workspace.yaml` で設定する。
+`pnpm-workspace.yaml` に camelCase のキーで設定する。これらの設定はもう `.npmrc` には置かない。
 
-```ini
+```yaml title="pnpm-workspace.yaml"
+packages:
+  - 'packages/*'
+
 # workspace パッケージを自動的にリンク
-link-workspace-packages=true
-
+linkWorkspacePackages: true
 # レジストリより workspace パッケージを優先
-prefer-workspace-packages=true
-
-# 単一の lockfile (推奨)
-shared-workspace-lockfile=true
-
-# workspace protocol の取り扱い
-save-workspace-protocol=rolling
-
+preferWorkspacePackages: true
+# workspace 全体で単一の lockfile (推奨)
+sharedWorkspaceLockfile: true
+# 公開時の workspace protocol の取り扱い
+saveWorkspaceProtocol: rolling
 # workspace スクリプトの並列度
-workspace-concurrency=4
+workspaceConcurrency: 4
+# 全プロジェクトの peer 解決にルートの依存を使う
+resolvePeersFromWorkspaceRoot: true
+# 全プロジェクトに必須のスクリプト (欠けると `pnpm -r run <name>` が失敗する)
+requiredScripts:
+  - build
+```
+
+### パッケージごとの設定 (packageConfigs)
+
+サブプロジェクトごとの `.npmrc` は存在しない。パッケージ固有の設定はルートのファイルから行う。
+
+```yaml title="pnpm-workspace.yaml"
+packageConfigs:
+  project-1:
+    saveExact: true
+  project-2:
+    savePrefix: '~'
 ```
 
 ## Workspace の公開
@@ -170,11 +186,12 @@ pnpm publish -r --no-git-checks
 
 ## ベストプラクティス
 
-1. **workspace protocol を使う**: 内部依存関係に活用する
-2. **`link-workspace-packages` を有効にする**: 自動リンクのため
-3. **共有 lockfile を使う**: 整合性を保つ
-4. **依存方向でフィルタする**: ビルド時に正しい順序を保証する
-5. **catalog を使う**: 外部依存のバージョンを共有する
+1. workspace protocol を使う: 内部依存関係に活用する
+2. `linkWorkspacePackages` を有効にする: 自動リンクのため
+3. 共有 lockfile を使う: 整合性を保つ
+4. 依存方向でフィルタする: ビルド時に正しい順序を保証する
+5. catalog を使う: 外部依存のバージョンを同じファイルで定義して共有する
+6. pnpm の設定はすべて camelCase で `pnpm-workspace.yaml` に置き、`.npmrc` に置かない
 
 ## プロジェクト構成の例
 

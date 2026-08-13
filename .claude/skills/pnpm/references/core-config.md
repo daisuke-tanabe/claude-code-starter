@@ -1,188 +1,185 @@
 ---
 name: pnpm-configuration
-description: pnpm-workspace.yaml と .npmrc を用いた設定オプション
+description: pnpm-workspace.yaml・グローバル config.yaml・認証専用の .npmrc による pnpm の設定
 ---
 
 # pnpm の設定
 
-pnpm では、workspace と pnpm 固有の設定を記述する `pnpm-workspace.yaml` と、npm 互換および pnpm 固有の設定を記述する `.npmrc` という、2 つの主要な設定ファイルを利用する。
+pnpm の設定は 2 つのカテゴリに分かれる。それぞれの置き場所を知ることが、現行 pnpm の設定で最も重要な概念である。
 
-## pnpm-workspace.yaml
+| カテゴリ | 保存先 | 形式 |
+|----------|-----------|--------|
+| pnpm・インストール関連のすべての設定。`nodeLinker`, `hoistPattern`, `autoInstallPeers`, `overrides`, `catalog` など | プロジェクトの `pnpm-workspace.yaml` とグローバルの `config.yaml` | YAML、キーは camelCase |
+| 認証・レジストリ認証情報。`_authToken`, `cert`, `key` など | プロジェクトの `.npmrc` は gitignore し、グローバルは `rc` を使う | INI |
 
-pnpm 固有の設定の推奨配置先。プロジェクトのルートに置く。
+> 重要な変更点: pnpm は `package.json` の `pnpm` フィールドから設定を読まなくなった。`.npmrc` は認証とレジストリ認証情報のみに使う。それ以外はすべて `pnpm-workspace.yaml` に書く。YAML のキーは `nodeLinker` のような camelCase であり、旧 `.npmrc` の kebab-case ではない。
 
-```yaml
-# workspace パッケージの定義
+## pnpm-workspace.yaml — 主要な設定ファイル
+
+workspace またはプロジェクトのルートに置く。単一パッケージのプロジェクトでも、pnpm の設定にはこのファイルを使う。
+
+```yaml title="pnpm-workspace.yaml"
+# workspace パッケージ (単一パッケージのリポジトリでは省略)
 packages:
   - 'packages/*'
   - 'apps/*'
-  - '!**/test/**'  # 除外パターン
+  - '!**/test/**'
 
-# 共有する依存バージョンの catalog
+# 一般的なインストール設定 (camelCase)
+nodeLinker: isolated          # isolated (デフォルト) | hoisted | pnp
+autoInstallPeers: true
+strictPeerDependencies: false
+savePrefix: '^'
+saveExact: false
+hoistPattern:
+  - '*eslint*'
+  - '*babel*'
+publicHoistPattern: []
+shamefullyHoist: false
+dedupeDirectDeps: false
+resolutionMode: highest       # highest | time-based | lowest-direct
+
+# バージョンの一元管理
 catalog:
   react: ^18.2.0
-  typescript: ~5.3.0
 
-# 依存グループ別の名前付き catalog
-catalogs:
-  react17:
-    react: ^17.0.2
-    react-dom: ^17.0.2
-  react18:
-    react: ^18.2.0
-    react-dom: ^18.2.0
-
-# 解決結果の override (推奨配置先)
+# 依存バージョンの強制 (root のみ)
 overrides:
   lodash: ^4.17.21
   'foo@^1.0.0>bar': ^2.0.0
 
-# pnpm 設定 (.npmrc の代替)
-settings:
-  auto-install-peers: true
-  strict-peer-dependencies: false
-  link-workspace-packages: true
-  prefer-workspace-packages: true
-  shared-workspace-lockfile: true
+# 壊れたパッケージの manifest を拡張・修正
+packageExtensions:
+  react-redux:
+    peerDependencies:
+      react-dom: '*'
+
+# peer dependency のルール
+peerDependencyRules:
+  ignoreMissing:
+    - '@babel/*'
+  allowedVersions:
+    react: '17 || 18'
 ```
 
-## .npmrc の設定
+## グローバル設定 (config.yaml)
 
-pnpm は `.npmrc` から設定を読み込む。プロジェクトのルートまたはユーザーホームに作成する。
+ユーザーレベルの非認証設定はグローバルな YAML の `config.yaml` に置く。
 
-### よく使う pnpm 設定
+- `$XDG_CONFIG_HOME/pnpm/config.yaml` — 設定されている場合
+- Linux: `~/.config/pnpm/config.yaml`
+- macOS: `~/Library/Preferences/pnpm/config.yaml`
+- Windows: `~/AppData/Local/pnpm/config/config.yaml`
 
-```ini
-# peer dependency を自動インストール
-auto-install-peers=true
+同じディレクトリにある `rc` という名前のグローバルファイルには、レジストリと認証の設定のみを置く。
 
-# peer dependency 問題で失敗させる
-strict-peer-dependencies=false
+## workspace 内のプロジェクト別設定 (packageConfigs)
 
-# 依存の hoist パターン
-public-hoist-pattern[]=*types*
-public-hoist-pattern[]=*eslint*
-shamefully-hoist=false
+サブプロジェクトごとの `.npmrc` はもう存在しない。パッケージ別の設定はルートの `pnpm-workspace.yaml` の `packageConfigs` で行う。
 
-# store の場所
-store-dir=~/.pnpm-store
+```yaml title="pnpm-workspace.yaml"
+packageConfigs:
+  # Map 形式: パッケージ名をキーにする
+  project-1:
+    saveExact: true
+  project-2:
+    savePrefix: '~'
+  # 配列形式: パターンマッチのルール
+  # - match: ['project-1', 'project-2']
+  #   modulesDir: node_modules
+  #   saveExact: true
+```
 
-# 仮想 store の場所
-virtual-store-dir=node_modules/.pnpm
+## .npmrc — 認証専用
 
-# lockfile 関連
-lockfile=true
-prefer-frozen-lockfile=true
+認証トークンをリポジトリに含めない。プロジェクトの `.npmrc` は gitignore する。認証ファイルは優先度の高い順に次のとおり。
 
-# 副作用キャッシュ (再ビルドを高速化)
-side-effects-cache=true
+1. `<workspace root>/.npmrc` — プロジェクト用。gitignore する
+2. `<pnpm config>/auth.ini` — `pnpm login` が書き込む
+3. `~/.npmrc` — npm 互換のためのフォールバック
 
-# レジストリ設定
-registry=https://registry.npmjs.org/
+```ini title=".npmrc"
+//registry.npmjs.org/:_authToken=${NPM_TOKEN}
 @myorg:registry=https://npm.myorg.com/
+//npm.myorg.com/:_authToken=${MYORG_TOKEN}
 ```
 
-### Workspace 関連の設定
+レジストリ自体の設定はシークレットではないため `pnpm-workspace.yaml` に書く。
 
-```ini
-# workspace パッケージをリンク
-link-workspace-packages=true
-
-# レジストリより workspace パッケージを優先
-prefer-workspace-packages=true
-
-# すべてのパッケージで単一の lockfile を共有
-shared-workspace-lockfile=true
-
-# workspace 依存の save prefix
-save-workspace-protocol=rolling
+```yaml title="pnpm-workspace.yaml"
+registries:
+  default: https://registry.npmjs.org/
+  '@my-org': https://private.example.com/
+# プレフィックスとして使える名前付きレジストリの alias。例: pnpm add work:@corp/lib
+namedRegistries:
+  work: https://npm.work.example.com/
 ```
 
-### Node.js 関連の設定
+> セキュリティ: v11 以降、プロジェクトの `.npmrc` ではレジストリ・プロキシ URL と認証情報キーの環境変数展開が無効化された。悪意あるリポジトリによるシークレット漏洩を防ぐためである。動的トークンの行はユーザーレベルの認証ファイルに置く。
 
-```ini
-# 特定の Node.js バージョンを使用
-use-node-version=20.10.0
+## `pnpm config` コマンド
 
-# Node.js バージョンファイル
-node-version-file=.nvmrc
+```bash
+# デフォルトではグローバルの config.yaml / rc に書き込む
+pnpm config set nodeVersion 22.0.0
+pnpm config set --location=project nodeVersion 22.0.0   # pnpm-workspace.yaml に書き込む
 
-# Node.js のバージョン管理
-manage-package-manager-versions=true
+# JSON 値は配列・オブジェクトを作る
+pnpm config set --location=project --json allowBuilds '{"react": true}'
+
+# v11 以降、get/list は INI ではなく JSON を出力する
+pnpm config get nodeLinker
+pnpm config get 'allowBuilds.react'
+pnpm config list
 ```
-
-### セキュリティ関連の設定
-
-```ini
-# 特定スクリプトを無視
-ignore-scripts=false
-
-# 特定のビルドスクリプトのみ許可
-onlyBuiltDependencies[]=esbuild
-onlyBuiltDependencies[]=sharp
-
-# 不足する peer dependency を補う package extensions
-package-extensions[foo@1].peerDependencies.bar=*
-```
-
-## 設定の優先順位
-
-設定は次の順に読み込まれ、後のものが先のものを上書きする。
-
-1. `/etc/npmrc` — グローバル設定
-2. `~/.npmrc` — ユーザー設定
-3. `<project>/.npmrc` — プロジェクト設定
-4. 環境変数: `npm_config_<key>=<value>`
-5. `pnpm-workspace.yaml` の settings フィールド
 
 ## 環境変数
 
-```bash
-# 環境変数経由で設定
-npm_config_registry=https://registry.npmjs.org/
+`pnpm_config_*` または `PNPM_CONFIG_*` を使う。pnpm は `npm_config_*` を読まなくなった。
 
-# pnpm 固有の環境変数
-PNPM_HOME=~/.local/share/pnpm
+```bash
+pnpm_config_save_exact=true pnpm add foo
 ```
 
-## package.json のフィールド
+## 名前が変わった主な設定
 
-pnpm は `package.json` の特定フィールドを読み取る。
+| 削除された旧設定 | 置き換え | 備考 |
+|---------------|-------------|-------|
+| `onlyBuiltDependencies`, `neverBuiltDependencies`, `ignoredBuiltDependencies`, `onlyBuiltDependenciesFile` | `allowBuilds: { name: true\|false }` | ビルドスクリプトの承認を単一の map で制御する。supply-chain-security を参照。 |
+| `managePackageManagerVersions`, `packageManagerStrict`, `packageManagerStrictVersion`, `COREPACK_ENABLE_STRICT` | `pmOnFail: download\|ignore\|warn\|error` | 実行中の pnpm バージョンが宣言と異なるときの挙動。 |
+| `useNodeVersion` | `package.json` の `devEngines.runtime` | ランタイムのピン留め。 |
+| `auditConfig.ignoreCves` | `auditConfig.ignoreGhsas` | GHSA ID を使う。 |
+| `allowNonAppliedPatches` | `allowUnusedPatches` | `ignorePatchFailures` は削除され、patch の失敗は常にエラーになる。 |
+| `package.json#pnpm` フィールド | `pnpm-workspace.yaml` | もう一切読まれない。 |
+
+## Package Manager / Runtime のピン留め (package.json)
 
 ```json
 {
-  "pnpm": {
-    "overrides": {
-      "lodash": "^4.17.21"
-    },
-    "peerDependencyRules": {
-      "ignoreMissing": ["@babel/*"],
-      "allowedVersions": {
-        "react": "17 || 18"
-      }
-    },
-    "neverBuiltDependencies": ["fsevents"],
-    "onlyBuiltDependencies": ["esbuild"],
-    "allowedDeprecatedVersions": {
-      "request": "*"
-    },
-    "patchedDependencies": {
-      "express@4.18.2": "patches/express@4.18.2.patch"
-    }
+  "packageManager": "pnpm@10.0.0",
+  "devEngines": {
+    "packageManager": { "name": "pnpm", "version": ">=11.0.0 <12.0.0", "onFail": "download" },
+    "runtime": { "name": "node", "version": "22.x", "onFail": "download" }
   }
 }
 ```
 
-## npm/yarn との主な違い
+`devEngines.packageManager` は範囲指定に対応し、解決されたバージョンは lockfile に保存される。`packageManager` は正確なバージョンを要求する。manifest を編集せずに `onFail` を上書きするには `pmOnFail` / `runtimeOnFail` 設定を使う。
 
-1. **デフォルトで strict**: phantom dependency を許容しない
-2. **Workspace protocol**: ローカルパッケージに `workspace:*` を使用
-3. **Catalogs**: バージョンを一元管理
-4. **コンテンツアドレス指定 store**: プロジェクト間で共有される
+## 要点
+
+- pnpm のすべての設定は camelCase で `pnpm-workspace.yaml` かグローバルの `config.yaml` に書く。`.npmrc` は認証・レジストリ専用である。
+- `package.json#pnpm` と `npm_config_*` 環境変数はもう読まれない。
+- workspace 内のパッケージ別設定には `packageConfigs` を使う。
+- ビルドスクリプトの承認は単一の `allowBuilds` map に、package manager の厳格さは単一の `pmOnFail` 設定になった。
+- `pnpm config get` と `list` は JSON を出力し、`--location=project` は `pnpm-workspace.yaml` に書き込む。
 
 <!--
 Source references:
-- https://pnpm.io/pnpm-workspace_yaml
+- https://pnpm.io/settings
+- https://pnpm.io/configuring
 - https://pnpm.io/npmrc
+- https://pnpm.io/pnpm-workspace_yaml
 - https://pnpm.io/package_json
+- https://pnpm.io/cli/config
 -->

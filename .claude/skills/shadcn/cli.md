@@ -68,7 +68,7 @@ preset を指定しない場合、CLI は `ui.shadcn.com/create` のカスタム
 npx shadcn@latest add [components...] [options]
 ```
 
-コンポーネント名、registry プレフィックス付きの名前 (`@magicui/shimmer-button`)、URL、ローカルパスを受け付ける。
+コンポーネント名、registry プレフィックス付きの名前 (`@magicui/shimmer-button`)、GitHub アイテムアドレス (`owner/repo/item`)、URL、ローカルパスを受け付ける。
 
 | フラグ          | 短縮 | 説明                                                                                                                  | デフォルト |
 | --------------- | ---- | --------------------------------------------------------------------------------------------------------------------- | ---------- |
@@ -105,6 +105,9 @@ npx shadcn@latest add button --view button.tsx
 # URL でも動作する。
 npx shadcn@latest add https://api.npoint.io/abc123 --dry-run
 
+# 公開 GitHub registry でも動作する。
+npx shadcn@latest add owner/repo/item --dry-run
+
 # CSS の diff。
 npx shadcn@latest add button --diff globals.css
 ```
@@ -126,17 +129,19 @@ npx shadcn@latest add button --diff globals.css
 ### `search` — registry の検索
 
 ```bash
-npx shadcn@latest search <registries...> [options]
+npx shadcn@latest search [registries...] [options]
 ```
 
-registry 横断のファジー検索。`npx shadcn@latest list` でも呼べる。`-q` を付けない場合は全アイテムを一覧する。
+registry 横断のファジー検索。`npx shadcn@latest list` でも呼べる。namespace (`@acme`)、公開 GitHub registry ソース (`owner/repo`)、registry カタログ URL をサポートする。`-q` を付けない場合は全アイテムを一覧する。registry を指定しない場合は `components.json` に設定されたすべての registry を検索する。
 
-| フラグ              | 短縮 | 説明                          | デフォルト |
-| ------------------- | ---- | ----------------------------- | ---------- |
-| `--query <query>`   | `-q` | 検索クエリ                    | —          |
-| `--limit <number>`  | `-l` | registry あたりの最大アイテム | `100`      |
-| `--offset <number>` | `-o` | スキップするアイテム数        | `0`        |
-| `--cwd <cwd>`       | `-c` | 作業ディレクトリ              | カレント   |
+| フラグ              | 短縮 | 説明                                                              | デフォルト |
+| ------------------- | ---- | ----------------------------------------------------------------- | ---------- |
+| `--query <query>`   | `-q` | 検索クエリ                                                        | —          |
+| `--type <type>`     | `-t` | アイテムタイプで絞り込み (例: `ui`、`block`、`hook`)。カンマ区切り可 | —          |
+| `--limit <number>`  | `-l` | 表示する最大アイテム数                                            | `100`      |
+| `--offset <number>` | `-o` | スキップするアイテム数                                            | `0`        |
+| `--json`            |      | JSON で出力                                                       | `false`    |
+| `--cwd <cwd>`       | `-c` | 作業ディレクトリ                                                  | カレント   |
 
 ### `view` — アイテム詳細の表示
 
@@ -144,7 +149,7 @@ registry 横断のファジー検索。`npx shadcn@latest list` でも呼べる�
 npx shadcn@latest view <items...> [options]
 ```
 
-アイテム情報をファイル内容付きで表示する。例: `npx shadcn@latest view @shadcn/button`。
+アイテム情報をファイル内容付きで表示する。例: `npx shadcn@latest view @shadcn/button`、`npx shadcn@latest view owner/repo/item`。
 
 ### `docs` — コンポーネントドキュメント URL の取得
 
@@ -231,6 +236,8 @@ npx shadcn@latest build [registry] [options]
 ```
 
 配布用に `registry.json` を個別の JSON ファイルへビルドする。デフォルト入力: `./registry.json`、デフォルト出力: `./public/r`。
+
+作成ルール、`include`、アイテム定義、`registryDependencies`、GitHub registry の挙動については [registry.md](./registry.md) を参照。
 
 | フラグ            | 短縮 | 説明             | デフォルト   |
 | ----------------- | ---- | ---------------- | ------------ |

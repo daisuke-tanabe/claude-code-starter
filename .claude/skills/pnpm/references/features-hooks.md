@@ -1,233 +1,180 @@
 ---
 name: pnpm-hooks
-description: pnpmfile の hook でパッケージ解決と依存挙動をカスタマイズする
+description: .pnpmfile.mjs の hook・finder・カスタム resolver / fetcher で解決・設定・packing・取得をカスタマイズする
 ---
 
-# pnpm の Hooks
+# pnpm の Hooks (.pnpmfile.mjs)
 
-pnpm は `.pnpmfile.cjs` を通じて、パッケージ解決やメタデータ処理を上書きできる hook を提供する。
+pnpm の hook はインストール処理をカスタマイズする。ESM の `.pnpmfile.mjs` を推奨し、CommonJS の `.pnpmfile.cjs` も使える。lockfile の隣、monorepo では workspace ルートに置く。
+
+> 現行の形式は ESM の `export const hooks = { ... }` である。従来の CommonJS の `module.exports = { hooks }` も `.pnpmfile.cjs` で引き続き動作する。
 
 ## セットアップ
 
-workspace ルートに `.pnpmfile.cjs` を作成する。
-
-```js
-// .pnpmfile.cjs
-function readPackage(pkg, context) {
-  // パッケージのメタデータを編集
-  return pkg
-}
-
-function afterAllResolved(lockfile, context) {
-  // lockfile を編集
-  return lockfile
-}
-
-module.exports = {
-  hooks: {
-    readPackage,
-    afterAllResolved
-  }
+```js title=".pnpmfile.mjs"
+export const hooks = {
+  readPackage,
+  afterAllResolved,
+  updateConfig,
+  beforePacking,
 }
 ```
 
-## readPackage hook
+## hook リファレンス
 
-解決前にすべてのパッケージに対して呼び出される。依存の編集、不足する peer dependency の追加、壊れたパッケージの修正に使う。
+| Hook | タイミング | 用途 |
+|------|-----|-----|
+| `readPackage(pkg, ctx)` | 依存の manifest がパースされた後 | 依存の `package.json` を変更する。解決に影響する |
+| `afterAllResolved(lockfile, ctx)` | 解決後 | 書き込まれる前の lockfile を変更する |
+| `updateConfig(config)` | インストール前 | pnpm の設定を変更する。config dependency と組み合わせると強力 |
+| `beforePacking(pkg)` | `pnpm pack` / `publish` の tarball 作成前 | 公開される manifest のみをカスタマイズする |
+| `preResolution(opts)` | lockfile 読み込み後、解決前 | lockfile オブジェクトを検査・変更する |
+| `importPackage(dir, opts)` | node_modules への書き込み時 | パッケージのリンク方法を変更する |
 
-### 不足する peer dependency を追加
+## readPackage
 
-```js
+解決前にすべてのパッケージに対して呼び出される。よくある使い方:
+
+```js title=".pnpmfile.mjs"
 function readPackage(pkg, context) {
+  // 不足する peer dependency を追加
   if (pkg.name === 'some-broken-package') {
-    pkg.peerDependencies = {
-      ...pkg.peerDependencies,
-      react: '*'
-    }
-    context.log(`Added react peer dep to ${pkg.name}`)
+    pkg.peerDependencies = { ...pkg.peerDependencies, react: '*' }
   }
-  return pkg
-}
-```
-
-### 依存バージョンを上書き
-
-```js
-function readPackage(pkg, context) {
-  // すべての lodash バージョンを修正
-  if (pkg.dependencies?.lodash) {
-    pkg.dependencies.lodash = '^4.17.21'
-  }
-  if (pkg.devDependencies?.lodash) {
-    pkg.devDependencies.lodash = '^4.17.21'
-  }
-  return pkg
-}
-```
-
-### 不要な依存を削除
-
-```js
-function readPackage(pkg, context) {
+  // 推移的依存のバージョンを固定
+  if (pkg.dependencies?.lodash) pkg.dependencies.lodash = '^4.17.21'
   // 問題を起こす optional dependency を削除
-  if (pkg.optionalDependencies?.fsevents) {
-    delete pkg.optionalDependencies.fsevents
+  delete pkg.optionalDependencies?.fsevents
+  // 非推奨の依存を置き換え
+  if (pkg.dependencies?.['old-pkg']) {
+    pkg.dependencies['new-pkg'] = pkg.dependencies['old-pkg']
+    delete pkg.dependencies['old-pkg']
   }
   return pkg
 }
+
+export const hooks = { readPackage }
 ```
 
-### パッケージを置換
+> 変更はディスクに書き込まれず、解決にのみ影響する。ロック済みの依存を再解決するには `pnpm-lock.yaml` を削除する。ここで `scripts` を削除してもビルドは止まらない。代わりに `allowBuilds` 設定を使う。依存のファイルへの変更を永続化するには `pnpm patch` を使う。
 
-```js
-function readPackage(pkg, context) {
-  // 非推奨パッケージを置き換え
-  if (pkg.dependencies?.['old-package']) {
-    pkg.dependencies['new-package'] = pkg.dependencies['old-package']
-    delete pkg.dependencies['old-package']
-  }
-  return pkg
-}
-```
+## updateConfig
 
-### 壊れたパッケージを修正
+pnpm 自体の設定をプログラムから変更する。config dependency に含めて配布すると設定をリポジトリ間で共有でき、最も強力である。
 
-```js
-function readPackage(pkg, context) {
-  // exports フィールドの誤りを修正
-  if (pkg.name === 'broken-esm-package') {
-    pkg.exports = {
-      '.': {
-        import: './dist/index.mjs',
-        require: './dist/index.cjs'
-      }
-    }
-  }
-  return pkg
-}
-```
-
-## afterAllResolved hook
-
-lockfile 生成後に呼び出される。解決後の修正に使う。
-
-```js
-function afterAllResolved(lockfile, context) {
-  // 解決されたすべてのパッケージをログ出力
-  context.log(`Resolved ${Object.keys(lockfile.packages || {}).length} packages`)
-
-  // 必要に応じて lockfile を編集
-  return lockfile
-}
-```
-
-## Context オブジェクト
-
-`context` オブジェクトはユーティリティを提供する。
-
-```js
-function readPackage(pkg, context) {
-  // メッセージをログ出力
-  context.log('Processing package...')
-
-  return pkg
-}
-```
-
-## TypeScript との併用
-
-型ヒントには JSDoc を使う。
-
-```js
-// .pnpmfile.cjs
-
-/**
- * @param {import('type-fest').PackageJson} pkg
- * @param {{ log: (msg: string) => void }} context
- * @returns {import('type-fest').PackageJson}
- */
-function readPackage(pkg, context) {
-  return pkg
-}
-
-module.exports = {
-  hooks: {
-    readPackage
+```js title=".pnpmfile.mjs"
+export const hooks = {
+  updateConfig(config) {
+    return Object.assign(config, {
+      enablePrePostScripts: false,
+      optimisticRepeatInstall: true,
+      resolutionMode: 'lowest-direct',
+      verifyDepsBeforeRun: 'install',
+    })
   }
 }
 ```
 
-## よくあるパターン
-
-### パッケージ名で条件分岐
-
 ```js
-function readPackage(pkg, context) {
-  switch (pkg.name) {
-    case 'package-a':
-      pkg.dependencies.foo = '^2.0.0'
-      break
-    case 'package-b':
-      delete pkg.optionalDependencies.bar
-      break
+// プラグインから catalog エントリを追加
+export const hooks = {
+  updateConfig(config) {
+    config.catalogs.default ??= {}
+    config.catalogs.default['is-odd'] = '1.0.0'
+    return config
   }
-  return pkg
 }
 ```
 
-### 全パッケージに適用
+## beforePacking
 
-```js
-function readPackage(pkg, context) {
-  // すべての optional fsevents を除去
-  if (pkg.optionalDependencies) {
-    delete pkg.optionalDependencies.fsevents
+ローカルの `package.json` に触れずに、公開 tarball に入る manifest をカスタマイズする。
+
+```js title=".pnpmfile.mjs"
+export const hooks = {
+  beforePacking(pkg) {
+    delete pkg.devDependencies
+    pkg.main = './dist/index.js'
+    return pkg
   }
-  return pkg
 }
 ```
 
-### 解決処理のデバッグ
+## afterAllResolved
 
-```js
-function readPackage(pkg, context) {
-  if (process.env.DEBUG_PNPM) {
-    context.log(`${pkg.name}@${pkg.version}`)
-    context.log(`  deps: ${Object.keys(pkg.dependencies || {}).join(', ')}`)
+```js title=".pnpmfile.mjs"
+export const hooks = {
+  afterAllResolved(lockfile, context) {
+    context.log(`Resolved ${Object.keys(lockfile.packages || {}).length} packages`)
+    return lockfile
   }
-  return pkg
 }
+```
+
+## Finders (pnpm list / why)
+
+`--find-by` で使うカスタム述語を定義する。
+
+```js title=".pnpmfile.mjs"
+export const finders = {
+  react17: (ctx) => ctx.readManifest().peerDependencies?.react === '^17.0.0'
+}
+```
+
+```bash
+pnpm why --find-by=react17
+```
+
+## カスタム resolver と fetcher
+
+上級者向けの機能である。トップレベルで `resolvers` / `fetchers` を登録すると、`my-protocol:pkg` のような新しいパッケージスキームをサポートできる。各エントリは軽量な `canResolve` / `canFetch` ガードと `resolve` / `fetch` を持つオブジェクトである。カスタム resolver は組み込みより先に実行される。カスタム解決の `type` フィールドには `custom:` プレフィックスが必要である。
+
+```js title=".pnpmfile.cjs"
+const resolver = {
+  canResolve: (dep) => dep.alias.startsWith('@company/'),
+  resolve: async (dep) => ({
+    id: `${dep.alias}@${dep.bareSpecifier}`,
+    resolution: { type: 'custom:cdn', cdnUrl: '...' },
+  }),
+}
+const fetcher = {
+  canFetch: (id, res) => res.type === 'custom:cdn',
+  fetch: (cafs, res, opts, fetchers) =>
+    fetchers.remoteTarball(cafs, { tarball: res.cdnUrl, integrity: res.integrity }, opts),
+}
+module.exports = { resolvers: [resolver], fetchers: [fetcher] }
+```
+
+> `hooks.fetchers` は v11 で削除された。代わりにトップレベルの `fetchers` export を使う。
+
+## 関連設定
+
+```yaml title="pnpm-workspace.yaml"
+ignorePnpmfile: false                  # pnpmfile を完全に無視する
+pnpmfile: ['.pnpmfile.mjs']            # ローカルの pnpmfile の場所
+globalPnpmfile: ~/.pnpm/global_pnpmfile.mjs
 ```
 
 ## Hooks と Overrides の比較
 
-| 機能 | Hooks (.pnpmfile.cjs) | Overrides |
-|---------|----------------------|-----------|
-| 複雑さ | JavaScript ロジックを利用可能 | 宣言的のみ |
-| スコープ | パッケージメタデータ全般 | バージョンのみ |
-| 用途 | 複雑な修正、条件分岐 | 単純なバージョン固定 |
+| | Hooks (.pnpmfile) | Overrides (pnpm-workspace.yaml) |
+|--|-------------------|---------------------------------|
+| ロジック | JavaScript | 宣言的 |
+| スコープ | manifest の任意フィールド、config、lockfile、packing | バージョン |
+| 用途 | 条件付き・複雑な修正 | 単純なバージョン固定 |
 
-**単純なバージョン修正は overrides を優先**する。**hooks は次のような場合に使う**:
-- 条件分岐ロジックが必要
-- バージョン以外の修正 (exports、peer dependency 等)
-- ログ出力やデバッグ
+単純なケースには `overrides` / `packageExtensions` を優先する。条件分岐、設定共有、packing の調整には hook を使う。
 
-## トラブルシューティング
+## 要点
 
-### hook が実行されない
-
-1. ファイル名が `.pnpmfile.cjs` であることを確認する (`.js` ではない)
-2. workspace ルートに置かれていることを確認する
-3. `pnpm install` を実行して hook をトリガーする
-
-### hook をデバッグ
-
-```bash
-# hook のログを確認
-pnpm install --reporter=append-only
-```
+- `export const hooks` / `finders` / `resolvers` / `fetchers` を使う `.pnpmfile.mjs` を推奨する
+- 新しい hook として、設定を変更する `updateConfig`、公開 manifest を変更する `beforePacking`、`preResolution`、`importPackage` がある
+- `updateConfig` を config dependency と組み合わせ、設定や catalog をリポジトリ間で共有する
+- `--ignore-scripts` では pnpmfile は無効にならない。`ignorePnpmfile` を使う
 
 <!--
 Source references:
 - https://pnpm.io/pnpmfile
+- https://pnpm.io/finders
+- https://pnpm.io/config-dependencies
 -->

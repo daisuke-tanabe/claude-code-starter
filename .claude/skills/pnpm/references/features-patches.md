@@ -42,22 +42,19 @@ pnpm patch-commit <step1 で出力されたパス>
 pnpm patch-commit /tmp/abc123...
 ```
 
-これにより `patches/` 配下に `.patch` ファイルが作成され、`package.json` が更新される。
+これにより `patches/` 配下に `.patch` ファイルが作成され、`pnpm-workspace.yaml` に記録される。
 
 ```
 patches/
 └── express@4.18.2.patch
 ```
 
-```json
-{
-  "pnpm": {
-    "patchedDependencies": {
-      "express@4.18.2": "patches/express@4.18.2.patch"
-    }
-  }
-}
+```yaml title="pnpm-workspace.yaml"
+patchedDependencies:
+  express@4.18.2: patches/express@4.18.2.patch
 ```
+
+> `patchedDependencies` は他のすべての pnpm 設定と同様、`package.json#pnpm` フィールドではなく `pnpm-workspace.yaml` に置くようになった。
 
 ## パッチファイルの形式
 
@@ -106,70 +103,59 @@ pnpm patch-remove express@4.18.2
 
 または手動で行う場合は、
 1. `patches/` 配下のパッチファイルを削除
-2. `package.json` の `patchedDependencies` から該当エントリを削除
+2. `pnpm-workspace.yaml` の `patchedDependencies` から該当エントリを削除
 3. `pnpm install` を実行
 
 ## パッチの設定
 
-### パッチディレクトリのカスタマイズ
+### 複数パッケージと workspace
 
-```json
-{
-  "pnpm": {
-    "patchedDependencies": {
-      "express@4.18.2": "custom-patches/my-express-fix.patch"
-    }
-  }
-}
+パッチはルートの `pnpm-workspace.yaml` から workspace 全体で共有される。
+
+```yaml title="pnpm-workspace.yaml"
+patchedDependencies:
+  express@4.18.2: patches/express@4.18.2.patch
+  lodash@4.17.21: patches/lodash@4.17.21.patch
+  '@types/node@20.10.0': patches/@types__node@20.10.0.patch
 ```
 
-### 複数パッケージにパッチ
+`express:` のようにバージョンを付けないキーは、インストール済みのすべてのバージョンにパッチを当てる。一致するバージョンを使うすべての workspace パッケージにパッチが適用される。
 
-```json
-{
-  "pnpm": {
-    "patchedDependencies": {
-      "express@4.18.2": "patches/express@4.18.2.patch",
-      "lodash@4.17.21": "patches/lodash@4.17.21.patch",
-      "@types/node@20.10.0": "patches/@types__node@20.10.0.patch"
-    }
-  }
-}
+### config dependency からのパッチ
+
+パッチファイルは共有の config dependency 内に置き、パスで参照できる。
+
+```yaml title="pnpm-workspace.yaml"
+configDependencies:
+  my-patches: '1.0.0'
+patchedDependencies:
+  react: node_modules/.pnpm-config/my-patches/react.patch
 ```
 
-## Workspaces
+### allowUnusedPatches
 
-パッチは workspace 全体で共有される。ルート `package.json` で定義する。
-
-```json
-// ルートの package.json
-{
-  "pnpm": {
-    "patchedDependencies": {
-      "express@4.18.2": "patches/express@4.18.2.patch"
-    }
-  }
-}
+```yaml title="pnpm-workspace.yaml"
+allowUnusedPatches: true   # 列挙したパッチが未適用でも失敗しない
 ```
 
-これにより、`express@4.18.2` を使用するすべての workspace パッケージにパッチが適用される。
+> `ignorePatchFailures` は v11 で削除された。適用に失敗したパッチは常にエラーを投げる。複数のパッチがまとめて処理される場合、すべてのエラーは最後に一括で報告される。
 
 ## ベストプラクティス
 
-1. **バージョンの厳密性**: パッチは正確なバージョンに紐づく。依存をアップグレードする際はパッチも更新する。
+1. バージョンの厳密性: パッチは正確なバージョンに紐づく。依存をアップグレードする際はパッチも更新する。
 
-2. **パッチを文書化する**: パッチの存在理由を説明するコメントを残す。
+2. パッチを文書化する: パッチの存在理由を説明するコメントを残す。
    ```bash
    # patches/README.md 内
    ## express@4.18.2.patch
    タイムアウト問題を修正。上流 PR は対応中: https://github.com/expressjs/express/pull/1234
    ```
 
-3. **パッチは最小限に**: 小さく焦点を絞ったものにする。大きなパッチは保守が難しい。
+3. パッチは最小限に: 小さく焦点を絞ったものにする。大きなパッチは保守が難しい。
 
-4. **上流を追う**: 上流の issue や PR を控えておき、修正されたらパッチを除去できるようにする。
+4. 上流を追う: 上流の issue や PR を控えておき、修正されたらパッチを除去できるようにする。
 
-5. **パッチを検証する**: パッチ済みコードが自分のユースケースで正しく動くことを確認する。
+5. パッチを検証する: パッチ済みコードが自分のユースケースで正しく動くことを確認する。
 
 ## トラブルシューティング
 
@@ -197,5 +183,5 @@ pnpm patch-commit <path>
 Source references:
 - https://pnpm.io/cli/patch
 - https://pnpm.io/cli/patch-commit
-- https://pnpm.io/package_json#pnpmpatcheddependencies
+- https://pnpm.io/config-dependencies
 -->

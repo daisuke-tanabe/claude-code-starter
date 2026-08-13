@@ -13,6 +13,7 @@
 - dark: の手動カラー上書きをしない
 - 条件付きクラスには cn() を使う
 - オーバーレイ系コンポーネントに手動 z-index を付けない
+- shimmer / scroll-fade ユーティリティを使い、カスタムアニメーションを書かない
 
 ---
 
@@ -160,3 +161,25 @@ import { cn } from "@/lib/utils"
 ## オーバーレイ系コンポーネントに手動 z-index を付けない
 
 `Dialog`、`Sheet`、`Drawer`、`AlertDialog`、`DropdownMenu`、`Popover`、`Tooltip`、`HoverCard` は自前で重なり順を扱う。`z-50` や `z-[999]` を付けない。
+
+---
+
+## shimmer / scroll-fade ユーティリティを使い、カスタムアニメーションを書かない
+
+「thinking…」のようなライブ表示やローディングテキストのシマーには `shimmer` ユーティリティを使う。カスタムの `@keyframes` や `bg-clip-text` のグラデーションスイープを自作しない。
+
+スクロールコンテナのスクロール連動エッジフェードには `scroll-fade` を使う。軸別のバリアントは `scroll-fade-x` と `scroll-fade-b`。マスクグラデーションを手作りしない。チャットコンポーネントは内部で既にこれらを適用している。`Attachment` はアップロード中にタイトルをシマー表示し、`MessageScrollerViewport` はエッジをフェードする。
+
+**Incorrect:**
+
+```tsx
+<span className="animate-pulse bg-gradient-to-r from-muted-foreground/40 via-foreground/70 to-muted-foreground/40 bg-clip-text text-transparent [animation:shimmer_1.6s_infinite]">
+  Thinking…
+</span>
+```
+
+**Correct:**
+
+```tsx
+<span className="shimmer">Thinking…</span>
+```

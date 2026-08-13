@@ -87,48 +87,6 @@ export const DELETE = requirePermission('delete')(
 
 ## レート制限
 
-シンプルなインメモリ実装。本番ではプロセス境界をまたぐ Redis ベース実装に置き換える。
+レート制限には Redis・ゲートウェイ・プラットフォーム標準のリミッターなど、共有ストアを使う。本番 API でプロセス内のインメモリカウンターを使ってはならない。デプロイでリセットされ、レプリカ間で分断され、サーバーレスやマルチインスタンス環境ではフェイルオープンになる。
 
-```typescript
-class RateLimiter {
-  private requests = new Map<string, number[]>()
-
-  async checkLimit(
-    identifier: string,
-    maxRequests: number,
-    windowMs: number
-  ): Promise<boolean> {
-    const now = Date.now()
-    const requests = this.requests.get(identifier) || []
-
-    // Remove old requests outside window
-    const recentRequests = requests.filter(time => now - time < windowMs)
-
-    if (recentRequests.length >= maxRequests) {
-      return false  // Rate limit exceeded
-    }
-
-    // Add current request
-    recentRequests.push(now)
-    this.requests.set(identifier, recentRequests)
-
-    return true
-  }
-}
-
-const limiter = new RateLimiter()
-
-export async function GET(request: Request) {
-  const ip = request.headers.get('x-forwarded-for') || 'unknown'
-
-  const allowed = await limiter.checkLimit(ip, 100, 60000)  // 100 req/min
-
-  if (!allowed) {
-    return NextResponse.json({
-      error: 'Rate limit exceeded'
-    }, { status: 429 })
-  }
-
-  // Continue with request
-}
-```
+統合ポイントとエラー形式の選定はバックエンド層の責務とする。HTTP 契約は `api-design` スキル、悪用ケースのレビューは security-review を使う。

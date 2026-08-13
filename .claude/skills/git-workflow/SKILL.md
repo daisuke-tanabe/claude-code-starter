@@ -3,6 +3,7 @@ name: git-workflow
 description: ブランチ戦略、コミット規約、マージ vs リベース、コンフリクト解決、PR レビュー、リリース管理を含む Git ワークフローパターン。Git 操作・ブランチ作成・コミットメッセージ作成・PR 作成・マージ判断・リリース管理・履歴の取り消しを行う際は必ず本スキルを参照する。
 metadata:
   source: "affaan-m/everything-claude-code@skills/git-workflow"
+  sourceVersion: "d29cf651c795869f733669c33e3d33dfd8307d10"
 ---
 
 # Git ワークフローパターン

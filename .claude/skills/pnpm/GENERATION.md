@@ -1,5 +1,5 @@
 # 生成情報
 
-- **ソース:** `sources/pnpm`
-- **Git SHA:** `a1d6d5aef9d5f369fa2f0d8a54f1edbaff8b23b3`
-- **生成日:** 2026-01-28
+- ソース: `sources/pnpm`
+- Git SHA: `5cd19942ee75cda8ed299233c486a67d95bb38ec`
+- 生成日: 2026-06-22

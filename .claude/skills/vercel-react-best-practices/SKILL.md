@@ -4,6 +4,7 @@ description: Vercel Engineering による React と Next.js のパフォーマ�
 license: MIT
 metadata:
   source: "vercel-labs/agent-skills@skills/react-best-practices"
+  sourceVersion: "dc8367e6f91c022d83361f03c3313fa05e848ee5"
   author: vercel
   version: "1.0.0"
 ---

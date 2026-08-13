@@ -1,4 +1,23 @@
-# TDD ワークフローの 7 ステップ
+# TDD ワークフローのステップ
+
+## Step 0: テストランナーを検出する
+
+`npm test` を前提にしない。以降のステップに登場する `npm test` は、検出した実際のランナーのコマンドに読み替える。
+
+1. パッケージマネージャを解決する。優先順は `CLAUDE_PACKAGE_MANAGER`、`.claude/package-manager.json`、`package.json` の `packageManager` フィールド、lockfile、グローバル設定
+2. パッケージマネージャとテストランナーは別物として区別する。Bun でインストールしつつ Jest や Vitest を実行するプロジェクトもある
+   - `scripts.test` が `jest` / `vitest` を呼ぶ → 検出したパッケージマネージャ経由で実行する。`npm test`、`pnpm test`、`yarn test`、`bun run test`
+   - `scripts.test` が `bun test`、テストファイルが `bun:test` から import している、または jest / vitest の設定がなく Bun が存在する → Bun のネイティブランナー `bun test` を使う
+
+| ランナー | 実行 | watch | coverage |
+|---|---|---|---|
+| npm | `npm test` | `npm test -- --watch` | `npm run test:coverage` |
+| pnpm | `pnpm test` | `pnpm test --watch` | `pnpm test:coverage` |
+| yarn | `yarn test` | `yarn test --watch` | `yarn test:coverage` |
+| Bun (script が jest/vitest) | `bun run test` | `bun run test --watch` | `bun run test:coverage` |
+| Bun (ネイティブ `bun:test`) | `bun test` | `bun test --watch` | `bun test --coverage` |
+
+`bun test` は Bun 組み込みランナーであり、`package.json` の `test` スクリプトを実行する `bun run test` とは別物。取り違えは典型的な失敗要因なので、RED ゲートの前にプロジェクトがどちらを想定しているか確認する。
 
 ## Step 1: ユーザージャーニーを書く
 
@@ -117,6 +136,23 @@ npm run test:coverage
 # Verify 80%+ coverage achieved
 ```
 
+## Step 8: TDD エビデンスレポートを書く
+
+GREEN とカバレッジの検証後、短い人間可読のエビデンスレポートを書く。テストコードの代替ではなく、テストコードが何を証明しているかの索引であり、セッション再開や squash マージ後もその証明を保存する。
+
+保存先はプロジェクトの標準ドキュメントディレクトリを使う。例: `docs/testing/<task-name>.tdd.md`、`.claude/tdd/<task-name>.tdd.md`。
+
+含める内容:
+
+1. 計画の出典。OpenSpec の change を使った場合はそのリンク、なければこの TDD 実行中にジャーニーを導出した旨
+2. ユーザージャーニーの一覧
+3. 実装した振る舞いごとのタスクレポート。実行サマリ 1 文、実際に実行した検証コマンド、RED / GREEN を含む出力の抜粋、パスしたテストが保証する内容
+4. テスト仕様の表。保証内容 / テストファイルまたはコマンド / テスト種別 / 結果 / エビデンス
+5. カバレッジと既知のギャップ。意図的な未テスト箇所やスキップの説明
+6. マージエビデンス。チェックポイントコミットを squash する場合は、RED / GREEN / リファクタの最終サマリを本レポートと PR 本文または squash コミット本文へ複製する
+
+レポートは事実のみ書く。実際のコマンドと結果を引用し、実行していないテストの PASS を捏造しない。
+
 ## Git チェックポイントの原則
 
 - リポジトリが Git 管理下なら、各 TDD ステージ後にチェックポイントコミットを作成する
@@ -126,3 +162,4 @@ npm run test:coverage
 - チェックポイントを満たしたと判断する前に、そのコミットがアクティブブランチの現在の `HEAD` から到達可能であることを検証する
 - **推奨される最小構成**: RED 検証 1 / GREEN 検証 1 / リファクタ完了任意 1
 - テストコミットが明確に RED に対応し、修正コミットが明確に GREEN に対応するなら、別個のエビデンス専用コミットは不要
+- squash マージは Step 8 でエビデンスを保存した後にのみ許可する。squash する場合は RED / GREEN / リファクタのサマリを PR 本文・squash コミット本文・エビデンスレポートのいずれかへ複製し、何がどう検証されたかをレビュアーが追えるようにする

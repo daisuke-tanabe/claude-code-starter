@@ -15,15 +15,16 @@ defineConfig({
     // ファイルを並列実行 (デフォルト: true)
     fileParallelism: true,
     
-    // ワーカースレッド数
+    // 最大同時ワーカー数 (v4: maxThreads / maxForks を置き換え。minWorkers は削除)
     maxWorkers: 4,
-    minWorkers: 1,
     
-    // プールの種類: 'threads', 'forks', 'vmThreads'
-    pool: 'threads',
+    // プールの種類: 'forks' (デフォルト), 'threads', 'vmForks', 'vmThreads'
+    pool: 'forks',
   },
 })
 ```
+
+> v4 のプール刷新: `poolOptions` は削除され、すべてのプール設定はトップレベルになった。`singleThread` / `singleFork` は `maxWorkers: 1, isolate: false` になる。VM の `memoryLimit` は `vmMemoryLimit` になった。これらは project ごとに設定できる。
 
 ## Concurrent テスト
 
@@ -48,25 +49,26 @@ describe.concurrent('parallel suite', () => {
 
 **重要:** concurrent テストでは context の `{ expect }` を使う。
 
-## Concurrent コンテキスト内の sequential
+## 並行実行からの除外
 
-順次実行を強制する:
+`test.sequential` / `describe.sequential` は v5 で削除された。`{ concurrent: false }` を使う:
 
 ```ts
 describe.concurrent('mostly parallel', () => {
   test('parallel 1', async () => {})
-  test('parallel 2', async () => {})
-  
-  test.sequential('must run alone 1', async () => {})
-  test.sequential('must run alone 2', async () => {})
+
+  // このテストを継承された並行実行から除外する
+  test('must run alone', { concurrent: false }, async () => {})
 })
 
-// スイート全体を sequential にする
-describe.sequential('sequential suite', () => {
+// スイート全体を除外する
+describe('sequential suite', { concurrent: false }, () => {
   test('first', () => {})
   test('second', () => {})
 })
 ```
+
+すべてのテストをデフォルトで concurrent にするには `sequence.concurrent: true` を設定する。
 
 ## 最大並列数
 
@@ -155,6 +157,9 @@ defineConfig({
       
       // デフォルトで全テストを concurrent に
       concurrent: true,
+
+      // project / グループの実行順 (3.2+)。小さい値が先に実行される
+      groupOrder: 0,
     },
   },
 })
@@ -166,7 +171,7 @@ defineConfig({
 
 ```ts
 // CLI から
-vitest --sequence.shuffle
+vitest --shuffle
 
 // スイートごと
 describe.shuffle('random order', () => {
@@ -176,54 +181,22 @@ describe.shuffle('random order', () => {
 })
 ```
 
-## プールオプション
+## プール (v4)
 
-### Threads (デフォルト)
-
-```ts
-defineConfig({
-  test: {
-    pool: 'threads',
-    poolOptions: {
-      threads: {
-        maxThreads: 8,
-        minThreads: 2,
-        isolate: true,
-      },
-    },
-  },
-})
-```
-
-### Forks
-
-隔離が強いが遅い:
+`poolOptions` は削除された。プール設定はトップレベルになり、project ごとに設定できる:
 
 ```ts
 defineConfig({
   test: {
-    pool: 'forks',
-    poolOptions: {
-      forks: {
-        maxForks: 4,
-        isolate: true,
-      },
-    },
+    pool: 'forks',     // 'forks' (デフォルト) | 'threads' | 'vmForks' | 'vmThreads'
+    maxWorkers: 8,
+    isolate: true,     // threads / forks のみ。vm* プールは常に隔離される
+    vmMemoryLimit: '512MB',
   },
 })
 ```
 
-### VM Threads
-
-ファイルごとに完全な VM 隔離:
-
-```ts
-defineConfig({
-  test: {
-    pool: 'vmThreads',
-  },
-})
-```
+project ごとの並列度・隔離の設定は [advanced-projects](advanced-projects.md) を参照。
 
 ## 失敗時の停止 (bail)
 
@@ -236,15 +209,15 @@ vitest --bail      # 最初の失敗で停止 (--bail 1 と同等)
 
 ## 要点
 
-- ファイルはデフォルトで並列実行される
-- ファイル内で並列実行するには `.concurrent` を使う
+- ファイルはデフォルトの `pool: 'forks'` で並列実行される。ファイル内のテストは `.concurrent` を使わない限り順次実行される
+- `concurrent` が高速化するのは I/O やタイマーなど await するテストだけである。純粋な同期テストはスレッドをブロックし続ける
 - concurrent テストでは必ず context の `expect` を使う
-- シャーディングで CI マシン間にテストを分割できる
-- シャード結果の結合には `--merge-reports` を使う
-- 隠れた依存関係を見つけるためにテストをシャッフルする
+- 除外には `.sequential` ではなく `{ concurrent: false }` を使う
+- `maxThreads` / `maxForks` ではなく `maxWorkers` を使う。`poolOptions` は v4 で削除された
+- シャーディングで CI マシン間にテストを分割できる。blob の結果は `--merge-reports` で結合する
 
 <!-- 
 Source references:
-- https://vitest.dev/guide/features.html#running-tests-concurrently
+- https://vitest.dev/guide/parallelism.html
 - https://vitest.dev/guide/improving-performance.html
 -->

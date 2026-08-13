@@ -9,11 +9,11 @@ Overrides を使うと、推移的依存を含むパッケージのバージョ�
 
 ## 基本の文法
 
-Overrides は `pnpm-workspace.yaml` (推奨) または `package.json` で定義する。
+Overrides は `pnpm-workspace.yaml` で定義する。プロジェクトのルートでのみ設定できる。
 
-### pnpm-workspace.yaml の場合 (推奨)
+> `package.json` の `pnpm.overrides` フィールドはもう読み込まれない。pnpm は `package.json#pnpm` の設定を一切読まなくなった。overrides は `pnpm-workspace.yaml` に移すこと。
 
-```yaml
+```yaml title="pnpm-workspace.yaml"
 packages:
   - 'packages/*'
 
@@ -24,25 +24,14 @@ overrides:
   # 特定のバージョン範囲だけを上書き
   "foo@^1.0.0": ^1.2.3
 
-  # ネストした依存を上書き
-  "express>cookie": ^0.6.0
+  # ネストした依存を上書き (qar@1 の中の zoo のみ)
+  "qar@1>zoo": "2"
 
   # 別のパッケージに置換
   "underscore": "npm:lodash@^4.17.21"
-```
 
-### package.json の場合
-
-```json
-{
-  "pnpm": {
-    "overrides": {
-      "lodash": "^4.17.21",
-      "foo@^1.0.0": "^1.2.3",
-      "bar@^2.0.0>qux": "^1.0.0"
-    }
-  }
-}
+  # catalog を参照してバージョンを同期
+  "react": "catalog:"
 ```
 
 ## Override のパターン
@@ -74,10 +63,10 @@ express の依存である場合に限り cookie を上書きする。
 overrides:
   # underscore を lodash に置換
   "underscore": "npm:lodash@^4.17.21"
-
+  
   # ローカルファイルを使う
   "some-pkg": "file:./local-pkg"
-
+  
   # git を使う
   "some-pkg": "github:user/repo#commit"
 ```
@@ -86,8 +75,22 @@ overrides:
 ```yaml
 overrides:
   "unwanted-pkg": "-"
+  "foo@1.0.0>bar": "-"   # 未使用の optionalDependencies をスキップするのに最適
 ```
 `-` を指定するとパッケージは完全に削除される。
+
+### Peer dependency を上書き
+
+Overrides は `peerDependencies` にも適用される。
+
+```yaml title="pnpm-workspace.yaml"
+overrides:
+  "react-dom>react": "18.1.0"
+```
+
+- semver 範囲、`workspace:`、`catalog:` を指定するとエントリは peer dependency のまま維持される
+- 範囲でない指定子 `link:` や `file:` は `dependencies` に移動する
+- `-` は peer dependency を完全に削除する
 
 ## よくあるユースケース
 
@@ -128,10 +131,9 @@ overrides:
 
 ## Hooks による代替手段
 
-より複雑なシナリオでは `.pnpmfile.cjs` を使う。
+より複雑なシナリオでは `.pnpmfile.mjs` を使う。
 
-```js
-// .pnpmfile.cjs
+```js title=".pnpmfile.mjs"
 function readPackage(pkg, context) {
   // 依存のバージョンを上書き
   if (pkg.dependencies?.lodash) {
@@ -149,11 +151,18 @@ function readPackage(pkg, context) {
   return pkg
 }
 
-module.exports = {
-  hooks: {
-    readPackage
-  }
+export const hooks = {
+  readPackage
 }
+```
+
+JS を書かずに、`packageExtensions` で宣言的に manifest を拡張することもできる。
+
+```yaml title="pnpm-workspace.yaml"
+packageExtensions:
+  react-redux:
+    peerDependencies:
+      react-dom: '*'
 ```
 
 ## Overrides と Catalogs の比較
@@ -179,6 +188,7 @@ pnpm list lodash --depth=Infinity
 
 <!--
 Source references:
-- https://pnpm.io/package_json#pnpmoverrides
+- https://pnpm.io/settings#overrides
+- https://pnpm.io/settings#packageextensions
 - https://pnpm.io/pnpmfile
 -->

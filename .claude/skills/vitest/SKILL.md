@@ -3,8 +3,9 @@ name: vitest
 description: Vite を基盤とした高速ユニットテストフレームワーク Vitest。Jest 互換 API を備える。テストの記述、モック、coverage の設定、テストの絞り込みや fixtures を扱う際に使用する。
 metadata:
   author: Anthony Fu
-  version: "2026.1.28"
+  version: "2026.6.22"
   source: Generated from https://github.com/vitest-dev/vitest, scripts located at https://github.com/antfu/skills
+  sourceVersion: "2814e65fe3095742fd648aa4e09afa76daaa428e"
 ---
 
 Vitest は Vite を基盤とする次世代テストフレームワークである。ネイティブな ESM・TypeScript・JSX サポートを標準で備えながら、Jest 互換 API を提供する。Vitest は Vite アプリと同じ config・transformer・resolver・plugin を共有する。
@@ -18,7 +19,7 @@ Vitest は Vite を基盤とする次世代テストフレームワークであ�
 - V8 または Istanbul を用いたカバレッジを標準搭載
 - スナップショットテスト、モック、スパイユーティリティを提供
 
-> 本スキルは Vitest 3.x をベースとしており、2026-01-28 に生成された。
+> 本スキルは Vitest 5.x (beta) をベースとしており、2026-06-22 に生成された。
 
 ## コア
 
@@ -41,6 +42,9 @@ Vitest は Vite を基盤とする次世代テストフレームワークであ�
 | Test Context | test fixtures、context.expect、test.extend によるカスタム fixture | [features-context](references/features-context.md) |
 | Concurrency | concurrent テスト、並列実行、シャーディング | [features-concurrency](references/features-concurrency.md) |
 | Filtering | 名前・ファイルパターン・タグによるテストの絞り込み | [features-filtering](references/features-filtering.md) |
+| Test Tags | タグでテストにラベルを付け、実行の絞り込みや共有オプションの適用を行う | [features-test-tags](references/features-test-tags.md) |
+| Reporters | 組み込みレポーター、デフォルト選択、CI・出力の設定 | [features-reporters](references/features-reporters.md) |
+| Benchmarking | bench fixture (Tinybench) によるベンチマークの記述 | [features-benchmarking](references/features-benchmarking.md) |
 
 ## 応用
 

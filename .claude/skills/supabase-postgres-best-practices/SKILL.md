@@ -1,9 +1,10 @@
 ---
 name: supabase-postgres-best-practices
-description: Supabase が提供する Postgres のパフォーマンス最適化およびベストプラクティス集。Postgres のクエリ・スキーマ設計・データベース設定を記述／レビュー／最適化する際に本スキルを使用する。
+description: "Supabase がメンテナンスする、あらゆる環境の Postgres に適用できるベストプラクティス集。Postgres データベースに存在するものを書く・変更する前に必ず本スキルをロードする。対象: テーブル・カラムの作成・変更とカラム型の選定、スキーマ設計、マイグレーションと宣言的スキーマファイル、RLS ポリシーとその検証テスト、インデックス、トリガー、データベース関数、キューとスケジュールジョブ (pg_cron, pgmq)、ベクトル・セマンティック検索 (pgvector)、ダンプのリストア (pg_restore) とデータインポート。スロークエリ、高 CPU、タイムアウト、EXPLAIN プラン、コネクション枯渇、ロック、肥大化、別ユーザー・テナントに行が見える問題の診断時にもロードする。性能ガイドに留まらず、スキーマ・マイグレーション・セキュリティ・SQL 記述のタスクでは、1 カラムの変更や単一クエリであっても本ルールが必要である。"
 license: MIT
 metadata:
   source: "supabase-community/supabase-plugin@skills/supabase-postgres-best-practices"
+  sourceVersion: "1329274441f347bae3fc06d3bab2ad9535c0cab5"
   author: supabase
   version: "1.1.1"
   organization: Supabase

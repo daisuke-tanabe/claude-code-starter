@@ -28,6 +28,35 @@ describe('Button Component', () => {
 })
 ```
 
+## Bun ネイティブテストパターン（`bun:test`）
+
+プロジェクトが Bun 組み込みランナーを使う場合は `bun:test` から import し、`bun run test` ではなく `bun test` で実行する。API は Jest 風で、`describe` / `it` / `expect` と大半のマッチャーはそのまま使える。
+
+```typescript
+import { describe, it, expect, mock } from 'bun:test'
+import { searchMarkets } from './search'
+
+describe('searchMarkets', () => {
+  it('returns an empty list for an empty query', async () => {
+    expect(await searchMarkets('')).toEqual([])
+  })
+
+  it('sorts results by similarity score', async () => {
+    const results = await searchMarkets('election')
+    expect(results).toEqual([...results].sort((a, b) => b.score - a.score))
+  })
+})
+```
+
+```bash
+bun test              # 1 回実行する (RED/GREEN ゲート)
+bun test --watch      # 開発中の watch モード
+bun test --coverage   # カバレッジレポート
+```
+
+- モジュールのモックは `jest.mock(...)` ではなく `bun:test` の `mock.module(...)` / `mock(...)` を使う
+- カバレッジしきい値は Jest の `coverageThresholds` ではなく `bunfig.toml` の `[test]` で設定する
+
 ## API 統合テストパターン
 
 ```typescript

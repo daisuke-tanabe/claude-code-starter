@@ -199,19 +199,27 @@ export default <Environment>{
 
 ## Browser Mode (環境とは別)
 
-実ブラウザでのテストには Vitest Browser Mode を使う:
+実ブラウザでのテストには Vitest Browser Mode を使う。v4 では provider は文字列ではなくオブジェクトになり、context は `vitest/browser` から import する:
 
 ```ts
+import { playwright } from '@vitest/browser-playwright'
+
 defineConfig({
   test: {
     browser: {
       enabled: true,
-      name: 'chromium', // 'firefox' や 'webkit' も可
-      provider: 'playwright',
+      provider: playwright({ launchOptions: { slowMo: 100 } }),
+      instances: [{ browser: 'chromium' }], // 'firefox' や 'webkit' も可
     },
   },
 })
 ```
+
+```ts
+import { page } from 'vitest/browser' // v4: 以前は '@vitest/browser/context'
+```
+
+> v5: `window.innerWidth` のような DOM 環境のグローバルへの代入は、下層の jsdom / happy-dom 実装に伝播するようになった。locator もデフォルトで exact / strict になった。
 
 ## CSS とアセット
 

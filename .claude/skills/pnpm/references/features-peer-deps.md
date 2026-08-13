@@ -7,126 +7,98 @@ description: 自動インストールと解決ルールによる peer dependency
 
 pnpm はデフォルトで peer dependency を厳格に扱う。解決方法や警告の出し方を制御する設定を提供している。
 
+peer dependency 関連の設定はすべて `pnpm-workspace.yaml` に camelCase で書く。`package.json#pnpm` フィールドはもう読み込まれない。
+
 ## Peer dependency の自動インストール
 
-デフォルトでは、pnpm は peer dependency を自動的にインストールする。
+v8 以降のデフォルトでは、pnpm は不足している非 optional の peer dependency を自動的にインストールする。
 
-```ini
-# .npmrc (pnpm v8 以降のデフォルトは true)
-auto-install-peers=true
+```yaml title="pnpm-workspace.yaml"
+autoInstallPeers: true
 ```
 
-有効な場合、不足している peer dependency をベストマッチのバージョンで自動的に追加する。
+ある依存が `react@^16` を、別の依存が `react@^17` を要求するように要求が競合する場合、pnpm は何もインストールせず警告を出す。手動で解決する。
 
 ## Strict な peer dependency
 
-peer dependency の問題でエラーにするかどうかを制御する。
-
-```ini
-# peer dependency の問題で失敗させる (デフォルト: false)
-strict-peer-dependencies=true
+```yaml title="pnpm-workspace.yaml"
+strictPeerDependencies: true   # デフォルトは false
 ```
 
-strict にすると、次の場合に失敗する。
-- peer dependency が不足している
-- インストール済みバージョンが要求範囲に合わない
+strict にすると、ツリー内に不足または不正な peer dependency がある場合にコマンドが失敗する。
+
+## workspace ルートからの解決
+
+```yaml title="pnpm-workspace.yaml"
+resolvePeersFromWorkspaceRoot: true   # デフォルト。共有 peer をルートで 1 回だけインストールする
+```
+
+## peer の重複排除
+
+```yaml title="pnpm-workspace.yaml"
+dedupePeerDependents: true   # デフォルト。peer が一致すればプロジェクト間でパッケージインスタンスを共有する
+dedupePeers: false           # v10.33 以降。peer suffix を name@version のバージョンのみにし、インスタンス数を減らす
+```
 
 ## Peer dependency のルール
 
-`package.json` で peer dependency の挙動を設定する。
-
-```json
-{
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": ["@babel/*", "eslint"],
-      "allowedVersions": {
-        "react": "17 || 18"
-      },
-      "allowAny": ["@types/*"]
-    }
-  }
-}
+```yaml title="pnpm-workspace.yaml"
+peerDependencyRules:
+  ignoreMissing:
+    - '@babel/*'
+    - eslint
+  allowedVersions:
+    react: '17 || 18'
+  allowAny:
+    - '@types/*'
 ```
 
 ### ignoreMissing
 
-不足している peer dependency の警告を抑制する。
+不足している peer dependency の警告を抑制する。パターンには `react` のような完全一致、`@babel/*` のようなスコープ指定、非推奨の `*` が使える。
 
-```json
-{
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "@babel/*",
-        "eslint",
-        "webpack"
-      ]
-    }
-  }
-}
+```yaml title="pnpm-workspace.yaml"
+peerDependencyRules:
+  ignoreMissing:
+    - '@babel/*'
+    - eslint
+    - webpack
 ```
-
-利用可能なパターン:
-- `"react"` — パッケージ名の完全一致
-- `"@babel/*"` — スコープ配下のすべてのパッケージ
-- `"*"` — すべてのパッケージ (非推奨)
 
 ### allowedVersions
 
-警告対象になる特定バージョンを許可する。
+本来は警告対象になる特定バージョンを許可する。`parent>peer` の形式で特定の親を対象にできる。
 
-```json
-{
-  "pnpm": {
-    "peerDependencyRules": {
-      "allowedVersions": {
-        "react": "17 || 18",
-        "webpack": "4 || 5",
-        "@types/react": "*"
-      }
-    }
-  }
-}
+```yaml title="pnpm-workspace.yaml"
+peerDependencyRules:
+  allowedVersions:
+    react: '17'
+    'button@2>react': '17'   # react が button@2 の peer である場合のみ
 ```
 
 ### allowAny
 
-指定の peer dependency に対して任意のバージョンを許可する。
+宣言された range を無視し、一致する peer を任意のバージョンで解決する。
 
-```json
-{
-  "pnpm": {
-    "peerDependencyRules": {
-      "allowAny": ["@types/*", "eslint"]
-    }
-  }
-}
+```yaml title="pnpm-workspace.yaml"
+peerDependencyRules:
+  allowAny:
+    - '@types/*'
+    - eslint
 ```
 
-## Hook で peer dependency を追加
+## packageExtensions で peer dependency を追加
 
-`.pnpmfile.cjs` で不足する peer dependency を補える。
+JS を書かずに、不足する peer dependency を宣言的に追加する。
 
-```js
-// .pnpmfile.cjs
-function readPackage(pkg, context) {
-  // 不足する peer dependency を追加
-  if (pkg.name === 'problematic-package') {
-    pkg.peerDependencies = {
-      ...pkg.peerDependencies,
+```yaml title="pnpm-workspace.yaml"
+packageExtensions:
+  problematic-package:
+    peerDependencies:
       react: '*'
-    }
-  }
-  return pkg
-}
-
-module.exports = {
-  hooks: {
-    readPackage
-  }
-}
 ```
+
+条件分岐が必要な場合は、代わりに `.pnpmfile.mjs` の `readPackage` hook を使う。
 
 ## Workspaces における peer dependency
 
@@ -141,7 +113,7 @@ workspace パッケージ自身が peer dependency を満たせる。
   }
 }
 
-// packages/components/package.json
+// packages/components/package.json  
 {
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0"
@@ -183,42 +155,30 @@ catalog:
 
 ### ESLint プラグインの警告を抑制
 
-```json
-{
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "eslint",
-        "@typescript-eslint/parser"
-      ]
-    }
-  }
-}
+```yaml title="pnpm-workspace.yaml"
+peerDependencyRules:
+  ignoreMissing:
+    - eslint
+    - '@typescript-eslint/parser'
 ```
 
 ### 複数のメジャーバージョンを許容
 
-```json
-{
-  "pnpm": {
-    "peerDependencyRules": {
-      "allowedVersions": {
-        "webpack": "4 || 5",
-        "postcss": "7 || 8"
-      }
-    }
-  }
-}
+```yaml title="pnpm-workspace.yaml"
+peerDependencyRules:
+  allowedVersions:
+    webpack: '4 || 5'
+    postcss: '7 || 8'
 ```
 
 ## Peer dependency のデバッグ
 
 ```bash
+# lockfile から未充足・不足の peer を直接レポートする (v11)
+pnpm peers check
+
 # パッケージがインストールされている理由を確認
 pnpm why <package>
-
-# すべての peer dependency 警告を列挙
-pnpm install --reporter=append-only 2>&1 | grep -i peer
 
 # 依存ツリーを確認
 pnpm list --depth=Infinity
@@ -226,25 +186,15 @@ pnpm list --depth=Infinity
 
 ## ベストプラクティス
 
-1. **`auto-install-peers` を有効化する**: 利便性が高い (pnpm v8 以降のデフォルト)
-
-2. **`peerDependencyRules` を使う**: すべての警告を握りつぶすのではなく、ルールで制御する
-
-3. **抑制した警告は文書化する**: なぜ安全なのかを説明する
-
-4. **ライブラリでは peer dependency の範囲を広く保つ**:
-   ```json
-   {
-     "peerDependencies": {
-       "react": "^17.0.0 || ^18.0.0"
-     }
-   }
-   ```
-
-5. **複数のメジャーをサポートする場合は実際に複数で検証する**
+1. `autoInstallPeers` は有効のままにする。利便性が高く、v8 以降のデフォルトである
+2. 警告を一括で無視せず `peerDependencyRules` を使う
+3. 抑制した警告は、なぜ安全なのかを文書化する
+4. ライブラリでは `"react": "^17 || ^18"` のように peer の範囲を広く保つ
+5. CI で `pnpm peers check` を実行し、peer の regression を検出する
 
 <!--
 Source references:
-- https://pnpm.io/package_json#pnpmpeerdependencyrules
-- https://pnpm.io/npmrc#auto-install-peers
+- https://pnpm.io/settings#peerdependencyrules
+- https://pnpm.io/settings#autoinstallpeers
+- https://pnpm.io/cli/peers
 -->

@@ -188,26 +188,26 @@ test.concurrent('concurrent', ({ onTestFinished }) => {
 
 ## 拡張テストのフック
 
-`test.extend` を使うと型を意識したフックになる:
+`test.extend` を使うとフックは型を認識する。フックは拡張した `test` に対して呼び出す必要がある:
 
 ```ts
-const test = base.extend<{ db: Database }>({
-  db: async ({}, use) => {
+const test = base
+  .extend('db', { scope: 'file' }, async ({}, { onCleanup }) => {
     const db = await createDb()
-    await use(db)
-    await db.close()
-  },
-})
+    onCleanup(() => db.close())
+    return db
+  })
 
-// これらのフックは `db` fixture を認識する
-test.beforeEach(({ db }) => {
-  db.seed()
-})
+// テストレベルのフックは fixture を参照できる
+test.beforeEach(({ db }) => db.seed())
+test.afterEach(({ db }) => db.clear())
 
-test.afterEach(({ db }) => {
-  db.clear()
-})
+// スイートレベルのフック (4.1+) は file / worker スコープの fixture にアクセスできる
+test.beforeAll(({ db }) => db.createUsers())
+test.aroundAll(async (runSuite, { db }) => db.transaction(runSuite))
 ```
+
+スイートレベルのフック `beforeAll` / `afterAll` / `aroundAll` が参照できるのは file / worker スコープの fixture のみである。グローバルの `beforeAll` / `afterAll` はカスタム fixture にアクセスできないため、`test.beforeAll` などを使う。
 
 ## フック実行順
 

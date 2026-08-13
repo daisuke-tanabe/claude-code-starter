@@ -3,6 +3,7 @@ name: frontend-patterns
 description: React、Next.js、状態管理、パフォーマンス最適化、フォーム、アニメーション、UI ベストプラクティスのためのフロントエンド開発パターン。React コンポーネント設計・カスタムフック作成・状態管理選定・レンダリング最適化・フォーム実装・モーダル/ドロップダウン等のインタラクション実装を行う際は必ず本スキルを参照する。
 metadata:
   source: "affaan-m/everything-claude-code@skills/frontend-patterns"
+  sourceVersion: "d29cf651c795869f733669c33e3d33dfd8307d10"
 ---
 
 # フロントエンド開発パターン
