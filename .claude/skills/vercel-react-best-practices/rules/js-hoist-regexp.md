@@ -9,7 +9,7 @@ tags: javascript, regexp, optimization, memoization
 
 render 内で RegExp を作らない。モジュールスコープに巻き上げるか `useMemo()` で memo 化する。
 
-**Incorrect (毎レンダーで new RegExp):**
+Incorrect (毎レンダーで new RegExp):
 
 ```tsx
 function Highlighter({ text, query }: Props) {
@@ -19,7 +19,7 @@ function Highlighter({ text, query }: Props) {
 }
 ```
 
-**Correct (memo 化または hoist する):**
+Correct (memo 化または hoist する):
 
 ```tsx
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -34,7 +34,7 @@ function Highlighter({ text, query }: Props) {
 }
 ```
 
-**注意 (グローバルフラグ付き regex は可変状態を持つ):**
+注意 (グローバルフラグ付き regex は可変状態を持つ):
 
 グローバル regex (`/g`) は `lastIndex` の状態を持ち、書き換わる:
 

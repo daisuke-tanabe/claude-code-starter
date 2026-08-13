@@ -9,7 +9,7 @@ tags: rerender, transitions, startTransition, performance
 
 頻繁かつ緊急でない state 更新は transition としてマークし、UI の応答性を保つ。
 
-**Incorrect (スクロールのたびに UI がブロックされる):**
+Incorrect (スクロールのたびに UI がブロックされる):
 
 ```tsx
 function ScrollTracker() {
@@ -22,7 +22,7 @@ function ScrollTracker() {
 }
 ```
 
-**Correct (ブロックしない更新):**
+Correct (ブロックしない更新):
 
 ```tsx
 import { startTransition } from 'react'

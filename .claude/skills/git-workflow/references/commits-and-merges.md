@@ -75,7 +75,7 @@ git merge feature/user-auth
 # * main commits
 ```
 
-**使うとき:**
+使うとき:
 - feature ブランチを `main` にマージするとき
 - 履歴を正確に保ちたいとき
 - 複数人がブランチで作業したとき
@@ -93,7 +93,7 @@ git rebase main
 # * main commits
 ```
 
-**使うとき:**
+使うとき:
 - ローカルのfeatureブランチを最新の `main` で更新するとき
 - 線形でクリーンな履歴が欲しいとき
 - ブランチがローカル限定（プッシュされていない）のとき

@@ -9,7 +9,7 @@ tags: javascript, cache, memoization, performance
 
 レンダリング中に同じ入力で同じ関数が繰り返し呼ばれる場合は、モジュールレベルの Map を使って結果をキャッシュする。
 
-**Incorrect (重複した計算):**
+Incorrect (重複した計算):
 
 ```typescript
 function ProjectList({ projects }: { projects: Project[] }) {
@@ -26,7 +26,7 @@ function ProjectList({ projects }: { projects: Project[] }) {
 }
 ```
 
-**Correct (結果をキャッシュする):**
+Correct (結果をキャッシュする):
 
 ```typescript
 // モジュールレベルのキャッシュ
@@ -55,7 +55,7 @@ function ProjectList({ projects }: { projects: Project[] }) {
 }
 ```
 
-**単一値を返す関数向けのシンプルなパターン:**
+単一値を返す関数向けのシンプルなパターン:
 
 ```typescript
 let isLoggedInCache: boolean | null = null

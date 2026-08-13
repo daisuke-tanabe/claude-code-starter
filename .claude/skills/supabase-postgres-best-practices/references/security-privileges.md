@@ -9,7 +9,7 @@ tags: privileges, security, roles, permissions
 
 必要最小限の権限のみ付与する。アプリケーションのクエリで superuser を使わない。
 
-**誤り (権限を広く与えすぎる):**
+誤り (権限を広く与えすぎる):
 
 ```sql
 -- アプリケーションが superuser 接続を使う
@@ -21,7 +21,7 @@ grant all privileges on all sequences in schema public to app_user;
 -- drop table users; があらゆるテーブルへ波及する
 ```
 
-**正しい例 (最小かつ具体的な権限付与):**
+正しい例 (最小かつ具体的な権限付与):
 
 ```sql
 -- デフォルト権限を持たないロールを作成する

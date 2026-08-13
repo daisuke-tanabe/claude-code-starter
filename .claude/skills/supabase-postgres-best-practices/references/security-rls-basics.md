@@ -9,7 +9,7 @@ tags: rls, row-level-security, multi-tenant, security
 
 Row Level Security (RLS) はデータベースレベルでアクセスを制限するため、ユーザーが自分のデータのみを参照できるようにする。
 
-**誤り (アプリケーション側でのフィルタリングだけに頼る):**
+誤り (アプリケーション側でのフィルタリングだけに頼る):
 
 ```sql
 -- アプリ側のフィルタだけに依存
@@ -19,7 +19,7 @@ select * from orders where user_id = $current_user_id;
 select * from orders;  -- すべての orders を返してしまう
 ```
 
-**正しい例 (データベースで RLS を強制する):**
+正しい例 (データベースで RLS を強制する):
 
 ```sql
 -- テーブルに対して RLS を有効化する

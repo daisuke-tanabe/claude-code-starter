@@ -9,7 +9,7 @@ tags: constraints, migrations, schema, alter-table
 
 PostgreSQL は `ADD CONSTRAINT IF NOT EXISTS` をサポートしない。この構文を使ったマイグレーションは失敗する。
 
-**誤り (構文エラーになる):**
+誤り (構文エラーになる):
 
 ```sql
 -- ERROR: syntax error at or near "not" (SQLSTATE 42601)
@@ -17,7 +17,7 @@ alter table public.profiles
 add constraint if not exists profiles_birthchart_id_unique unique (birthchart_id);
 ```
 
-**正しい例 (冪等な制約の追加):**
+正しい例 (冪等な制約の追加):
 
 ```sql
 -- DO ブロックで事前にチェックしてから追加する

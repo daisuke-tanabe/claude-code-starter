@@ -9,7 +9,7 @@ tags: rendering, svg, css, animation, performance
 
 多くのブラウザは SVG 要素に対する CSS3 アニメーションをハードウェアアクセラレーションしない。SVG を `<div>` でラップし、ラッパー側をアニメーションさせる。
 
-**Incorrect (SVG を直接アニメーション - ハードウェアアクセラレーションなし):**
+Incorrect (SVG を直接アニメーション - ハードウェアアクセラレーションなし):
 
 ```tsx
 function LoadingSpinner() {
@@ -26,7 +26,7 @@ function LoadingSpinner() {
 }
 ```
 
-**Correct (ラッパー div をアニメーション - ハードウェアアクセラレーション):**
+Correct (ラッパー div をアニメーション - ハードウェアアクセラレーション):
 
 ```tsx
 function LoadingSpinner() {

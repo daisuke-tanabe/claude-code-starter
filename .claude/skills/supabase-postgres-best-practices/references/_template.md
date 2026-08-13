@@ -9,7 +9,7 @@ tags: indexes, query-optimization, performance
 
 [問題と、それがなぜ重要なのかを 1〜2 文で説明する。パフォーマンスへの影響に焦点を当てる。]
 
-**誤り (問題点を説明する):**
+誤り (問題点を説明する):
 
 ```sql
 -- このクエリが遅い/問題となる理由をコメントで説明する
@@ -19,7 +19,7 @@ SELECT * FROM users WHERE email = 'user@example.com' AND deleted_at IS NULL;
 -- 削除済みレコードまで不要にスキャンしてしまう
 ```
 
-**正しい例 (解決策を説明する):**
+正しい例 (解決策を説明する):
 
 ```sql
 -- なぜこちらが良いのかをコメントで説明する

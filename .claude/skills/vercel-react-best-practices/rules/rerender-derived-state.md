@@ -9,7 +9,7 @@ tags: rerender, derived-state, media-query, optimization
 
 連続的に変わる値ではなく、派生した boolean を subscribe して、再レンダリングの回数を減らす。
 
-**Incorrect (1 ピクセル変わるたびに再レンダリングされる):**
+Incorrect (1 ピクセル変わるたびに再レンダリングされる):
 
 ```tsx
 function Sidebar() {
@@ -19,7 +19,7 @@ function Sidebar() {
 }
 ```
 
-**Correct (boolean が切り替わったときだけ再レンダリングする):**
+Correct (boolean が切り替わったときだけ再レンダリングする):
 
 ```tsx
 function Sidebar() {

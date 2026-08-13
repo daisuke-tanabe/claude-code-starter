@@ -9,7 +9,7 @@ tags: client, event-listeners, scrolling, performance, touch, wheel
 
 タッチや wheel のイベントリスナーには `{ passive: true }` を付け、即座にスクロールできるようにする。通常ブラウザは `preventDefault()` が呼ばれるかチェックするためリスナーの完了を待ち、その分スクロール開始が遅れる。
 
-**Incorrect:**
+Incorrect:
 
 ```typescript
 useEffect(() => {
@@ -26,7 +26,7 @@ useEffect(() => {
 }, [])
 ```
 
-**Correct:**
+Correct:
 
 ```typescript
 useEffect(() => {
@@ -43,6 +43,6 @@ useEffect(() => {
 }, [])
 ```
 
-**passive を使うべきケース:** トラッキング／計測、ロギング、`preventDefault()` を呼ばないあらゆるリスナー。
+passive を使うべきケース: トラッキング／計測、ロギング、`preventDefault()` を呼ばないあらゆるリスナー。
 
-**passive を使ってはいけないケース:** カスタムのスワイプジェスチャー実装、独自ズーム制御、`preventDefault()` が必要なリスナー。
+passive を使ってはいけないケース: カスタムのスワイプジェスチャー実装、独自ズーム制御、`preventDefault()` が必要なリスナー。

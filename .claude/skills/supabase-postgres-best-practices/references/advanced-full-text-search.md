@@ -9,7 +9,7 @@ tags: full-text-search, tsvector, gin, search
 
 ワイルドカード付きの LIKE はインデックスを利用できない。tsvector による full text search は桁違いに高速になる。
 
-**誤り (LIKE によるパターンマッチ):**
+誤り (LIKE によるパターンマッチ):
 
 ```sql
 -- インデックスを使えず、全行をスキャンしてしまう
@@ -19,7 +19,7 @@ select * from articles where content like '%postgresql%';
 select * from articles where lower(content) like '%postgresql%';
 ```
 
-**正しい例 (tsvector による full text search):**
+正しい例 (tsvector による full text search):
 
 ```sql
 -- tsvector カラムとインデックスを追加する

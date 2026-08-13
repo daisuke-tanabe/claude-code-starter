@@ -25,13 +25,13 @@ metadata:
 
 Skills CLI (`npx skills`) はオープンな agent skills エコシステム向けのパッケージマネージャー。スキルは、専門知識・ワークフロー・ツールでエージェントの機能を拡張するモジュール化されたパッケージである。
 
-**主なコマンド:**
+主なコマンド:
 
 - `npx skills find [query] [--owner <owner>]` — 対話的またはキーワードでスキルを検索する。GitHub の owner で絞り込める
 - `npx skills add <package>` — GitHub などのソースからスキルをインストールする
 - `npx skills update` — インストール済みのスキルをすべて更新する
 
-**スキルを閲覧する:** https://skills.sh/
+スキルを閲覧する: https://skills.sh/
 
 ## スキル発見の支援方法
 
@@ -67,11 +67,11 @@ npx skills find [query] [--owner <owner>]
 
 ### Step 4: 推奨する前に品質を検証する
 
-**検索結果だけを根拠にスキルを推奨してはならない。** 必ず次を検証する。
+検索結果だけを根拠にスキルを推奨してはならない。 必ず次を検証する。
 
-1. **インストール数** — 1,000 件以上のスキルを優先する。100 件未満には慎重になる。
-2. **ソースの信頼性** — 公式ソース (`vercel-labs`, `anthropics`, `microsoft`) は未知の作者より信頼できる。
-3. **GitHub のスター数** — ソースリポジトリを確認する。100 スター未満のリポジトリ由来のスキルは懐疑的に扱う。
+1. インストール数 — 1,000 件以上のスキルを優先する。100 件未満には慎重になる。
+2. ソースの信頼性 — 公式ソース (`vercel-labs`, `anthropics`, `microsoft`) は未知の作者より信頼できる。
+3. GitHub のスター数 — ソースリポジトリを確認する。100 スター未満のリポジトリ由来のスキルは懐疑的に扱う。
 
 ### Step 5: ユーザーに選択肢を提示する
 
@@ -121,9 +121,9 @@ npx skills add <owner/repo@skill> -g -y
 
 ## 効果的に検索するコツ
 
-1. **具体的なキーワードを使う**: 単に "testing" より "react testing" のほうがよい
-2. **言い換えを試す**: "deploy" でヒットしなければ "deployment" や "ci-cd" を試す
-3. **人気のあるソースを確認する**: 多くのスキルは `vercel-labs/agent-skills` や `ComposioHQ/awesome-claude-skills` から提供されている
+1. 具体的なキーワードを使う: 単に "testing" より "react testing" のほうがよい
+2. 言い換えを試す: "deploy" でヒットしなければ "deployment" や "ci-cd" を試す
+3. 人気のあるソースを確認する: 多くのスキルは `vercel-labs/agent-skills` や `ComposioHQ/awesome-claude-skills` から提供されている
 
 ## スキルが見つからないとき
 

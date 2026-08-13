@@ -9,7 +9,7 @@ tags: async, await, conditional, optimization
 
 `await` の処理は、実際に使うブランチへ移動する。そうすれば、その値を必要としないコードパスがブロックされなくなる。
 
-**Incorrect (両方のブランチがブロックされる):**
+Incorrect (両方のブランチがブロックされる):
 
 ```typescript
 async function handleRequest(userId: string, skipProcessing: boolean) {
@@ -25,7 +25,7 @@ async function handleRequest(userId: string, skipProcessing: boolean) {
 }
 ```
 
-**Correct (必要なときだけブロックする):**
+Correct (必要なときだけブロックする):
 
 ```typescript
 async function handleRequest(userId: string, skipProcessing: boolean) {
@@ -40,7 +40,7 @@ async function handleRequest(userId: string, skipProcessing: boolean) {
 }
 ```
 
-**もう 1 つの例 (早期 return の最適化):**
+もう 1 つの例 (早期 return の最適化):
 
 ```typescript
 // Incorrect: 常に permissions を取得する

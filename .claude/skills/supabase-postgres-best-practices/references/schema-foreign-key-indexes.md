@@ -9,7 +9,7 @@ tags: foreign-key, indexes, joins, schema
 
 Postgres は foreign key のカラムに自動でインデックスを張らない。インデックスがないと JOIN や CASCADE 処理が遅くなる。
 
-**誤り (foreign key にインデックスがない):**
+誤り (foreign key にインデックスがない):
 
 ```sql
 create table orders (
@@ -24,7 +24,7 @@ select * from orders where customer_id = 123;  -- Seq Scan
 delete from customers where id = 123;          -- テーブルをロックし、orders を全件スキャン
 ```
 
-**正しい例 (foreign key にインデックスを張る):**
+正しい例 (foreign key にインデックスを張る):
 
 ```sql
 create table orders (

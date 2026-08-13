@@ -2,9 +2,9 @@
 
 設定は `components.json` から読み込まれる。
 
-> **重要:** コマンドは必ずプロジェクトの package runner で実行する: `npx shadcn@latest`、`pnpm dlx shadcn@latest`、`bunx --bun shadcn@latest`。どれを使うかは、プロジェクトコンテキストの `packageManager` を確認して選ぶ。以下の例では `npx shadcn@latest` を使っているが、プロジェクトに合った runner に置き換えること。
+> 重要: コマンドは必ずプロジェクトの package runner で実行する: `npx shadcn@latest`、`pnpm dlx shadcn@latest`、`bunx --bun shadcn@latest`。どれを使うかは、プロジェクトコンテキストの `packageManager` を確認して選ぶ。以下の例では `npx shadcn@latest` を使っているが、プロジェクトに合った runner に置き換えること。
 
-> **重要:** 使うフラグは下記に記載のあるものだけにする。フラグを推測したり捏造したりしない — ここに載っていないフラグは存在しない。CLI はプロジェクトの lockfile から package manager を自動検出する。`--package-manager` フラグは存在しない。
+> 重要: 使うフラグは下記に記載のあるものだけにする。フラグを推測したり捏造したりしない — ここに載っていないフラグは存在しない。CLI はプロジェクトの lockfile から package manager を自動検出する。`--package-manager` フラグは存在しない。
 
 ## 目次
 
@@ -62,7 +62,7 @@ preset を指定しない場合、CLI は `ui.shadcn.com/create` のカスタム
 
 ### `add` — コンポーネントの追加
 
-> **重要:** ローカルのコンポーネントをアップストリームと比較したり変更をプレビューしたりするときは、必ず `npx shadcn@latest add <component> --dry-run`、`--diff`、`--view` を使う。GitHub などから生ファイルを手動で取得してはいけない。CLI が registry 解決、ファイルパス、CSS diff を自動で処理する。
+> 重要: ローカルのコンポーネントをアップストリームと比較したり変更をプレビューしたりするときは、必ず `npx shadcn@latest add <component> --dry-run`、`--diff`、`--view` を使う。GitHub などから生ファイルを手動で取得してはいけない。CLI が registry 解決、ファイルパス、CSS diff を自動で処理する。
 
 ```bash
 npx shadcn@latest add [components...] [options]
@@ -112,7 +112,7 @@ npx shadcn@latest add owner/repo/item --dry-run
 npx shadcn@latest add button --diff globals.css
 ```
 
-**dry-run を使うタイミング:**
+dry-run を使うタイミング:
 
 - ユーザーから「どんなファイルが追加される?」「何が変わる?」と聞かれた場合 — `--dry-run` を使う。
 - 既存コンポーネントを上書きする前 — 先に `--diff` で変更を確認する。
@@ -120,7 +120,7 @@ npx shadcn@latest add button --diff globals.css
 - `globals.css` への CSS 変更を確認したい場合 — `--diff globals.css` を使う。
 - サードパーティ registry のコードをインストール前にレビュー・監査したい場合 — `--view` でソースを確認する。
 
-> **`npx shadcn@latest add --dry-run` と `npx shadcn@latest view` の使い分け:** ユーザーがプロジェクトへの変更をプレビューしたい場合は `npx shadcn@latest view` よりも `npx shadcn@latest add --dry-run/--diff/--view` を優先する。`npx shadcn@latest view` は registry のメタデータをそのまま表示するだけ。`npx shadcn@latest add --dry-run` は実際にユーザーのプロジェクトで何が起きるか — 解決後のファイルパス、既存ファイルとの diff、CSS の更新内容 — を正確に示す。`npx shadcn@latest view` は、プロジェクトコンテキストなしで registry の情報だけを見たいときに使う。
+> `npx shadcn@latest add --dry-run` と `npx shadcn@latest view` の使い分け: ユーザーがプロジェクトへの変更をプレビューしたい場合は `npx shadcn@latest view` よりも `npx shadcn@latest add --dry-run/--diff/--view` を優先する。`npx shadcn@latest view` は registry のメタデータをそのまま表示するだけ。`npx shadcn@latest add --dry-run` は実際にユーザーのプロジェクトで何が起きるか — 解決後のファイルパス、既存ファイルとの diff、CSS の更新内容 — を正確に示す。`npx shadcn@latest view` は、プロジェクトコンテキストなしで registry の情報だけを見たいときに使う。
 
 #### アップストリームからの Smart Merge
 
@@ -191,7 +191,7 @@ npx shadcn@latest info [options]
 | ------------- | ---- | ---------------- | ---------- |
 | `--cwd <cwd>` | `-c` | 作業ディレクトリ | カレント   |
 
-**Project Info フィールド:**
+Project Info フィールド:
 
 | フィールド           | 型        | 意味                                                                |
 | -------------------- | --------- | ------------------------------------------------------------------- |
@@ -206,7 +206,7 @@ npx shadcn@latest info [options]
 | `aliasPrefix`        | `string`  | import alias プレフィックス (例: `@`、`~`、`@/`)                    |
 | `packageManager`     | `string`  | 検出された package manager (`npm`、`pnpm`、`yarn`、`bun`)           |
 
-**Components.json フィールド:**
+Components.json フィールド:
 
 | フィールド           | 型        | 意味                                                                                            |
 | -------------------- | --------- | ----------------------------------------------------------------------------------------------- |
@@ -225,9 +225,9 @@ npx shadcn@latest info [options]
 | `resolvedPaths`      | `object`  | 各 alias の絶対ファイルシステムパス                                                             |
 | `registries`         | `object`  | 設定済みのカスタム registry                                                                     |
 
-**Links フィールド:**
+Links フィールド:
 
-`info` の出力には **Links** セクションがあり、コンポーネントのドキュメント、ソース、サンプル用のテンプレート URL が含まれる。解決済み URL が必要な場合は `npx shadcn@latest docs <component>` を使う。
+`info` の出力には Links セクションがあり、コンポーネントのドキュメント、ソース、サンプル用のテンプレート URL が含まれる。解決済み URL が必要な場合は `npx shadcn@latest docs <component>` を使う。
 
 ### `build` — カスタム registry のビルド
 
@@ -265,19 +265,19 @@ npx shadcn@latest build [registry] [options]
 
 `--preset` で preset を指定する方法は 3 種類:
 
-1. **Named:** `--preset nova` や `--preset lyra`
-2. **Code:** `--preset a2r6bw` (バージョンプレフィックス付きの base62 文字列。例: `a2r6bw`、`b0`)
-3. **URL:** `--preset "https://ui.shadcn.com/init?base=radix&style=nova&..."`
+1. Named: `--preset nova` や `--preset lyra`
+2. Code: `--preset a2r6bw` (バージョンプレフィックス付きの base62 文字列。例: `a2r6bw`、`b0`)
+3. URL: `--preset "https://ui.shadcn.com/init?base=radix&style=nova&..."`
 
-> **重要:** preset コードを手動でデコード・取得・解決しようとしない。preset コードは不透明な値 — そのまま `npx shadcn@latest init --preset <code>` に渡し、解決は CLI に任せる。
+> 重要: preset コードを手動でデコード・取得・解決しようとしない。preset コードは不透明な値 — そのまま `npx shadcn@latest init --preset <code>` に渡し、解決は CLI に任せる。
 > 既存プロジェクトの preset を上書きするときは `npx shadcn@latest apply --preset <code>` を使う。
 
 ## preset の切り替え
 
-先にユーザーに確認する: 既存コンポーネントを **overwrite**、**merge**、**skip** のどれにするか?
+先にユーザーに確認する: 既存コンポーネントを overwrite、merge、skip のどれにするか?
 
-- **Overwrite / Re-install** → `npx shadcn@latest apply --preset <code>`。検出されたコンポーネントファイルをすべて新しい preset のスタイルで上書きする。ユーザーがコンポーネントをカスタマイズしていないときに使う。
-- **Merge** → `npx shadcn@latest init --preset <code> --force --no-reinstall` を実行し、続いて `npx shadcn@latest info` でインストール済みコンポーネント一覧を取得し、[smart merge ワークフロー](./SKILL.md#コンポーネントの更新) を使って 1 つずつローカル変更を保ちながら更新する。ユーザーがコンポーネントをカスタマイズしているときに使う。
-- **Skip** → `npx shadcn@latest init --preset <code> --force --no-reinstall`。設定と CSS 変数のみを更新し、既存コンポーネントはそのまま残す。
+- Overwrite / Re-install → `npx shadcn@latest apply --preset <code>`。検出されたコンポーネントファイルをすべて新しい preset のスタイルで上書きする。ユーザーがコンポーネントをカスタマイズしていないときに使う。
+- Merge → `npx shadcn@latest init --preset <code> --force --no-reinstall` を実行し、続いて `npx shadcn@latest info` でインストール済みコンポーネント一覧を取得し、[smart merge ワークフロー](./SKILL.md#コンポーネントの更新) を使って 1 つずつローカル変更を保ちながら更新する。ユーザーがコンポーネントをカスタマイズしているときに使う。
+- Skip → `npx shadcn@latest init --preset <code> --force --no-reinstall`。設定と CSS 変数のみを更新し、既存コンポーネントはそのまま残す。
 
 preset コマンドは必ずユーザーのプロジェクトディレクトリで実行する。`apply` は `components.json` を持つ既存プロジェクトでのみ動作する。CLI は `components.json` の現在の base (`base` か `radix`) を自動的に維持する。スクラッチ/一時ディレクトリを使う必要がある場合 (例: `--dry-run` 比較のため) は `--base <current-base>` を明示的に渡す — preset コードに base は含まれない。

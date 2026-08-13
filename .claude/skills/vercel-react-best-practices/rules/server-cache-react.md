@@ -9,7 +9,7 @@ tags: server, cache, react-cache, deduplication
 
 サーバーサイドのリクエスト内重複排除には `React.cache()` を使う。認証チェックや DB クエリで特に効果がある。
 
-**使い方:**
+使い方:
 
 ```typescript
 import { cache } from 'react'
@@ -25,11 +25,11 @@ export const getCurrentUser = cache(async () => {
 
 1 リクエストの中で `getCurrentUser()` が複数回呼ばれても、クエリは 1 回だけ実行される。
 
-**引数にインラインオブジェクトを使わない:**
+引数にインラインオブジェクトを使わない:
 
 `React.cache()` はキャッシュヒットの判定に浅い等価性 (`Object.is`) を使う。インラインオブジェクトは呼び出しごとに新しい参照を作るため、キャッシュヒットしない。
 
-**Incorrect (常にキャッシュミス):**
+Incorrect (常にキャッシュミス):
 
 ```typescript
 const getUser = cache(async (params: { uid: number }) => {
@@ -41,7 +41,7 @@ getUser({ uid: 1 })
 getUser({ uid: 1 })  // キャッシュミス、再度クエリが走る
 ```
 
-**Correct (キャッシュヒット):**
+Correct (キャッシュヒット):
 
 ```typescript
 const getUser = cache(async (uid: number) => {
@@ -61,7 +61,7 @@ getUser(params)  // クエリが走る
 getUser(params)  // キャッシュヒット (同じ参照)
 ```
 
-**Next.js 固有の注意:**
+Next.js 固有の注意:
 
 Next.js では `fetch` API がリクエストメモ化付きに拡張されている。同じ URL とオプションの `fetch` は同一リクエスト内で自動的に重複排除されるため、`fetch` 呼び出しに `React.cache()` は不要。一方、`React.cache()` は以下のような非 fetch 系の非同期処理に依然として重要:
 

@@ -9,7 +9,7 @@ tags: partitioning, large-tables, time-series, performance
 
 partitioning は大規模テーブルを小さな単位に分割し、クエリ性能とメンテナンス性を向上させる。
 
-**誤り (単一の巨大テーブル):**
+誤り (単一の巨大テーブル):
 
 ```sql
 create table events (
@@ -23,7 +23,7 @@ select * from events where created_at > '2024-01-01';  -- 遅い
 vacuum events;  -- 何時間もかかり、テーブルがロックされる
 ```
 
-**正しい例 (日時範囲で partitioning):**
+正しい例 (日時範囲で partitioning):
 
 ```sql
 create table events (

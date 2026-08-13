@@ -9,7 +9,7 @@ tags: client, swr, event-listeners, subscription
 
 `useSWRSubscription()` を使って、グローバルなイベントリスナーをコンポーネントインスタンス間で共有する。
 
-**Incorrect (N インスタンス = N リスナー):**
+Incorrect (N インスタンス = N リスナー):
 
 ```tsx
 function useKeyboardShortcut(key: string, callback: () => void) {
@@ -27,7 +27,7 @@ function useKeyboardShortcut(key: string, callback: () => void) {
 
 `useKeyboardShortcut` フックを複数回使うと、各インスタンスが新しいリスナーを登録してしまう。
 
-**Correct (N インスタンス = 1 リスナー):**
+Correct (N インスタンス = 1 リスナー):
 
 ```tsx
 import useSWRSubscription from 'swr/subscription'

@@ -9,7 +9,7 @@ tags: javascript, arrays, loops, performance
 
 `.filter()` や `.map()` を複数回呼ぶと、配列を何度も走査することになる。1 つのループにまとめる。
 
-**Incorrect (3 回走査):**
+Incorrect (3 回走査):
 
 ```typescript
 const admins = users.filter(u => u.isAdmin)
@@ -17,7 +17,7 @@ const testers = users.filter(u => u.isTester)
 const inactive = users.filter(u => !u.isActive)
 ```
 
-**Correct (1 回走査):**
+Correct (1 回走査):
 
 ```typescript
 const admins: User[] = []

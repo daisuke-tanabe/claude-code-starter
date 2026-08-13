@@ -9,7 +9,7 @@ tags: advisory-locks, coordination, application-locks
 
 advisory lock は、ロック対象のデータベース行を用意することなくアプリケーションレベルでの協調動作を可能にする。
 
-**誤り (ロックのためだけに行を作る):**
+誤り (ロックのためだけに行を作る):
 
 ```sql
 -- ロック対象用のダミー行を作る
@@ -23,7 +23,7 @@ insert into resource_locks values ('report_generator');
 select * from resource_locks where resource_name = 'report_generator' for update;
 ```
 
-**正しい例 (advisory lock):**
+正しい例 (advisory lock):
 
 ```sql
 -- セッションスコープの advisory lock (切断もしくは unlock で解放)

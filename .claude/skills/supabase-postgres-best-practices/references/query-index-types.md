@@ -9,7 +9,7 @@ tags: indexes, btree, gin, gist, brin, hash, index-types
 
 クエリのパターンによって得意なインデックス種別は異なる。デフォルトの B-tree が常に最適とは限らない。
 
-**誤り (JSONB の containment に B-tree を使う):**
+誤り (JSONB の containment に B-tree を使う):
 
 ```sql
 -- B-tree は containment 演算子を最適化できない
@@ -18,7 +18,7 @@ select * from products where attributes @> '{"color": "red"}';
 -- フルテーブルスキャンとなる - B-tree は @> 演算子をサポートしない
 ```
 
-**正しい例 (JSONB には GIN):**
+正しい例 (JSONB には GIN):
 
 ```sql
 -- GIN は @>, ?, ?&, ?| 演算子をサポートする

@@ -30,7 +30,7 @@ Button(action: deleteItem) {
 ## ターゲットサイズ
 
 - WCAG SC 2.5.8 の最低 24×24 CSS ピクセル
-- iOS HIG 推奨は **44×44 pt**
+- iOS HIG 推奨は 44×44 pt
 - `Button` のデフォルトのタップ領域だけでは不足することが多いので、`.frame(minWidth: 44, minHeight: 44)` で明示的に確保
 
 ## カスタムビューのセマンティック化

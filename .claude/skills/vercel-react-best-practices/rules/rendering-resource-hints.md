@@ -7,18 +7,18 @@ tags: rendering, preload, preconnect, prefetch, resource-hints
 
 ## Use React DOM Resource Hints
 
-**Impact: HIGH (クリティカルなリソースのロード時間を短縮する)**
+Impact: HIGH (クリティカルなリソースのロード時間を短縮する)
 
 React DOM は、これから必要になるリソースをブラウザにヒントとして伝える API を提供している。これらはサーバーコンポーネントで特に有用で、クライアントが HTML を受け取る前からリソースの読み込みを開始できる。
 
-- **`prefetchDNS(href)`**: 接続予定のドメインの DNS を解決する
-- **`preconnect(href)`**: サーバーへの接続 (DNS + TCP + TLS) を確立する
-- **`preload(href, options)`**: 近いうちに使うリソース (スタイルシート、フォント、スクリプト、画像) を取得する
-- **`preloadModule(href)`**: 近いうちに使う ES モジュールを取得する
-- **`preinit(href, options)`**: スタイルシートやスクリプトを取得して評価する
-- **`preinitModule(href)`**: ES モジュールを取得して評価する
+- `prefetchDNS(href)`: 接続予定のドメインの DNS を解決する
+- `preconnect(href)`: サーバーへの接続 (DNS + TCP + TLS) を確立する
+- `preload(href, options)`: 近いうちに使うリソース (スタイルシート、フォント、スクリプト、画像) を取得する
+- `preloadModule(href)`: 近いうちに使う ES モジュールを取得する
+- `preinit(href, options)`: スタイルシートやスクリプトを取得して評価する
+- `preinitModule(href)`: ES モジュールを取得して評価する
 
-**例 (サードパーティ API への preconnect):**
+例 (サードパーティ API への preconnect):
 
 ```tsx
 import { preconnect, prefetchDNS } from 'react-dom'
@@ -31,7 +31,7 @@ export default function App() {
 }
 ```
 
-**例 (クリティカルなフォントとスタイルを preload する):**
+例 (クリティカルなフォントとスタイルを preload する):
 
 ```tsx
 import { preload, preinit } from 'react-dom'
@@ -51,7 +51,7 @@ export default function RootLayout({ children }) {
 }
 ```
 
-**例 (コード分割されたルートのモジュールを preload する):**
+例 (コード分割されたルートのモジュールを preload する):
 
 ```tsx
 import { preloadModule, preinitModule } from 'react-dom'
@@ -71,7 +71,7 @@ function Navigation() {
 }
 ```
 
-**各 API の使い分け:**
+各 API の使い分け:
 
 | API | ユースケース |
 |-----|----------|

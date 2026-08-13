@@ -9,7 +9,7 @@ tags: rendering, activity, visibility, state-preservation
 
 頻繁に表示／非表示を切り替える高コストなコンポーネントの state と DOM を保持するため、React の `<Activity>` を使う。
 
-**使い方:**
+使い方:
 
 ```tsx
 import { Activity } from 'react'

@@ -24,7 +24,7 @@ npx hono request [file] -P /path
 npx hono request [file] -X POST -P /api/users -d '{"name": "test"}'
 ```
 
-**注意:** 認証情報を CLI 引数で直接渡してはならない。機密値には環境変数を利用すること。`hono request` は Cloudflare Workers のバインディング (KV, D1, R2 など) をサポートしていない。バインディングが必要な場合は代わりに `workers-fetch` を使用する。
+注意: 認証情報を CLI 引数で直接渡してはならない。機密値には環境変数を利用すること。`hono request` は Cloudflare Workers のバインディング (KV, D1, R2 など) をサポートしていない。バインディングが必要な場合は代わりに `workers-fetch` を使用する。
 
 ```bash
 npx workers-fetch /path
@@ -342,7 +342,7 @@ app.post('/users', sValidator('json', schema), (c) => {
 
 もしくは pragma を利用する: `/** @jsxImportSource hono/jsx */`
 
-**重要:** JSX を使用するファイルは `.tsx` 拡張子にする必要がある。`.ts` のままだとコンパイルに失敗するため、`.tsx` にリネームすること。
+重要: JSX を使用するファイルは `.tsx` 拡張子にする必要がある。`.ts` のままだとコンパイルに失敗するため、`.tsx` にリネームすること。
 
 ### Components
 
@@ -482,7 +482,7 @@ const res = await app.request(req)
 
 サーバーとクライアント間で型を共有することで、型安全な API クライアントを構築できる。
 
-**重要: 型推論を効かせるためにルートはチェーンで定義する必要がある。チェーンしないとクライアント側でルートの型を推論できない。**
+重要: 型推論を効かせるためにルートはチェーンで定義する必要がある。チェーンしないとクライアント側でルートの型を推論できない。
 
 ```ts
 // Server: routes MUST be chained to preserve types

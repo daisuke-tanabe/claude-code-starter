@@ -9,7 +9,7 @@ tags: bundle, conditional-loading, lazy-loading
 
 大きなデータやモジュールは、機能が有効化されたときだけ読み込む。
 
-**例 (アニメーションフレームを遅延読み込みする):**
+例 (アニメーションフレームを遅延読み込みする):
 
 ```tsx
 function AnimationPlayer({ enabled, setEnabled }: { enabled: boolean; setEnabled: React.Dispatch<React.SetStateAction<boolean>> }) {

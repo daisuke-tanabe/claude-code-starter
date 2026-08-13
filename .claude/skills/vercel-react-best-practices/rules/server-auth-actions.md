@@ -7,13 +7,13 @@ tags: server, server-actions, authentication, security, authorization
 
 ## Authenticate Server Actions Like API Routes
 
-**Impact: CRITICAL (サーバーミューテーションへの不正アクセスを防ぐ)**
+Impact: CRITICAL (サーバーミューテーションへの不正アクセスを防ぐ)
 
-Server Actions (`"use server"` が付いた関数) は API ルートと同じく公開エンドポイントとして外部に晒される。各 Server Action の **内部で** 認証と認可を必ず検証すること。middleware、layout のガード、ページレベルのチェックだけに頼ってはならない。Server Actions は直接呼び出され得る。
+Server Actions (`"use server"` が付いた関数) は API ルートと同じく公開エンドポイントとして外部に晒される。各 Server Action の 内部で 認証と認可を必ず検証すること。middleware、layout のガード、ページレベルのチェックだけに頼ってはならない。Server Actions は直接呼び出され得る。
 
 Next.js のドキュメントにも明記されている: 「Server Actions は公開向け API エンドポイントと同じセキュリティ上の考慮を払い、ユーザーがそのミューテーションを実行できるか検証すること」。
 
-**Incorrect (認証チェックがない):**
+Incorrect (認証チェックがない):
 
 ```typescript
 'use server'
@@ -25,7 +25,7 @@ export async function deleteUser(userId: string) {
 }
 ```
 
-**Correct (action 内で認証する):**
+Correct (action 内で認証する):
 
 ```typescript
 'use server'
@@ -51,7 +51,7 @@ export async function deleteUser(userId: string) {
 }
 ```
 
-**入力バリデーション付き:**
+入力バリデーション付き:
 
 ```typescript
 'use server'

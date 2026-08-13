@@ -9,7 +9,7 @@ tags: rendering, transitions, useTransition, loading, state
 
 ローディング状態には `useState` で手動管理するのではなく `useTransition` を使う。`isPending` 状態が組み込みで提供され、遷移の管理が自動化される。
 
-**Incorrect (手動でローディング状態を管理する):**
+Incorrect (手動でローディング状態を管理する):
 
 ```tsx
 function SearchResults() {
@@ -35,7 +35,7 @@ function SearchResults() {
 }
 ```
 
-**Correct (useTransition で pending 状態を組み込みで扱う):**
+Correct (useTransition で pending 状態を組み込みで扱う):
 
 ```tsx
 import { useTransition, useState } from 'react'
@@ -65,11 +65,11 @@ function SearchResults() {
 }
 ```
 
-**メリット:**
+メリット:
 
-- **自動の pending 状態**: `setIsLoading(true/false)` を手動で管理しなくてよい
-- **エラー耐性**: 遷移中に throw されても pending 状態は正しくリセットされる
-- **応答性が向上**: 更新中も UI の応答性を保てる
-- **割り込み処理**: 新しい遷移が、保留中の遷移を自動でキャンセルする
+- 自動の pending 状態: `setIsLoading(true/false)` を手動で管理しなくてよい
+- エラー耐性: 遷移中に throw されても pending 状態は正しくリセットされる
+- 応答性が向上: 更新中も UI の応答性を保てる
+- 割り込み処理: 新しい遷移が、保留中の遷移を自動でキャンセルする
 
 Reference: [useTransition](https://react.dev/reference/react/useTransition)

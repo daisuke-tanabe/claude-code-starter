@@ -9,7 +9,7 @@ tags: client, localStorage, storage, versioning, data-minimization
 
 キーにバージョン接頭辞を付け、必要なフィールドだけを保存する。スキーマ衝突や機微情報の誤保存を防げる。
 
-**Incorrect:**
+Incorrect:
 
 ```typescript
 // バージョンなし、すべてを保存、エラーハンドリングなし
@@ -17,7 +17,7 @@ localStorage.setItem('userConfig', JSON.stringify(fullUserObject))
 const data = localStorage.getItem('userConfig')
 ```
 
-**Correct:**
+Correct:
 
 ```typescript
 const VERSION = 'v2'
@@ -52,7 +52,7 @@ function migrate() {
 }
 ```
 
-**サーバーレスポンスからは最小限のフィールドだけを保存する:**
+サーバーレスポンスからは最小限のフィールドだけを保存する:
 
 ```typescript
 // User オブジェクトは 20 以上のフィールドを持つが、UI が必要とするものだけを保存する
@@ -66,6 +66,6 @@ function cachePrefs(user: FullUser) {
 }
 ```
 
-**必ず try-catch で囲む:** `getItem()` と `setItem()` は、シークレット／プライベートブラウジング (Safari, Firefox)、容量超過、機能無効化のときに throw する。
+必ず try-catch で囲む: `getItem()` と `setItem()` は、シークレット／プライベートブラウジング (Safari, Firefox)、容量超過、機能無効化のときに throw する。
 
-**メリット:** バージョニングによるスキーマ進化、ストレージサイズの削減、トークン／PII／内部フラグの混入防止。
+メリット: バージョニングによるスキーマ進化、ストレージサイズの削減、トークン／PII／内部フラグの混入防止。

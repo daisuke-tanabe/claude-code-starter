@@ -9,7 +9,7 @@ tags: javascript, arrays, performance, sorting, algorithms
 
 最小値や最大値を求めるには配列を 1 回走査するだけでよい。ソートは無駄で遅い。
 
-**Incorrect (O(n log n) - 最新を見つけるためにソートする):**
+Incorrect (O(n log n) - 最新を見つけるためにソートする):
 
 ```typescript
 interface Project {
@@ -26,7 +26,7 @@ function getLatestProject(projects: Project[]) {
 
 最大値を求めるだけのために配列全体をソートしている。
 
-**Incorrect (O(n log n) - 最古と最新の両方を求めるためにソートする):**
+Incorrect (O(n log n) - 最古と最新の両方を求めるためにソートする):
 
 ```typescript
 function getOldestAndNewest(projects: Project[]) {
@@ -37,7 +37,7 @@ function getOldestAndNewest(projects: Project[]) {
 
 min/max が必要なだけなのに、依然として不必要にソートしている。
 
-**Correct (O(n) - 1 回のループ):**
+Correct (O(n) - 1 回のループ):
 
 ```typescript
 function getLatestProject(projects: Project[]) {
@@ -71,7 +71,7 @@ function getOldestAndNewest(projects: Project[]) {
 
 配列を 1 回走査するだけ。コピーもソートも不要。
 
-**代替 (小さな配列なら Math.min/Math.max):**
+代替 (小さな配列なら Math.min/Math.max):
 
 ```typescript
 const numbers = [5, 2, 8, 1, 9]

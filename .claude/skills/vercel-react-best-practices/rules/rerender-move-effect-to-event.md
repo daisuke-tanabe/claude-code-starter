@@ -9,7 +9,7 @@ tags: rerender, useEffect, events, side-effects, dependencies
 
 ある副作用が特定のユーザー操作 (送信、クリック、ドラッグ) によって発火するなら、そのイベントハンドラの中で実行する。state + effect として表現してはならない。関係のない変更で effect が再実行され、操作が重複する可能性がある。
 
-**Incorrect (イベントを state + effect でモデル化している):**
+Incorrect (イベントを state + effect でモデル化している):
 
 ```tsx
 function Form() {
@@ -27,7 +27,7 @@ function Form() {
 }
 ```
 
-**Correct (ハンドラの中で処理する):**
+Correct (ハンドラの中で処理する):
 
 ```tsx
 function Form() {

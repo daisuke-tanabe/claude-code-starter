@@ -9,7 +9,7 @@ tags: server, async, logging, analytics, side-effects
 
 レスポンス送信後に実行したい処理は、Next.js の `after()` でスケジュールする。これによりロギング・analytics などの副作用がレスポンスをブロックしなくなる。
 
-**Incorrect (レスポンスをブロックする):**
+Incorrect (レスポンスをブロックする):
 
 ```tsx
 import { logUserAction } from '@/app/utils'
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
 }
 ```
 
-**Correct (ブロックしない):**
+Correct (ブロックしない):
 
 ```tsx
 import { after } from 'next/server'
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
 
 レスポンスは即座に返り、ロギングはバックグラウンドで実行される。
 
-**よくある用途:**
+よくある用途:
 
 - analytics トラッキング
 - 監査ログ
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
 - キャッシュの無効化
 - クリーンアップ処理
 
-**重要な注意点:**
+重要な注意点:
 
 - `after()` はレスポンスが失敗した場合やリダイレクトした場合でも実行される
 - Server Actions、Route Handlers、Server Components で利用できる

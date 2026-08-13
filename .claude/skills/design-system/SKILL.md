@@ -68,17 +68,17 @@ UI を 10 軸でスコア化する(各 0〜10):
 
 ## 例
 
-**SaaS アプリ向けに生成:**
+SaaS アプリ向けに生成:
 ```
 /design-system generate --style minimal --palette earth-tones
 ```
 
-**既存 UI を監査:**
+既存 UI を監査:
 ```
 /design-system audit --url http://localhost:3000 --pages / /pricing /docs
 ```
 
-**AI slop をチェック:**
+AI slop をチェック:
 ```
 /design-system slop-check
 ```

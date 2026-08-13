@@ -9,7 +9,7 @@ tags: rls, performance, security, optimization
 
 RLS ポリシーの書き方が悪いと深刻なパフォーマンス問題を招く。subquery とインデックスを戦略的に活用する。
 
-**誤り (行ごとに関数が呼び出される):**
+誤り (行ごとに関数が呼び出される):
 
 ```sql
 create policy orders_policy on orders
@@ -18,7 +18,7 @@ create policy orders_policy on orders
 -- 100 万行なら auth.uid() が 100 万回呼ばれることになる
 ```
 
-**正しい例 (関数を SELECT で包む):**
+正しい例 (関数を SELECT で包む):
 
 ```sql
 create policy orders_policy on orders

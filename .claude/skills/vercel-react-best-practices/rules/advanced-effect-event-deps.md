@@ -9,7 +9,7 @@ tags: advanced, hooks, useEffectEvent, dependencies, effects
 
 Effect Event 関数は安定した識別子を持たない。識別子は意図的に毎レンダーで変化する。`useEffectEvent` の戻り値を `useEffect` の依存配列に含めてはならない。実際にリアクティブな値だけを依存に保ち、Effect Event は effect 本体や effect が作成したサブスクリプションの内側から呼び出す。
 
-**Incorrect (Effect Event を依存に追加している):**
+Incorrect (Effect Event を依存に追加している):
 
 ```tsx
 import { useEffect, useEffectEvent } from 'react'
@@ -32,7 +32,7 @@ function ChatRoom({ roomId, onConnected }: {
 
 Effect Event を依存に入れると effect が毎レンダー再実行され、React Hooks の lint ルールも警告を出す。
 
-**Correct (Effect Event ではなくリアクティブな値に依存する):**
+Correct (Effect Event ではなくリアクティブな値に依存する):
 
 ```tsx
 import { useEffect, useEffectEvent } from 'react'

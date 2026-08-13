@@ -9,7 +9,7 @@ tags: rendering, conditional, jsx, falsy-values
 
 条件分岐の値が `0` や `NaN` などレンダリングされる falsy 値になり得る場合は、`&&` ではなく三項演算子 (`? :`) を使って明示する。
 
-**Incorrect (count が 0 のときに "0" が描画される):**
+Incorrect (count が 0 のときに "0" が描画される):
 
 ```tsx
 function Badge({ count }: { count: number }) {
@@ -24,7 +24,7 @@ function Badge({ count }: { count: number }) {
 // count = 5 のとき: <div><span class="badge">5</span></div>
 ```
 
-**Correct (count が 0 のときは何も描画されない):**
+Correct (count が 0 のときは何も描画されない):
 
 ```tsx
 function Badge({ count }: { count: number }) {

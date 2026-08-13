@@ -51,7 +51,7 @@ Action + topic + value proposition + one supporting detail
 
 ## 監査出力フォーマット
 
-監査結果は **重大度 + 場所 + 問題 + 修正案** を 1 セットで出力する。汎用的な「SEO を改善せよ」では実装に落ちないので、必ずページ／アセット単位で具体化する。
+監査結果は 重大度 + 場所 + 問題 + 修正案 を 1 セットで出力する。汎用的な「SEO を改善せよ」では実装に落ちないので、必ずページ／アセット単位で具体化する。
 
 ```text
 [HIGH] Duplicate title tags on product pages
@@ -61,6 +61,6 @@ Fix: Generate a unique title per product using the product name and primary cate
 ```
 
 重大度の目安:
-- **HIGH**: インデックス／クロールに直接影響、または順位を大きく下げるリスク
-- **MEDIUM**: 改善で明確な順位向上が期待できるが、即時の損害は小さい
-- **LOW**: ベストプラクティス遵守。優先度低
+- HIGH: インデックス／クロールに直接影響、または順位を大きく下げるリスク
+- MEDIUM: 改善で明確な順位向上が期待できるが、即時の損害は小さい
+- LOW: ベストプラクティス遵守。優先度低

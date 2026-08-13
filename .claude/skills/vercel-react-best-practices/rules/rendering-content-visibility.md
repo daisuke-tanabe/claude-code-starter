@@ -9,7 +9,7 @@ tags: rendering, css, content-visibility, long-lists
 
 `content-visibility: auto` を使って画面外要素のレンダリングを後回しにする。
 
-**CSS:**
+CSS:
 
 ```css
 .message-item {
@@ -18,7 +18,7 @@ tags: rendering, css, content-visibility, long-lists
 }
 ```
 
-**例:**
+例:
 
 ```tsx
 function MessageList({ messages }: { messages: Message[] }) {

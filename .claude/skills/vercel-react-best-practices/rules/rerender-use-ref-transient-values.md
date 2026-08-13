@@ -9,7 +9,7 @@ tags: rerender, useref, state, performance
 
 頻繁に変化し、更新のたびに再レンダリングしたくない値 (マウストラッカー、インターバル、過渡的なフラグ等) は `useState` ではなく `useRef` に格納する。UI 用には state を、DOM 周辺の一時的な値には ref を使う。ref の更新では再レンダリングが発生しない。
 
-**Incorrect (更新のたびに再レンダリングされる):**
+Incorrect (更新のたびに再レンダリングされる):
 
 ```tsx
 function Tracker() {
@@ -36,7 +36,7 @@ function Tracker() {
 }
 ```
 
-**Correct (追跡のために再レンダリングしない):**
+Correct (追跡のために再レンダリングしない):
 
 ```tsx
 function Tracker() {

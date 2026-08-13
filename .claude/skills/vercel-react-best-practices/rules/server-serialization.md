@@ -7,9 +7,9 @@ tags: server, rsc, serialization, props
 
 ## Minimize Serialization at RSC Boundaries
 
-React の Server/Client 境界では、オブジェクトの全プロパティが文字列にシリアライズされ、HTML レスポンスや後続の RSC リクエストに埋め込まれる。このシリアライズデータはページの重さとロード時間に直結するため、**サイズが大きく影響する**。クライアントが実際に使うフィールドだけを渡す。
+React の Server/Client 境界では、オブジェクトの全プロパティが文字列にシリアライズされ、HTML レスポンスや後続の RSC リクエストに埋め込まれる。このシリアライズデータはページの重さとロード時間に直結するため、サイズが大きく影響する。クライアントが実際に使うフィールドだけを渡す。
 
-**Incorrect (50 フィールドすべてをシリアライズする):**
+Incorrect (50 フィールドすべてをシリアライズする):
 
 ```tsx
 async function Page() {
@@ -23,7 +23,7 @@ function Profile({ user }: { user: User }) {
 }
 ```
 
-**Correct (1 フィールドだけをシリアライズする):**
+Correct (1 フィールドだけをシリアライズする):
 
 ```tsx
 async function Page() {

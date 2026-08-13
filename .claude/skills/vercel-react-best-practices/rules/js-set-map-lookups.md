@@ -9,14 +9,14 @@ tags: javascript, set, map, data-structures, performance
 
 繰り返し所属チェックを行う場合は、配列を Set/Map に変換する。
 
-**Incorrect (1 チェックごとに O(n)):**
+Incorrect (1 チェックごとに O(n)):
 
 ```typescript
 const allowedIds = ['a', 'b', 'c', ...]
 items.filter(item => allowedIds.includes(item.id))
 ```
 
-**Correct (1 チェックごとに O(1)):**
+Correct (1 チェックごとに O(1)):
 
 ```typescript
 const allowedIds = new Set(['a', 'b', 'c', ...])

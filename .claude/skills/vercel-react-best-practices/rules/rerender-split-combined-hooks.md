@@ -9,7 +9,7 @@ tags: rerender, useMemo, useEffect, dependencies, optimization
 
 1 つの hook に依存関係の異なる複数の独立したタスクが含まれている場合は、別々の hook に分割する。1 つにまとめると、依存のいずれかが変わったときに、変更された値を使っていないタスクまで再計算されてしまう。
 
-**Incorrect (`sortOrder` を変えるとフィルタリングまで再計算される):**
+Incorrect (`sortOrder` を変えるとフィルタリングまで再計算される):
 
 ```tsx
 const sortedProducts = useMemo(() => {
@@ -21,7 +21,7 @@ const sortedProducts = useMemo(() => {
 }, [products, category, sortOrder])
 ```
 
-**Correct (products か category が変わったときだけフィルタリングを再計算する):**
+Correct (products か category が変わったときだけフィルタリングを再計算する):
 
 ```tsx
 const filteredProducts = useMemo(
@@ -40,7 +40,7 @@ const sortedProducts = useMemo(
 
 無関係な副作用を 1 つにまとめている場合も、`useEffect` で同様のパターンが適用される:
 
-**Incorrect (どちらかの依存が変わるだけで両方の処理が走る):**
+Incorrect (どちらかの依存が変わるだけで両方の処理が走る):
 
 ```tsx
 useEffect(() => {
@@ -49,7 +49,7 @@ useEffect(() => {
 }, [pathname, pageTitle])
 ```
 
-**Correct (各 effect が独立して走る):**
+Correct (各 effect が独立して走る):
 
 ```tsx
 useEffect(() => {
@@ -61,4 +61,4 @@ useEffect(() => {
 }, [pageTitle])
 ```
 
-**注意:** プロジェクトで [React Compiler](https://react.dev/learn/react-compiler) が有効化されている場合、依存追跡が自動で最適化され、このようなケースを処理してくれることもある。
+注意: プロジェクトで [React Compiler](https://react.dev/learn/react-compiler) が有効化されている場合、依存追跡が自動で最適化され、このようなケースを処理してくれることもある。

@@ -22,7 +22,7 @@
 
 コンテンツコンテナの直下に item を直接レンダーしない。
 
-**Incorrect:**
+Incorrect:
 
 ```tsx
 <SelectContent>
@@ -31,7 +31,7 @@
 </SelectContent>
 ```
 
-**Correct:**
+Correct:
 
 ```tsx
 <SelectContent>

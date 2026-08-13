@@ -19,7 +19,7 @@ tags: bundle, nextjs, vite, webpack, rollup, esbuild, path
 
 ### Import パス
 
-**Incorrect (バンドラーは何が import され得るのか判断できない):**
+Incorrect (バンドラーは何が import され得るのか判断できない):
 
 ```ts
 const PAGE_MODULES = {
@@ -30,7 +30,7 @@ const PAGE_MODULES = {
 const Page = await import(PAGE_MODULES[pageName])
 ```
 
-**Correct (許可するモジュールを明示的なマップで列挙する):**
+Correct (許可するモジュールを明示的なマップで列挙する):
 
 ```ts
 const PAGE_MODULES = {
@@ -43,13 +43,13 @@ const Page = await PAGE_MODULES[pageName]()
 
 ### ファイルシステムパス
 
-**Incorrect (2 値の列挙であっても、最終パスは静的解析から隠れている):**
+Incorrect (2 値の列挙であっても、最終パスは静的解析から隠れている):
 
 ```ts
 const baseDir = path.join(process.cwd(), 'content/' + contentKind)
 ```
 
-**Correct (呼び出し箇所で最終パスをそれぞれリテラルにする):**
+Correct (呼び出し箇所で最終パスをそれぞれリテラルにする):
 
 ```ts
 const baseDir =

@@ -9,7 +9,7 @@ tags: api-routes, server-actions, waterfalls, parallelization
 
 API ルートや Server Actions では、まだ await しないとしても、独立した処理は即座に開始する。
 
-**Incorrect (config は auth を待ち、data はその両方を待つ):**
+Incorrect (config は auth を待ち、data はその両方を待つ):
 
 ```typescript
 export async function GET(request: Request) {
@@ -20,7 +20,7 @@ export async function GET(request: Request) {
 }
 ```
 
-**Correct (auth と config が即座に開始される):**
+Correct (auth と config が即座に開始される):
 
 ```typescript
 export async function GET(request: Request) {
