@@ -1,6 +1,8 @@
 ---
 name: hono
 description: Hono ウェブアプリケーションを構築する際、または Hono の API・ルーティング・middleware・JSX・バリデーション・テスト・ストリーミングについて質問された際に使用する。コードが 'hono' または 'hono/*' からインポートしているとき、ユーザーが Hono に言及したときにトリガーする。エンドポイントのテストには `npx hono request` を利用する。
+metadata:
+  source: "yusukebe/hono-skill@skills/hono"
 ---
 
 # Hono Skill

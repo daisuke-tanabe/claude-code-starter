@@ -4,6 +4,8 @@ description: Enter explore mode - a thinking partner for exploring ideas, invest
 license: MIT
 compatibility: Requires openspec CLI.
 metadata:
+  source: "OpenSpec CLI"
+  sourceNote: "openspec update で再生成する"
   author: openspec
   version: "1.0"
   generatedBy: "1.3.1"

@@ -1,6 +1,8 @@
 ---
 name: e2e-testing
 description: Playwright を用いた E2E テストパターン、Page Object Model、設定、CI/CD 連携、アーティファクト管理、フレーキーテスト対策、クリティカルフローのテスト。E2E テスト追加・既存テスト改修・テスト構成設計・フレーキーテスト対処・CI 連携・Playwright 設定調整を行う際は必ず本スキルを参照する。
+metadata:
+  source: "affaan-m/everything-claude-code@skills/e2e-testing"
 ---
 
 # E2E テストパターン

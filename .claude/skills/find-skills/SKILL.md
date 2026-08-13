@@ -1,6 +1,8 @@
 ---
 name: find-skills
 description: ユーザーが「X をどうやるか」「X 用のスキルを探して」「〜できるスキルはある？」といった質問をしたり、エージェントの機能拡張に関心を示した際に、agent skill の発見とインストールを支援する。インストール可能なスキルとして存在しそうな機能をユーザーが探しているときに本スキルを利用する。
+metadata:
+  source: "vercel-labs/skills@skills/find-skills"
 ---
 
 # Find Skills

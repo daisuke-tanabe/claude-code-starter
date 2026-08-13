@@ -2,6 +2,7 @@
 name: supabase
 description: "Supabase に関わるあらゆるタスクで使用する。トリガー: Supabase の各プロダクト (Database, Auth, Edge Functions, Realtime, Storage, Vectors, Cron, Queues)、Next.js / React / SvelteKit / Astro / Remix におけるクライアントライブラリと SSR 連携 (supabase-js, @supabase/ssr)、認証関連の問題 (login, logout, sessions, JWT, cookies, getSession, getUser, getClaims, RLS)、Supabase CLI または MCP サーバー、スキーマ変更、マイグレーション、セキュリティ監査、Postgres 拡張 (pg_graphql, pg_cron, pg_vector)。"
 metadata:
+  source: "supabase-community/supabase-plugin@skills/supabase"
   author: supabase
   version: "0.1.2"
 ---

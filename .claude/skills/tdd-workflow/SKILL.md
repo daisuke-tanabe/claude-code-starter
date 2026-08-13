@@ -1,6 +1,8 @@
 ---
 name: tdd-workflow
 description: ユニットテスト・統合テスト・E2E テストを含む 80% 以上のカバレッジで、テスト駆動開発（TDD）を強制するワークフロー。新機能の作成・バグ修正・コードのリファクタリング・API エンドポイント追加・新コンポーネント作成を行う際は必ず本スキルを参照する。
+metadata:
+  source: "affaan-m/everything-claude-code@skills/tdd-workflow"
 ---
 
 # テスト駆動開発ワークフロー

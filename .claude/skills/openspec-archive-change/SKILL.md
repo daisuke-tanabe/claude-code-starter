@@ -4,6 +4,8 @@ description: Archive a completed change in the experimental workflow. Use when t
 license: MIT
 compatibility: Requires openspec CLI.
 metadata:
+  source: "OpenSpec CLI"
+  sourceNote: "openspec update で再生成する"
   author: openspec
   version: "1.0"
   generatedBy: "1.3.1"

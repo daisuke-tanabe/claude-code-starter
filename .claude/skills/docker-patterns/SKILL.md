@@ -1,6 +1,8 @@
 ---
 name: docker-patterns
 description: ローカル開発、コンテナセキュリティ、ネットワーキング、ボリューム戦略、マルチサービスのオーケストレーションのための Docker および Docker Compose パターン。Docker Compose 構築・Dockerfile 作成/レビュー・コンテナセキュリティ強化・ネットワーク/ボリュームのトラブルシューティング・本番ワークフロー設計を行う際は必ず本スキルを参照する。
+metadata:
+  source: "affaan-m/everything-claude-code@skills/docker-patterns"
 ---
 
 # Docker パターン

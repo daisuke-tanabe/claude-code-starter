@@ -1,6 +1,8 @@
 ---
 name: seo
 description: テクニカル SEO、オンページ最適化、構造化データ、Core Web Vitals、コンテンツ戦略にわたって SEO 改善を監査・計画・実装する。クロール可能性/インデックス可能性監査、title/meta/見出し改善、構造化データ追加、Core Web Vitals 改善、キーワードマッピング、内部リンク/サイトマップ/robots の作業を行う際は必ず本スキルを参照する。
+metadata:
+  source: "affaan-m/everything-claude-code@skills/seo"
 ---
 
 # SEO

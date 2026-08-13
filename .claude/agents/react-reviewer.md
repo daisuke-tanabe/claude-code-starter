@@ -8,7 +8,7 @@ skills:
   - coding-style
   - typescript-coding-style
   - vercel-react-best-practices
-  - next-best-practices
+  - next-docs
   - next-cache-components
 ---
 
