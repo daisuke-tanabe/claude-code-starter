@@ -16,22 +16,22 @@ description: 外部由来スキルを upstream から更新するワークフロ
 
 ## 更新手順
 
-1. **対象列挙**: `grep -l "^  source:" .claude/skills/*/SKILL.md` で外部由来スキルを列挙する
-2. **更新確認**: upstream の対象パスの最新 commit SHA を取得し、`sourceVersion` と比較する
+1. 対象列挙: `grep -l "^  source:" .claude/skills/*/SKILL.md` で外部由来スキルを列挙する
+2. 更新確認: upstream の対象パスの最新 commit SHA を取得し、`sourceVersion` と比較する
 
    ```bash
    gh api "repos/<owner>/<repo>/commits?path=<repo 内パス>&per_page=1" --jq '.[0].sha'
    ```
 
    一致すれば更新不要。`sourceVersion` が未設定の場合は upstream の現内容とローカルを突き合わせて判断する
-3. **取得**: `gh api repos/<owner>/<repo>/contents/<パス>` で SKILL.md と references 等の全ファイルを取得する
-4. **翻訳・再構成**: 以下の規約で日本語化する
+3. 取得: `gh api repos/<owner>/<repo>/contents/<パス>` で SKILL.md と references 等の全ファイルを取得する
+4. 翻訳・再構成: 以下の規約で日本語化する
    - CLAUDE.md の文章スタイルに従う。結論ファースト、丸括弧による補足は原則禁止、一文は短く
    - コード・API 名・コマンド・技術用語は原文のまま残す
    - ローカルの既存構成を維持する。長大な本文は `references/` に分割し、SKILL.md は起動タイミングと索引に絞る
    - description の書き方は既存スキルに揃え、末尾に起動条件を明記する
-5. **適用**: ディレクトリ名と `name` は upstream と同名を維持する。`metadata.source` / `sourceNote` を保持し、`sourceVersion` を手順 2 で取得した SHA に更新する
-6. **検証・コミット**: frontmatter が YAML として妥当なこと、`references/` へのリンク切れがないことを確認し、スキル単位でコミットする
+5. 適用: ディレクトリ名と `name` は upstream と同名を維持する。`metadata.source` / `sourceNote` を保持し、`sourceVersion` を手順 2 で取得した SHA に更新する
+6. 検証・コミット: frontmatter が YAML として妥当なこと、`references/` へのリンク切れがないことを確認し、スキル単位でコミットする
 
 ## 注意
 
