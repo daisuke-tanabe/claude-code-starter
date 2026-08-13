@@ -3,6 +3,7 @@ name: find-skills
 description: ユーザーが「X をどうやるか」「X 用のスキルを探して」「〜できるスキルはある？」といった質問をしたり、エージェントの機能拡張に関心を示した際に、agent skill の発見とインストールを支援する。インストール可能なスキルとして存在しそうな機能をユーザーが探しているときに本スキルを利用する。
 metadata:
   source: "vercel-labs/skills@skills/find-skills"
+  sourceVersion: "773fb2c7bbf16781670a3520affc4abd0c6151ae"
 ---
 
 # Find Skills
@@ -26,9 +27,8 @@ Skills CLI (`npx skills`) はオープンな agent skills エコシステム向�
 
 **主なコマンド:**
 
-- `npx skills find [query]` — 対話的またはキーワードでスキルを検索する
+- `npx skills find [query] [--owner <owner>]` — 対話的またはキーワードでスキルを検索する。GitHub の owner で絞り込める
 - `npx skills add <package>` — GitHub などのソースからスキルをインストールする
-- `npx skills check` — スキルの更新を確認する
 - `npx skills update` — インストール済みのスキルをすべて更新する
 
 **スキルを閲覧する:** https://skills.sh/
@@ -56,7 +56,7 @@ CLI 検索を実行する前に、[skills.sh のリーダーボード](https://s
 リーダーボードでユーザーのニーズを満たせない場合は find コマンドを実行する。
 
 ```bash
-npx skills find [query]
+npx skills find [query] [--owner <owner>]
 ```
 
 例:
