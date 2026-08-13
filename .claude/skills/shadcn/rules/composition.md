@@ -5,7 +5,7 @@
 - Item は必ず対応する Group コンポーネントの中に置く
 - コールアウトには Alert を使う
 - 空状態には Empty コンポーネントを使う
-- トースト通知には sonner を使う
+- トースト通知はプロジェクトの base に従う
 - オーバーレイ系コンポーネントの選び方
 - Dialog、Sheet、Drawer には必ず Title が必要
 - Card の構造
@@ -51,6 +51,12 @@
 | `MenubarItem` | `MenubarGroup` |
 | `ContextMenuItem` | `ContextMenuGroup` |
 | `CommandItem` | `CommandGroup` |
+| `MessageScrollerItem` | `MessageScrollerContent` |
+| `Message` (同一送信者の連続) | `MessageGroup` |
+| `Bubble` (スタック表示) | `BubbleGroup` |
+| `Attachment` (横並び) | `AttachmentGroup` |
+
+チャットコンポーネントは決まった順序でネストする (`MessageScrollerProvider` → `MessageScroller` → `MessageScrollerViewport` → `MessageScrollerContent` → `MessageScrollerItem`)。[chat.md](./chat.md) を参照。
 
 ---
 
@@ -82,7 +88,19 @@
 
 ---
 
-## トースト通知には sonner を使う
+## トースト通知はプロジェクトの base に従う
+
+Base UI プロジェクトでは `toast` コンポーネントを使う。
+
+```tsx
+import { toast } from "@/components/ui/toast"
+
+toast.add({
+  title: "Changes saved.",
+})
+```
+
+Radix と React Aria プロジェクトでは Sonner を使う。
 
 ```tsx
 import { toast } from "sonner"

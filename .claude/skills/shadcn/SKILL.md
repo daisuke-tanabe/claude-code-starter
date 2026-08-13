@@ -1,10 +1,11 @@
 ---
 name: shadcn
-description: shadcn コンポーネントとプロジェクトを管理する — 追加・検索・修正・デバッグ・スタイリング・UI のコンポジションをサポート。プロジェクトのコンテキスト、コンポーネントのドキュメント、利用例を提供する。shadcn/ui、component registry、preset、--preset コード、または `components.json` を持つプロジェクトを扱う際に適用される。「shadcn init」「create an app with --preset」「switch to --preset」などのリクエストにもトリガーされる。
+description: shadcn コンポーネントとプロジェクトを管理する — 追加・検索・修正・デバッグ・スタイリング・チャットインターフェースを含む UI のコンポジションをサポート。プロジェクトのコンテキスト、コンポーネントのドキュメント、利用例を提供する。shadcn/ui、component registry、preset、--preset コード、または `components.json` を持つプロジェクトを扱う際に適用される。「shadcn init」「create an app with --preset」「switch to --preset」などのリクエストにもトリガーされる。
 user-invocable: false
 allowed-tools: Bash(npx shadcn@latest *), Bash(pnpm dlx shadcn@latest *), Bash(bunx --bun shadcn@latest *)
 metadata:
   source: "shadcn-ui/ui@skills/shadcn"
+  sourceVersion: "6cd3f4c65c361ab6554e06a77e6a0af9cf8b6e37"
 ---
 
 # shadcn/ui
@@ -66,7 +67,7 @@ UI、コンポーネント、デザインシステムを構築するためのフ
 - **カスタムマークアップの前に既存コンポーネントを使う。** スタイル付きの `div` を書く前に同等のコンポーネントが存在しないか確認する。
 - **コールアウトには `Alert` を使う。** スタイル付きの div を独自に作らない。
 - **空状態には `Empty` を使う。** 空状態のカスタムマークアップを作らない。
-- **トーストは `sonner` を使う。** `sonner` の `toast()` を使う。
+- トーストはプロジェクトの base に従う。Base UI プロジェクトでは `toast` コンポーネントの `toast` を使う。Radix と React Aria プロジェクトでは `sonner` の `toast()` を使う。
 - **`<hr>` や `<div className="border-t">` の代わりに `Separator` を使う。**
 - **ローディングプレースホルダには `Skeleton` を使う。** 独自の `animate-pulse` の div を作らない。
 - **カスタムスタイルの span の代わりに `Badge` を使う。**
@@ -76,6 +77,12 @@ UI、コンポーネント、デザインシステムを構築するためのフ
 - **`Button` 内のアイコンは `data-icon` を使う。** アイコンに `data-icon="inline-start"` または `data-icon="inline-end"` を付ける。
 - **コンポーネント内のアイコンにサイズクラスを付けない。** コンポーネントは CSS でアイコンサイズを管理する。`size-4` や `w-4 h-4` を付けない。
 - **アイコンは文字列キーではなくオブジェクトとして渡す。** 文字列ルックアップではなく `icon={CheckIcon}`。
+
+### チャットとメッセージング → [chat.md](./rules/chat.md)
+
+- チャット UI はチャット primitive をコンポジションする。会話には `MessageScroller`、行には `Message`、メッセージ面には `Bubble` を使う。バブル用の `div` や生のスクロールコンテナを手作りしない。
+- スクロール挙動は `MessageScroller` が管理する。ストリーミング追従、アンカリング、jump-to-latest の `MessageScrollerButton` は組み込み。`useStickToBottom` や `ResizeObserver` のフックを書かない。
+- 添付には `Attachment` を使い、システムノートと区切りには `Marker` を使う。`Item` カードや `Separator` + ラベルを使わない。
 
 ### CLI
 
@@ -131,13 +138,14 @@ UI、コンポーネント、デザインシステムを構築するためのフ
 | データ表示                 | `Table`, `Card`, `Badge`, `Avatar`                                                                  |
 | ナビゲーション             | `Sidebar`, `NavigationMenu`, `Breadcrumb`, `Tabs`, `Pagination`                                     |
 | オーバーレイ               | `Dialog` (モーダル), `Sheet` (サイドパネル), `Drawer` (ボトムシート), `AlertDialog` (確認)          |
-| フィードバック             | `sonner` (トースト), `Alert`, `Progress`, `Skeleton`, `Spinner`                                     |
+| フィードバック             | `toast` (Base UI), `sonner` (Radix/Aria), `Alert`, `Progress`, `Skeleton`, `Spinner`                |
 | コマンドパレット           | `Dialog` 内に `Command`                                                                             |
 | チャート                   | `Chart` (Recharts のラッパー)                                                                       |
 | レイアウト                 | `Card`, `Separator`, `Resizable`, `ScrollArea`, `Accordion`, `Collapsible`                          |
 | 空状態                     | `Empty`                                                                                             |
 | メニュー                   | `DropdownMenu`, `ContextMenu`, `Menubar`                                                            |
 | ツールチップ/情報          | `Tooltip`, `HoverCard`, `Popover`                                                                   |
+| チャット/会話 UI           | `MessageScroller`, `Message`, `Bubble`, `Attachment`, `Marker`                                      |
 
 ## 主要フィールド
 
@@ -176,7 +184,7 @@ npx shadcn@latest docs button dialog select
 5. **インストールまたは更新する** — `npx shadcn@latest add`。既存コンポーネントを更新する際は、まず `--dry-run` と `--diff` で変更をプレビューする (下記 [Updating Components](#updating-components) を参照)。
 6. **サードパーティコンポーネントの import を修正する** — コミュニティ registry (例: `@bundui`、`@magicui`) からコンポーネントを追加した後は、追加された非 UI ファイルに `@/components/ui/...` のようなハードコードされた import パスがないか確認する。これらはプロジェクトの実際の alias と一致しない。`npx shadcn@latest info` で正しい `ui` alias (例: `@workspace/ui/components`) を取得し、import を書き換える。CLI は自前の UI ファイルについては import を書き換えるが、サードパーティ registry のコンポーネントはプロジェクトに合わないデフォルトパスを使っていることがある。
 7. **追加されたコンポーネントをレビューする** — 任意の registry からコンポーネントやブロックを追加したら、**必ず追加されたファイルを読み、正しいか確認する**。サブコンポーネントの欠落 (例: `SelectGroup` のない `SelectItem`)、import の漏れ、誤ったコンポジション、[重要なルール](#重要なルール) 違反をチェックする。さらに、アイコンの import はプロジェクトコンテキストの `iconLibrary` に合わせて置き換える (例: registry が `lucide-react` を使うがプロジェクトが `hugeicons` を使う場合は、import とアイコン名をそれに合わせて差し替える)。問題はすべて修正してから次に進む。
-8. **registry は明示する** — ユーザーがブロックやコンポーネントの追加を依頼したとき **registry を勝手に推測しない**。registry が指定されていない場合 (例: ユーザーが `@shadcn`、`@tailark` などを指定せず「ログインブロックを追加して」と言った場合) は、どの registry を使うか確認する。ユーザーの代わりに既定の registry を選ばない。
+8. **registry は明示する** — ユーザーがブロックやコンポーネントの追加を依頼したとき **registry を勝手に推測しない**。registry が指定されていない場合 (例: ユーザーが `@shadcn`、`@tailark`、`owner/repo` などを指定せず「ログインブロックを追加して」と言った場合) は、どの registry を使うか確認する。ユーザーの代わりに既定の registry を選ばない。
 9. **preset を切り替えるとき** — 先にユーザーに確認する: **overwrite**、**partial**、**merge**、**skip** のどれか?
    - **現在の preset を確認**: `npx shadcn@latest preset resolve`。構造化された値が必要なときは `--json` を付ける。
    - **適用予定の preset を確認**: `npx shadcn@latest preset decode <code>`。preset builder を共有・オープンするには `preset url <code>` または `preset open <code>` を使う。
@@ -229,22 +237,28 @@ npx shadcn@latest preset resolve --json
 # コンポーネントを追加する。
 npx shadcn@latest add button card dialog
 npx shadcn@latest add @magicui/shimmer-button
+npx shadcn@latest add owner/repo/item
 npx shadcn@latest add --all
 
 # 追加・更新の前に変更をプレビューする。
 npx shadcn@latest add button --dry-run
 npx shadcn@latest add button --diff button.tsx
 npx shadcn@latest add @acme/form --view button.tsx
+npx shadcn@latest add owner/repo/item --dry-run
 
 # registry を検索する。
 npx shadcn@latest search @shadcn -q "sidebar"
 npx shadcn@latest search @tailark -q "stats"
+npx shadcn@latest search owner/repo -q "login"
+npx shadcn@latest search                          # 設定済みのすべての registry
+npx shadcn@latest search @shadcn -q "menu" -t ui  # アイテムタイプで絞り込み
 
 # コンポーネントのドキュメントとサンプル URL を取得する。
 npx shadcn@latest docs button dialog select
 
 # registry 項目の詳細を表示する (未インストール項目向け)。
 npx shadcn@latest view @shadcn/button
+npx shadcn@latest view owner/repo/item
 ```
 
 **Named presets:** `nova`, `vega`, `maia`, `lyra`, `mira`, `luma`
@@ -255,8 +269,10 @@ npx shadcn@latest view @shadcn/button
 
 - [rules/forms.md](./rules/forms.md) — FieldGroup、Field、InputGroup、ToggleGroup、FieldSet、バリデーション状態
 - [rules/composition.md](./rules/composition.md) — Group、オーバーレイ、Card、Tabs、Avatar、Alert、Empty、Toast、Separator、Skeleton、Badge、Button のローディング
+- [rules/chat.md](./rules/chat.md) — MessageScroller、Message、Bubble、Attachment、Marker、ストリーミング、アンカリング、jump-to-latest
 - [rules/icons.md](./rules/icons.md) — data-icon、アイコンサイズ、アイコンをオブジェクトとして渡す方法
 - [rules/styling.md](./rules/styling.md) — セマンティックカラー、variant、className、スペーシング、size、truncate、ダークモード、cn()、z-index
 - [rules/base-vs-radix.md](./rules/base-vs-radix.md) — asChild と render、Select、ToggleGroup、Slider、Accordion
 - [cli.md](./cli.md) — コマンド、フラグ、preset、テンプレート
+- [registry.md](./registry.md) — source registry の作成、include、アイテム定義、依存関係、GitHub registry のルール
 - [customization.md](./customization.md) — テーマ、CSS 変数、コンポーネントの拡張
