@@ -148,21 +148,37 @@ overrides:
 }
 ```
 
+## Registry Aliases (namedRegistries)
+
+パッケージエイリアスとは別物として、`namedRegistries` のプレフィックスはパッケージをどの registry から取得するかを選択する。
+
+```yaml title="pnpm-workspace.yaml"
+namedRegistries:
+  work: https://npm.work.example.com/
+```
+
+```bash
+pnpm add work:@corp/lib@^2.0.0   # @corp/lib を work registry に対して解決する
+```
+
+組み込みの `gh:` エイリアスは GitHub Packages を指す。認証は URL ごとの `.npmrc` エントリを再利用する。
+
 ## ベストプラクティス
 
-1. **わかりやすい命名**: 目的が伝わるエイリアス名を使う
+1. わかりやすい命名: 目的が伝わるエイリアス名を使う
    ```json
    "lodash-legacy": "npm:lodash@3"
    "lodash-modern": "npm:lodash@4"
    ```
 
-2. **エイリアスを文書化する**: なぜエイリアスを使うのかを示すコメントや説明を残す
+2. エイリアスを文書化する: なぜエイリアスを使うのかを説明する
 
-3. **全体的な置換には overrides を優先する**: あらゆる場所で置換したいなら、エイリアスではなく overrides を使う
+3. 全体的な置換には overrides を優先する: あらゆる場所で置換したいなら、エイリアスではなく `pnpm-workspace.yaml` の `overrides` を使う
 
-4. **十分にテストする**: エイリアスされたパッケージは挙動が微妙に異なる可能性がある
+4. 十分にテストする: エイリアスされたパッケージは挙動が微妙に異なる可能性がある
 
 <!--
 Source references:
 - https://pnpm.io/aliases
+- https://pnpm.io/settings#namedregistries
 -->

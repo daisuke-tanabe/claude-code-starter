@@ -37,6 +37,8 @@ catalog:
 }
 ```
 
+`catalog:` は `catalog:default` の省略形である。`catalog:` プロトコルは `package.json` の `dependencies`、`devDependencies`、`peerDependencies`、`optionalDependencies` に加え、`pnpm-workspace.yaml` 内の `overrides` でも有効である。CLI でも使える。`pnpm add react@catalog:` や `pnx shx@catalog:` のように指定する。
+
 ## 名前付き Catalog
 
 シナリオごとに複数の catalog を作成できる。
@@ -78,12 +80,33 @@ catalogs:
 }
 ```
 
+## overrides を catalog と同期させる
+
+`overrides` から catalog を参照すると、バージョンの定義箇所を 1 か所に保てる。
+
+```yaml title="pnpm-workspace.yaml"
+catalog:
+  foo: ^1.0.0
+
+overrides:
+  foo: 'catalog:'          # または catalog:<name>
+```
+
+## 設定
+
+```yaml title="pnpm-workspace.yaml"
+# `pnpm add` がデフォルト catalog とどう連携するか (v10.12+)
+catalogMode: manual        # manual (デフォルト) | prefer | strict
+# strict: catalog のバージョンのみ許可; prefer: 一致しなければフォールバック
+cleanupUnusedCatalogs: true  # install 時に未使用の catalog エントリを削除する (v10.15+)
+```
+
 ## メリット
 
-1. **単一の信頼できる情報源**: バージョンを 1 か所で更新できる
-2. **整合性**: すべてのパッケージが同じバージョンを使用する
-3. **アップグレードが容易**: 1 度バージョンを変更すれば workspace 全体に反映される
-4. **型安全**: pnpm-workspace.yaml で TypeScript のサポートが効く
+1. 単一の信頼できる情報源: バージョンを 1 か所で更新できる
+2. 整合性: すべてのパッケージが同じバージョンを使用する
+3. アップグレードが容易: 1 度バージョンを変更すれば workspace 全体に反映される
+4. マージコンフリクトの減少: アップグレード時に package.json が変更されない
 
 ## Catalog と Overrides の比較
 
@@ -134,14 +157,18 @@ catalog:
   react-dom: ^18.2.0
 ```
 
-そのうえで、各 package.json を `catalog:` 参照に置き換える。
+そのうえで、各 package.json を `catalog:` 参照に置き換える。既存の workspace を自動で移行するには次を実行する。
+
+```bash
+pnpx codemod pnpm/catalog
+```
 
 ## ベストプラクティス
 
-1. **共有依存にはデフォルト catalog を使う**: 広く共有される依存に向く
-2. **バージョンバリエーションには名前付き catalog を使う**: 例: React のバージョン違い
-3. **catalog は最小限に保つ**: 共有される依存のみを載せる
-4. **workspace protocol と併用する**: 内部パッケージは workspace protocol を使う
+1. 共有依存にはデフォルト catalog を使う: 広く共有される依存に向く
+2. バージョンバリエーションには名前付き catalog を使う: 例: React のバージョン違い
+3. catalog は最小限に保つ: 共有される依存のみを載せる
+4. workspace protocol と併用する: 内部パッケージは workspace protocol を使う
 
 ```yaml
 catalog:

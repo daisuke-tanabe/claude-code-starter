@@ -27,12 +27,6 @@ pnpm install --frozen-lockfile
 pnpm install --prefer-offline
 ```
 
-グローバル設定にもできる。
-```ini
-# .npmrc
-prefer-offline=true
-```
-
 ### Optional 依存をスキップ
 
 optional 依存が不要なら、
@@ -49,55 +43,50 @@ CI やスクリプトが不要な場面で、
 pnpm install --ignore-scripts
 ```
 
-**注意:** 一部のパッケージは postinstall スクリプトに依存する。
+注意: 一部のパッケージは postinstall スクリプトに依存する。
 
 ### 特定依存だけビルド
 
-特定パッケージのみビルドスクリプトを実行する。
+ビルドスクリプトの承認は単一の `allowBuilds` マップで行う。`onlyBuiltDependencies` と `neverBuiltDependencies` を置き換えるもので、許可したパッケージのみが install スクリプトを実行する。
 
-```ini
-# .npmrc
-onlyBuiltDependencies[]=esbuild
-onlyBuiltDependencies[]=sharp
-onlyBuiltDependencies[]=@swc/core
+```yaml title="pnpm-workspace.yaml"
+allowBuilds:
+  esbuild: true
+  '@swc/core': true
+  core-js: false      # 明示的にスキップ
 ```
 
-不要な依存についてはビルドを完全に無効化することもできる。
-
-```json
-{
-  "pnpm": {
-    "neverBuiltDependencies": ["fsevents", "cpu-features"]
-  }
-}
-```
+リストに無いパッケージは未レビュー扱いとなり、デフォルトでブロックされる。ビルド承認ワークフローの全体は `features-supply-chain-security` を参照。
 
 ## Store の最適化
 
 ### 副作用キャッシュ
 
-ネイティブモジュールのビルド結果をキャッシュする。
+ネイティブモジュールのビルド結果をキャッシュする。デフォルトで有効。
 
-```ini
-# .npmrc
-side-effects-cache=true
+```yaml title="pnpm-workspace.yaml"
+sideEffectsCache: true
 ```
 
 postinstall スクリプトの結果がキャッシュされ、次回以降のインストールが高速化する。
 
-### Store を共有
+### Global virtual store
 
-すべてのプロジェクトで単一の store を使う (デフォルトの挙動)。
+git worktree や複数エージェントなど、同一リポジトリのチェックアウトが多数ある場合は global virtual store を有効にする。各プロジェクトの `node_modules` は共有 store への symlink だけになり、チェックアウトごとのコストがほぼゼロになる。CI では自動的に無効化される。
 
-```ini
-# .npmrc
-store-dir=~/.pnpm-store
+```yaml title="pnpm-workspace.yaml"
+enableGlobalVirtualStore: true
 ```
 
-メリット:
-- パッケージは全プロジェクトで 1 度だけダウンロード
-- ハードリンクでディスク容量を節約
-- キャッシュからのインストールが速い
+### Store を共有
+
+デフォルトで、すべてのプロジェクトが単一のコンテンツアドレス型 store を使う。
+
+```yaml title="pnpm-workspace.yaml"
+storeDir: ~/.local/share/pnpm/store
+```
+
+メリット: パッケージのダウンロードは 1 度だけ、ハードリンクでディスク容量を節約、キャッシュからのインストールが速い。
 
 ### Store のメンテナンス
 
@@ -122,9 +111,8 @@ pnpm -r --parallel run build
 ```
 
 並列度を制御する。
-```ini
-# .npmrc
-workspace-concurrency=8
+```yaml title="pnpm-workspace.yaml"
+workspaceConcurrency: 8
 ```
 
 ### 出力をストリーム
@@ -160,44 +148,27 @@ pnpm -r --workspace-concurrency=1 run build
 
 ## ネットワークの最適化
 
-### レジストリの設定
+ネットワークとレジストリの設定は `pnpm-workspace.yaml` に camelCase で書く。レジストリ URL は `registries` にも書ける。
 
-近く・速いレジストリを使う。
-
-```ini
-# .npmrc
-registry=https://registry.npmmirror.com/
-```
-
-### HTTP 設定
-
-ネットワーク設定をチューニングする。
-
-```ini
-# .npmrc
-fetch-retries=3
-fetch-retry-mintimeout=10000
-fetch-retry-maxtimeout=60000
-network-concurrency=16
-```
-
-### プロキシ設定
-
-```ini
-# .npmrc
-proxy=http://proxy.company.com:8080
-https-proxy=http://proxy.company.com:8080
+```yaml title="pnpm-workspace.yaml"
+registries:
+  default: https://registry.npmmirror.com/
+fetchRetries: 3
+fetchRetryMintimeout: 10000
+fetchRetryMaxtimeout: 60000
+networkConcurrency: 16          # 自動値は clamp(workers x 3, 16, 64)
+httpProxy: http://proxy.company.com:8080
+httpsProxy: http://proxy.company.com:8080
 ```
 
 ## Lockfile の最適化
 
 ### 単一の lockfile (Monorepo)
 
-全パッケージで lockfile を共有する (デフォルト)。
+全パッケージで lockfile を共有する。デフォルトの挙動。
 
-```ini
-# .npmrc
-shared-workspace-lockfile=true
+```yaml title="pnpm-workspace.yaml"
+sharedWorkspaceLockfile: true
 ```
 
 メリット:
@@ -244,41 +215,46 @@ DEBUG=pnpm:* pnpm install
 
 ## 設定まとめ
 
-パフォーマンス最適化向けの `.npmrc`:
+パフォーマンス最適化向けの `pnpm-workspace.yaml`:
 
-```ini
+```yaml title="pnpm-workspace.yaml"
 # インストール挙動
-prefer-offline=true
-auto-install-peers=true
+autoInstallPeers: true
+sideEffectsCache: true
+optimisticRepeatInstall: true
 
-# ビルド最適化
-side-effects-cache=true
-# 必要なものだけビルド
-onlyBuiltDependencies[]=esbuild
-onlyBuiltDependencies[]=@swc/core
+# ビルド承認 (必要なものだけ)
+allowBuilds:
+  esbuild: true
+  '@swc/core': true
 
 # ネットワーク
-fetch-retries=3
-network-concurrency=16
+fetchRetries: 3
+networkConcurrency: 16
 
 # Workspace
-workspace-concurrency=4
+workspaceConcurrency: 4
+
+# 同一リポジトリのチェックアウトが多数ある場合
+enableGlobalVirtualStore: true
 ```
 
 ## クイックリファレンス
 
 | シナリオ | コマンド/設定 |
 |----------|-----------------|
-| CI でのインストール | `pnpm install --frozen-lockfile` |
+| CI でのインストール | `pnpm ci` / `pnpm install --frozen-lockfile` |
 | オフライン開発 | `--prefer-offline` |
-| ネイティブビルドのスキップ | `neverBuiltDependencies` |
+| ネイティブビルドの制御 | `allowBuilds` マップ |
 | workspace の並列実行 | `pnpm -r --parallel run build` |
 | 変更分のみビルド | `pnpm --filter "...[origin/main]" build` |
 | store の整理 | `pnpm store prune` |
+| 多数の worktree/エージェント | `enableGlobalVirtualStore: true` |
 
 <!--
 Source references:
-- https://pnpm.io/npmrc
+- https://pnpm.io/settings
 - https://pnpm.io/cli/install
 - https://pnpm.io/filtering
+- https://pnpm.io/global-virtual-store
 -->
