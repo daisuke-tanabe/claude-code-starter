@@ -3,6 +3,8 @@ name: docker-patterns
 description: ローカル開発、コンテナセキュリティ、ネットワーキング、ボリューム戦略、マルチサービスのオーケストレーションのための Docker および Docker Compose パターン。Docker Compose 構築・Dockerfile 作成/レビュー・コンテナセキュリティ強化・ネットワーク/ボリュームのトラブルシューティング・本番ワークフロー設計を行う際は必ず本スキルを参照する。
 metadata:
   source: "affaan-m/everything-claude-code@skills/docker-patterns"
+  sourceVersion: "d791457aca159f862358f05aef3a7f588416a2dc"
+  sourceNote: "upstream の Hardened CLI Installer Harnesses 節は ECC リポジトリ固有のため、汎用部分のみ references/security.md に取り込む"
 ---
 
 # Docker パターン
@@ -16,6 +18,7 @@ metadata:
 - Dockerfile のセキュリティとサイズをレビューするとき
 - コンテナのネットワーキングやボリュームの問題を切り分けるとき
 - ローカル開発からコンテナ化ワークフローへ移行するとき
+- インストーラや CLI を複数の Linux ディストリビューションで検証するとき
 
 ## 主要原則
 
@@ -33,5 +36,5 @@ metadata:
 |---|---|
 | Docker Compose 構成、マルチステージ Dockerfile、Override ファイル | `references/compose-and-dockerfile.md` |
 | ネットワーキング（サービスディスカバリ／カスタムネットワーク）とボリューム戦略 | `references/networking-and-volumes.md` |
-| コンテナセキュリティ（ハードニング、シークレット管理、.dockerignore） | `references/security.md` |
+| コンテナセキュリティ（ハードニング、シークレット管理、.dockerignore、インストーラ検証） | `references/security.md` |
 | デバッグコマンド・ネットワーク調査・アンチパターン | `references/debugging.md` |

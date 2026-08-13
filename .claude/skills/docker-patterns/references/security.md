@@ -76,3 +76,23 @@ Dockerfile*
 README.md
 tests/
 ```
+
+## インストーラ・CLI をコンテナで検証する
+
+使い捨てのプロジェクトコピーに対してインストーラの挙動をテストし、ソースのチェックアウトを変更させない。
+
+プラットフォーム境界を尊重する。
+
+- Debian や Ubuntu などの Linux ディストリビューションは実コンテナで検証する
+- Docker は Linux カーネルを共有するため、macOS はコンテナとして実行できない。同じテストエントリポイントを macOS ネイティブで実行する
+- Windows コンテナには Windows の Docker エンジンが必要。プラットフォーム非依存のロジックはネイティブの Windows CI ランナーで実行する
+- Linux コンテナでの検証をもって macOS や Windows の挙動を検証したと主張しない
+
+隔離の原則を守る。
+
+- ベースイメージは immutable digest でピン留めし、CLI のバージョンも固定する
+- リポジトリとソースプロジェクトは read-only でマウントし、変更前に書き込み可能な tmpfs ワークスペースへコピーする
+- `read_only: true`、`no-new-privileges:true`、`cap_drop: [ALL]`、有限の `pids_limit` を設定する
+- デフォルトのサービスは `network_mode: none` に保ち、ネットワークアクセスは明示的な opt-in サービスに限定する
+- ホストの認証情報をデフォルトでコンテナに渡さない
+- クロスプラットフォームのランナーには引数配列か `spawnSync(..., { shell: false })` を使い、プロジェクトパスをシェルコマンドに埋め込まない
