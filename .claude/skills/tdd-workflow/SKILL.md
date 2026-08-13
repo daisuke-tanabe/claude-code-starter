@@ -3,6 +3,8 @@ name: tdd-workflow
 description: ユニットテスト・統合テスト・E2E テストを含む 80% 以上のカバレッジで、テスト駆動開発（TDD）を強制するワークフロー。新機能の作成・バグ修正・コードのリファクタリング・API エンドポイント追加・新コンポーネント作成を行う際は必ず本スキルを参照する。
 metadata:
   source: "affaan-m/everything-claude-code@skills/tdd-workflow"
+  sourceVersion: "7976e6faf24640fe660c8137ec9ff4fc8625b3d5"
+  sourceNote: "upstream の Plan Handoff 節は ECC の /plan ワークフロー固有のため取り込まない。本 repo の計画層は OpenSpec を使う"
 ---
 
 # テスト駆動開発ワークフロー
@@ -50,6 +52,7 @@ metadata:
 
 ## ワークフロー概要（Red → Green → Refactor）
 
+0. **テストランナーを検出** — `npm test` を前提にせず、パッケージマネージャとランナーを判別する
 1. **ユーザージャーニーを書く** — `As a [role], I want to [action], so that [benefit]`
 2. **テストケース候補を列挙し、最初の 1 つを書く** — 候補は列挙のみ、コードは 1 テストずつ書く
 3. **テストを実行（RED 検証）** — 失敗を確認、`test:` コミット
@@ -57,6 +60,7 @@ metadata:
 5. **テスト再実行（GREEN 検証）** — `fix:` コミット
 6. **リファクタリング** — 緑を保ったまま品質改善、`refactor:` コミット
 7. **カバレッジ検証** — 80%+ 達成
+8. **エビデンスレポート** — RED / GREEN の証跡を記録し、squash 後も検証内容を追えるようにする
 
 各ステップの詳細・チェックポイントの正確な検証手順は `references/workflow-steps.md`。
 
@@ -64,8 +68,8 @@ metadata:
 
 | トピック | ファイル |
 |---|---|
-| TDD 7 ステップの詳細・RED/GREEN ゲート・Git チェックポイント運用 | `references/workflow-steps.md` |
-| ユニット / API 統合 / E2E のテストパターンとファイル構成 | `references/test-patterns.md` |
+| TDD ステップの詳細・ランナー検出・RED/GREEN ゲート・Git チェックポイント運用・エビデンスレポート | `references/workflow-steps.md` |
+| ユニット / Bun ネイティブ / API 統合 / E2E のテストパターンとファイル構成 | `references/test-patterns.md` |
 | 外部サービスのモック（DB クライアント / キャッシュ / AI 等） | `references/mocking.md` |
 | カバレッジしきい値・Watch モード・Pre-Commit Hook・CI/CD 統合 | `references/coverage-and-ci.md` |
 | テスト失敗時のトラブルシューティングとアンチパターン | `references/anti-patterns.md` |
