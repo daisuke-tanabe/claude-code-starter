@@ -3,6 +3,7 @@ name: deployment-patterns
 description: Web アプリケーション向けのデプロイメントワークフロー、デプロイメント戦略（Rolling / Blue-Green / Canary）、CI/CD パイプラインパターン、Docker コンテナ化、ヘルスチェック、ロールバック戦略、本番準備チェックリスト。CI/CD 構築・本番リリース準備・コンテナ化・デプロイ戦略選定・ヘルスチェック実装・ロールバック計画立案を行う際は必ず本スキルを参照する。
 metadata:
   source: "affaan-m/everything-claude-code@skills/deployment-patterns"
+  sourceVersion: "d29cf651c795869f733669c33e3d33dfd8307d10"
 ---
 
 # デプロイメントパターン

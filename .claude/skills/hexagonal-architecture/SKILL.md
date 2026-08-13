@@ -3,6 +3,7 @@ name: hexagonal-architecture
 description: 明確なドメイン境界、依存性逆転、テスト可能なユースケース調整を備えた Ports & Adapters システムを、TypeScript、Java、Kotlin、Go の各サービスにわたって設計、実装、リファクタリングする。新規ドメイン設計・既存コードのアーキテクチャ整理・ビジネスロジックとフレームワーク/インフラの分離・依存性注入の組み立て・ユースケース層のテスト容易化を行う際は必ず本スキルを参照する。
 metadata:
   source: "affaan-m/everything-claude-code@skills/hexagonal-architecture"
+  sourceVersion: "d29cf651c795869f733669c33e3d33dfd8307d10"
 ---
 
 # ヘキサゴナルアーキテクチャ

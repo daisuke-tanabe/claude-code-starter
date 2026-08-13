@@ -3,6 +3,7 @@ name: database-migrations
 description: PostgreSQL、MySQL、一般的な ORM（Prisma、Drizzle、Kysely、Django、TypeORM、golang-migrate）を対象とした、スキーマ変更・データ移行・ロールバック・ゼロダウンタイムデプロイのデータベースマイグレーションのベストプラクティス。テーブル作成/変更・カラム追加/削除/リネーム・インデックス追加・データバックフィル・ゼロダウンタイム計画・マイグレーションツール導入を行う際は必ず本スキルを参照する。
 metadata:
   source: "affaan-m/everything-claude-code@skills/database-migrations"
+  sourceVersion: "d29cf651c795869f733669c33e3d33dfd8307d10"
 ---
 
 # データベースマイグレーションパターン
