@@ -1,9 +1,14 @@
 ---
 name: update-external-skills
 description: 外部由来スキルを upstream から更新するワークフロー。.claude/skills 配下で metadata.source を持つスキルの更新確認・取得・翻訳・再構成・適用を行う。「スキルを更新して」「upstream に追従して」「外部スキルの更新を確認して」といった依頼、および新しい外部スキルを取り込む際に使用する。
+argument-hint: "[skill 名...]"
 ---
 
 # 外部スキルの更新
+
+対象スキル: $ARGUMENTS
+
+スキル名が渡された場合はそのスキルだけを対象にする。空なら外部由来スキル全件を対象にする。
 
 ## 出所の規約
 
